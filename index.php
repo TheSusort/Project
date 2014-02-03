@@ -63,6 +63,7 @@
 
 	<p> This is the directory script </p>
 	<?php
+	include_once("Metadata.php");
 
 	$images = "upload/"; # Location of small versions
 	$big    = ""; # Location of big versions (assumed to be a subdir of above)
