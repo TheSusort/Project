@@ -1,9 +1,10 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title> Gruppe F's fantastiske løsning til å laste opp filer </title>
+	<title>Gruppe F's fantastiske løsning til å laste opp filer</title>
 	<style>
-		body {
+		body
+		{
 			margin: 0 auto 20px;
 			padding: 0;
 			background: #000000;
@@ -11,100 +12,69 @@
 
 		}
 
-		td {
+		td
+		{
 			padding: 0 0 10px;
 			text-align: center;
 			font: 9px sans-serif;
 			color: #FFFFFF;
 		}
-		table {
-
+		
+		table
+		{
 			width: 100%;
 		}
-		img {
+		
+		img
+		{
 			display: block;
 			margin: 20px auto 10px;
 			max-width: 900px;
-			outline: none;
-			
+			outline: none;			
 		}
-		img:active {
+		
+		img:active
+		{
 			max-width: 100%;
 		}
-		a:focus {
+		
+		a:focus
+		{
 			outline: none;
 		}
 	</style>
 </head>
-
+<!-------------------------------------------------------------------------------------->
 <body>
-
-<table border="1">
-
-<tr>
-<td>
-    <h1> Gruppe F's fantastiske løsning til å laste opp filer </h1>
-
-
-    <form action="upload_file.php" method="post"
-          enctype="multipart/form-data">
-
-        <label for="file">Filename:</label>
-        <input type="file" name="file" id="file"><br>
-        <input type="submit" name="submit" value="Submit">
-    </form>
-
-</td>
-</tr>
-
-
-<tr>
-<td>
-
-	<p> This is the directory script </p>
-	<?php
-	include_once("Metadata.php");
-	
-	LastInnMetadata();
-
-	$images = "upload/"; # Location of small versions
-	$big    = ""; # Location of big versions (assumed to be a subdir of above)
-	$cols   = 3; # Number of columns to display
-
-	if ($handle = opendir($images)) {
-	   while (false !== ($file = readdir($handle))) {
-		   if ($file != "." && $file != ".." && $file != rtrim($big,"/")) {
-			   $files[] = $file;
-		   }
-	   }
-	   closedir($handle);
-	}
-
-	$colCtr = 0;
-
-	echo '<table width="100%" cellspacing="3"><tr>';
-
-	foreach($files as $file)
-	{
-	  if($colCtr %$cols == 0)
-		echo '</tr><tr><td colspan="'.$cols.'"><hr /></td></tr><tr>';
-		echo '<td align="center"><a href="' . $images . $big . $file . '"><img src="' . $images . $file . ' "width="200px" length="auto" /></a></td>';
-		$colCtr++;
-	}
-
-	echo '</table>' . "\r\n";
-
-	?> 
-</td>
-</tr>
-
-<tr>
-<td>
-	<p> This is the EXIF script </p>
-</tr>
-</td>
-
-</table>
- <embed height="50" width="100" src="Kalimba.mp3" style= visibilty: hidden>
+	<table border="1">
+		<tr>
+			<td>
+				<h1>Gruppe F's fantastiske løsning til å laste opp filer</h1>
+				<form action="upload_file.php" method="post" enctype="multipart/form-data">
+					<label for="file">Filename:</label>
+					<input type="file" name="file" id="file"><br>
+					<input type="submit" name="submit" value="Submit">
+				</form>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>This is the directory script</p>
+				<?php
+					include_once("Metadata.php");
+					include_once("Bildeviser.php");
+					
+					LastInnMetadata();
+					VisBilder();
+				?> 
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>This is the EXIF script</p>
+			</td>
+		</tr>
+	</table>
+	<embed height="50" width="100" src="Kalimba.mp3" style= visibilty: hidden>
 </body>
 </html>
