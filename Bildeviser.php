@@ -5,7 +5,7 @@
 
 	function VisBilder()
 	{
-		$images = "upload/";
+		$images = "Bilder/";
 		$big    = "";
 		$cols   = 3;
 		

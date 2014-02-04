@@ -6,13 +6,16 @@
 </head>
 <!-------------------------------------------------------------------------------------->
 <body>
+	<?php
+		include_once("Metadata.php");
+		include_once("Bildeviser.php");
+	?>
 	<table border="1">
 		<tr>
 			<td>
 				<h1>Gruppe F's fantastiske løsning til å laste opp filer</h1>
-				<form action="upload_file.php" method="post" enctype="multipart/form-data">
-					<label for="file">Filename:</label>
-					<input type="file" name="file" id="file"><br>
+				<form action="Opplasting.php" method="post" enctype="multipart/form-data">
+					<input name="bildefil[]" id="bildefil" type="file" multiple=""><br>
 					<input type="submit" name="submit" value="Submit">
 				</form>
 			</td>
@@ -20,10 +23,7 @@
 		<tr>
 			<td>
 				<p>This is the directory script</p>
-				<?php
-					include_once("Metadata.php");
-					include_once("Bildeviser.php");
-					
+				<?php					
 					LastInnMetadata();
 					VisBilder();
 				?> 

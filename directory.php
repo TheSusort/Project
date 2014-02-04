@@ -1,6 +1,6 @@
 ﻿    <?php
     //path to directory to scan. i have included a wildcard for a subdirectory
-    $directory = "upload/*/";
+    $directory = "Bilder/*/";
      
     //get all image files with a .jpg extension.
     $images = glob("" . $directory . "*.jpg");
