@@ -2,47 +2,7 @@
 <html>
 <head>
 	<title>Gruppe F's fantastiske løsning til å laste opp filer</title>
-	<style>
-		body
-		{
-			margin: 0 auto 20px;
-			padding: 0;
-			background: #000000;
-			text-align: center;
-
-		}
-
-		td
-		{
-			padding: 0 0 10px;
-			text-align: center;
-			font: 9px sans-serif;
-			color: #FFFFFF;
-		}
-		
-		table
-		{
-			width: 100%;
-		}
-		
-		img
-		{
-			display: block;
-			margin: 20px auto 10px;
-			max-width: 900px;
-			outline: none;			
-		}
-		
-		img:active
-		{
-			max-width: 100%;
-		}
-		
-		a:focus
-		{
-			outline: none;
-		}
-	</style>
+	<link rel="stylesheet" href="style.css">
 </head>
 <!-------------------------------------------------------------------------------------->
 <body>
