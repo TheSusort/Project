@@ -21,4 +21,6 @@
 			echo "Temp file: " . $_FILES["bildefil"]["tmp_name"][$i] . "<br>";
 		}
 	}
+	//Gå tilbake til index etter 3s
+	echo '<meta http-equiv="refresh" content="3;URL=index.php" /> '
 ?>
