@@ -1,24 +1,10 @@
-body
-		{
-			margin: 0 auto 20px;
-			padding: 0;
-			background: #000000;
-			text-align: center;
+body {
+    margin: 0 auto 20px;
+    padding: 0;
+    background: #FFFFFF;
+    text-align: center;
+}
 
-		}
-
-td
-		{
-			padding: 0 0 10px;
-			text-align: center;
-			font: 9px sans-serif;
-			color: #FFFFFF;
-		}
-		
-table
-		{
-			width: 100%;
-		}
 		
 img
 		{
@@ -38,8 +24,53 @@ a:focus
 			outline: none;
 		}
 
-h1 
-        {
-            font-size: 25px;
-            font-family: oldenburg;
-        }
+h1 {
+    font-size: 25px;
+    }
+
+#title {
+    width:100%;
+    border-style:dotted;
+    border-color:blue;
+}
+
+#containerleft {
+    float:left;
+    width:250px;
+    border-style:dotted;
+    border-color:red;
+}
+
+#upload {
+    width:100%;
+    height:60px;
+    border-style:dotted;
+    border-color:green;
+}
+
+#directory {
+    width:100%;
+    height:400px;
+    overflow:auto;
+    border-style:dotted;
+    border-color:purple;
+}
+
+#gallery {
+    margin-left:260px;
+    border-style:dotted;
+    border-color:brown;
+}
+
+#exif {
+    width:100%;
+    height:200px;
+    border-style:dotted;
+    border-color:yellow;
+}
+
+#terriblemusic {
+    width:100%;
+    border-style:dotted;
+    border-color:black;
+}

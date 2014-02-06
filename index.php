@@ -10,31 +10,43 @@
 		include_once("Metadata.php");
 		include_once("Bildeviser.php");
 	?>
-	<table border="1">
-		<tr>
-			<td>
+    
+    <div id="containermain">
+        
+        <div id="title">
 				<h1>Gruppe F's fantastiske løsning til å laste opp filer</h1>
+        </div>
+        
+        <div id="containerleft">
+        
+        <div id="upload">
 				<form action="Opplasting.php" method="post" enctype="multipart/form-data">
 					<input name="bildefil[]" id="bildefil" type="file" multiple=""><br>
 					<input type="submit" name="submit" value="Submit">
 				</form>
-			</td>
-		</tr>
-		<tr>
-			<td>
+        </div>
+        
+        <div id="directory">
 				<p>This is the directory script</p>
+        </div>
+            
+        <div id="exif">
+				<p>This is the EXIF script</p>
+        </div>
+            
+        </div>
+            
+        <div id="gallery">
 				<?php					
 					LastInnMetadata();
 					VisBilder();
 				?> 
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<p>This is the EXIF script</p>
-			</td>
-		</tr>
-	</table>
-	<embed height="50" width="100" src="Kalimba.mp3" style= visibilty: hidden>
+        </div>
+		
+        <div id="terriblemusic">
+	               <embed height="50" width="100" src="Kalimba.mp3" style= visibilty: hidden>
+        </div>
+        
+    </div>
 </body>
 </html>
