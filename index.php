@@ -9,12 +9,14 @@
 	<?php
 		include_once("Metadata.php");
 		include_once("Bildeviser.php");
+        include_once("mysql.php")
 	?>
     
     <div id="containermain">
         
         <div id="title">
 				<h1>Gruppe F's fantastiske løsning til å laste opp filer</h1>
+                <?php db_connnect(); ?>
         </div>
         
         <div id="containerleft">
