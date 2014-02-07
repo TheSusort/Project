@@ -16,7 +16,7 @@
         {
             $db_is_connected = false;
             alert_message("Error: Could not connect ot database. Please try again later.");
-            exit;
+//            exit;
         }
         $db_is_connected = true;
         return;
