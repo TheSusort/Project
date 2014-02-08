@@ -16,6 +16,7 @@
 
         check_for_new_img('Bilder');
         check_for_del_img('Bilder');
+
 		echo '<table width="100%" cellspacing="3"><tr>';
 
 		foreach($files as $file)

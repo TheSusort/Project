@@ -11,7 +11,7 @@
     function db_connnect()
     {
         global $db;
-        @ $db = new mysqli('localhost', 'root', '1234', 'gruppef');
+        @ $db = new mysqli('localhost', 'user', '1234', 'gruppef');
         global $db_is_connected;
         if (mysqli_connect_errno())
         {
