@@ -1,7 +1,7 @@
 <?php
 	$images = "Bilder/";                # Location of small versions
 	$big    = "";                       # Location of big versions (assumed to be a subdir of above)
-	$cols   = 3;                        # Number of columns to display
+	$cols   = 4;                        # Number of columns to display
     $files  = get_img_list("Bilder");   # List of the files from disk
 
 	function VisBilder()
@@ -12,30 +12,32 @@
 
         check_for_new_img('Bilder');
         check_for_del_img('Bilder');
+        if ($files != null)
+        {
+       	    echo '<table width="100%" cellspacing="3"><tr>';
 
-		echo '<table width="100%" cellspacing="3"><tr>';
+            foreach($files as $file)
+            {
+              if($colCtr %$cols == 0)
+                echo '
+                        </tr>
+                        <tr>
+                            <td colspan="'.$cols.'">
+                                <hr />
+                            </td>
+                        </tr>
+                        <tr>';
+                echo '
+                        <td id="bilde" align="center">
+                            <a href="' . $images . $big . $file . '">
+                                <img src="' . $images . $file . ' "width="200px" length="auto" />
+                            </a>
+                        </td>';
+                $colCtr++;
+            }
 
-		foreach($files as $file)
-		{
-		  if($colCtr %$cols == 0)
-			echo '
-			        </tr>
-			        <tr>
-			            <td colspan="'.$cols.'">
-			                <hr />
-			            </td>
-			        </tr>
-			        <tr>';
-			echo '
-			        <td id="bilde" align="center">
-			            <a href="' . $images . $big . $file . '">
-			                <img src="' . $images . $file . ' "width="200px" length="auto" />
-			            </a>
-			        </td>';
-			$colCtr++;
-		}
-
-		echo '</table>' . "\r\n";
+            echo '</table>' . "\r\n";
+        }
 	}
 
 // return array of files names from dir.
@@ -56,7 +58,7 @@
     function get_img_list($dir)
     {
         $f = scandir($dir);
-
+        $files = null;
         foreach ($f as $file){
             if(preg_match("/\.jp.?g$|\.png$/i", $file)){
                 $files[] = $file;
@@ -70,7 +72,16 @@
     {
         $files_on_disc  = $GLOBALS['files'];
         $files_in_db    = db_select('file_liste', 'filename');
-        $result = array_diff($files_on_disc, $files_in_db);
+
+        if      ($files_on_disc <> null & $files_in_db == null){
+            $result = $files_on_disc;
+        }elseif ($files_on_disc == null & $files_in_db <> null){
+            $result = $files_in_db;
+        }elseif ($files_on_disc <> null & $files_in_db <> null){
+            $result = array_diff($files_on_disc, $files_in_db);
+        }else{
+            return;
+        }
         foreach($result as $rslt)
         {
             db_insert('file_liste', 'filename', $rslt);
@@ -79,14 +90,21 @@
 
 // check images which are deleted from disc and delete them from the db.
     function check_for_del_img($dir)
-{
-    $files_on_disc  = $GLOBALS['files'];
-    $files_in_db    = db_select('file_liste', 'filename');
-    $result = array_diff($files_in_db, $files_on_disc);
-    foreach($result as $rslt)
     {
-        db_delete('file_liste', 'filename', $rslt);
+        $files_on_disc  = $GLOBALS['files'];
+        $files_in_db    = db_select('file_liste', 'filename');
+
+        if ($files_on_disc == null & $files_in_db <> null){
+            $result = $files_in_db;
+        }elseif($files_on_disc <> null & $files_in_db <> null){
+            $result = array_diff($files_in_db, $files_on_disc);
+        }else{
+            return;
+        }
+        foreach($result as $rslt)
+        {
+            db_delete('file_liste', 'filename', $rslt);
+        }
     }
-}
 
 ?>

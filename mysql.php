@@ -33,7 +33,7 @@
             exit;
         }elseif(count($column) <> count($value))
         {
-            alert_message("SQL query is incorrect");
+            alert_message("SQL insert query is incorrect");
             exit;
         }else
         {
@@ -57,7 +57,7 @@ function db_delete($table, $column, $value)
         exit;
     }elseif(count($column) <> count($value))
     {
-        alert_message("SQL query is incorrect");
+        alert_message("SQL delete query is incorrect");
         exit;
     }else
     {
@@ -74,6 +74,7 @@ function db_delete($table, $column, $value)
 // Select data from database
     function db_select($table, $column)
     {
+        $result = null;
         global $db_is_connected, $db;
         if (!$db_is_connected)
         {
