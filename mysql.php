@@ -47,6 +47,30 @@
         return;
     }
 
+// Delete data from database
+function db_delete($table, $column, $value)
+{
+    global $db_is_connected, $db;
+    if (!$db_is_connected)
+    {
+        alert_message("Error: Could not connect ot database.");
+        exit;
+    }elseif(count($column) <> count($value))
+    {
+        alert_message("SQL query is incorrect");
+        exit;
+    }else
+    {
+        $query = "DELETE FROM $table WHERE $column = '$value';";
+        $result = $db->query($query);
+        if ($result)
+        {
+            alert_message($value.' deleted from database.');
+        }
+    }
+    return;
+}
+
 // Select data from database
     function db_select($table, $column)
     {
@@ -93,9 +117,5 @@
             ");
     }
 
-
-//db_connnect();
-//$files_in_db    = db_select('file_liste', 'filename');
-//print_r($files_in_db);
 
 ?>
