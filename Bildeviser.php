@@ -15,7 +15,7 @@
 		$colCtr = 0;
 
         check_for_new_img('Bilder');
-
+        check_for_del_img('Bilder');
 		echo '<table width="100%" cellspacing="3"><tr>';
 
 		foreach($files as $file)
@@ -61,14 +61,14 @@
         $f = scandir($dir);
 
         foreach ($f as $file){
-            if(preg_match('/\.jpg/i', $file) || preg_match('/\.png/i', $file)){
+            if(preg_match("/\.jpg$|\.jpeg$|\.png$/i", $file)){
                 $files[] = $file;
             }
         }
         return $files;
     }
 
-// check for image som are not registered in database and add tem to the db.
+// check images which are not registered in database and add them to the db
     function check_for_new_img($dir)
     {
         $files_on_disc  = get_img_list($dir);
@@ -79,5 +79,17 @@
             db_insert('file_liste', 'filename', $rslt);
         }
     }
+
+// check images which are deleted from disc and delete them from the db.
+function check_for_del_img($dir)
+{
+    $files_on_disc  = get_img_list($dir);
+    $files_in_db    = db_select('file_liste', 'filename');
+    $result = array_diff($files_in_db, $files_on_disc);
+    foreach($result as $rslt)
+    {
+        db_delete('file_liste', 'filename', $rslt);
+    }
+}
 
 ?>
