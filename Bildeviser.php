@@ -1,18 +1,14 @@
 <?php
-	$images; # Location of small versions
-	$big; # Location of big versions (assumed to be a subdir of above)
-	$cols; # Number of columns to display
+	$images = "Bilder/";                # Location of small versions
+	$big    = "";                       # Location of big versions (assumed to be a subdir of above)
+	$cols   = 3;                        # Number of columns to display
+    $files  = get_img_list("Bilder");   # List of the files from disk
 
 	function VisBilder()
 	{
-		$images = "Bilder/";
-		$big    = "";
-		$cols   = 3;
-
+		global $images, $big, $cols, $files;
+        $colCtr = 0;
 //        $files = get_File_List($big, $images);
-        $files = get_img_list("Bilder");
-
-		$colCtr = 0;
 
         check_for_new_img('Bilder');
         check_for_del_img('Bilder');
@@ -31,7 +27,7 @@
 			        </tr>
 			        <tr>';
 			echo '
-			        <td align="center">
+			        <td id="bilde" align="center">
 			            <a href="' . $images . $big . $file . '">
 			                <img src="' . $images . $file . ' "width="200px" length="auto" />
 			            </a>
@@ -62,7 +58,7 @@
         $f = scandir($dir);
 
         foreach ($f as $file){
-            if(preg_match("/\.jpg$|\.jpeg$|\.png$/i", $file)){
+            if(preg_match("/\.jp.?g$|\.png$/i", $file)){
                 $files[] = $file;
             }
         }
@@ -72,7 +68,7 @@
 // check images which are not registered in database and add them to the db
     function check_for_new_img($dir)
     {
-        $files_on_disc  = get_img_list($dir);
+        $files_on_disc  = $GLOBALS['files'];
         $files_in_db    = db_select('file_liste', 'filename');
         $result = array_diff($files_on_disc, $files_in_db);
         foreach($result as $rslt)
@@ -82,9 +78,9 @@
     }
 
 // check images which are deleted from disc and delete them from the db.
-function check_for_del_img($dir)
+    function check_for_del_img($dir)
 {
-    $files_on_disc  = get_img_list($dir);
+    $files_on_disc  = $GLOBALS['files'];
     $files_in_db    = db_select('file_liste', 'filename');
     $result = array_diff($files_in_db, $files_on_disc);
     foreach($result as $rslt)
