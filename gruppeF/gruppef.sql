@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 09, 2014 at 06:07 PM
+-- Generation Time: Feb 09, 2014 at 06:20 PM
 -- Server version: 5.6.14
 -- PHP Version: 5.5.6
 
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `gruppef`
 --
+CREATE DATABASE IF NOT EXISTS `gruppef` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `gruppef`;
 
 -- --------------------------------------------------------
 
@@ -26,6 +28,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `file_liste`
 --
 
+DROP TABLE IF EXISTS `file_liste`;
 CREATE TABLE IF NOT EXISTS `file_liste` (
   `fileid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `filename` varchar(60) NOT NULL,
@@ -62,6 +65,7 @@ INSERT INTO `file_liste` (`fileid`, `filename`, `commentary`, `rating`) VALUES
 -- Table structure for table `tag`
 --
 
+DROP TABLE IF EXISTS `tag`;
 CREATE TABLE IF NOT EXISTS `tag` (
   `fileid` int(10) unsigned NOT NULL,
   `tags` varchar(60) NOT NULL,
