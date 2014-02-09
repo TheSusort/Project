@@ -1,7 +1,7 @@
 <?php
 	$images = "Bilder/";                # Location of small versions
 	$big    = "";                       # Location of big versions (assumed to be a subdir of above)
-	$cols   = 4;                        # Number of columns to display
+	$cols   = 3;                        # Number of columns to display
     $files  = get_img_list("Bilder");   # List of the files from disk
 
 	function VisBilder()
@@ -9,9 +9,11 @@
 		global $images, $big, $cols, $files;
         $colCtr = 0;
 //        $files = get_File_List($big, $images);
-
-        check_for_new_img('Bilder');
-        check_for_del_img('Bilder');
+        if ($GLOBALS['db_is_connected'])
+        {
+            check_for_new_img('Bilder');
+            check_for_del_img('Bilder');
+        }
         if ($files != null)
         {
        	    echo '<table width="100%" cellspacing="3"><tr>';

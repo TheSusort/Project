@@ -17,9 +17,11 @@
         {
             $db_is_connected = false;
             alert_message("Error: Could not connect ot database. Please try again later.");
-//            exit;
+            return;
+//            exit(alert_message("Error: Could not connect ot database. Please try again later."));
+        }else{
+            $db_is_connected = true;
         }
-        $db_is_connected = true;
         return;
     }
 
@@ -30,7 +32,8 @@
         if (!$db_is_connected)
         {
             alert_message("Error: Could not connect to database.");
-            exit;
+            return;
+//            exit(alert_message("Error: Could not connect to database."));
         }elseif(count($column) <> count($value))
         {
             alert_message("SQL insert query is incorrect");
@@ -38,6 +41,7 @@
         }else
         {
             $query = "INSERT INTO $table($column) VALUES ('$value');";
+            echo $query;
             $result = $db->query($query);
             if ($result)
             {
@@ -48,13 +52,14 @@
     }
 
 // Delete data from database
-function db_delete($table, $column, $value)
+    function db_delete($table, $column, $value)
 {
     global $db_is_connected, $db;
     if (!$db_is_connected)
     {
         alert_message("Error: Could not connect to database.");
-        exit;
+        return;
+//        exit(alert_message("Error: Could not connect to database."));
     }elseif(count($column) <> count($value))
     {
         alert_message("SQL delete query is incorrect");
@@ -79,7 +84,8 @@ function db_delete($table, $column, $value)
         if (!$db_is_connected)
         {
             alert_message("Error: Could not connect ot database.");
-            exit;
+            return;
+//            exit(alert_message("Error: Could not connect ot database."));
         }else
         {
             $query = "SELECT $column FROM $table ;";
