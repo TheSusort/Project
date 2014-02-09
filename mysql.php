@@ -29,7 +29,7 @@
         global $db_is_connected, $db;
         if (!$db_is_connected)
         {
-            alert_message("Error: Could not connect ot database.");
+            alert_message("Error: Could not connect to database.");
             exit;
         }elseif(count($column) <> count($value))
         {
@@ -41,7 +41,7 @@
             $result = $db->query($query);
             if ($result)
             {
-                alert_message($value.' inserted into database.');
+                alert_message($value.' was downloaded manually. \r\n Inserted into database.');
             }
         }
         return;
@@ -53,7 +53,7 @@ function db_delete($table, $column, $value)
     global $db_is_connected, $db;
     if (!$db_is_connected)
     {
-        alert_message("Error: Could not connect ot database.");
+        alert_message("Error: Could not connect to database.");
         exit;
     }elseif(count($column) <> count($value))
     {
@@ -65,7 +65,7 @@ function db_delete($table, $column, $value)
         $result = $db->query($query);
         if ($result)
         {
-            alert_message($value.' deleted from database.');
+            alert_message($value.' was deleted manually. \r\n Deleted from database.');
         }
     }
     return;
