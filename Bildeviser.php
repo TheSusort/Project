@@ -31,7 +31,7 @@
                         <tr>';
                 echo '
                         <td id="bilde" align="center">
-                            <a href="' . $images . $big . $file . '" data-lightbox="roadtrip">
+                            <a href="fullscreen.php?bilde='.$images.$file.'">
                                 <img src="' . $images . $file . ' "width="200px" length="auto" />
                             </a>
                         </td>';
