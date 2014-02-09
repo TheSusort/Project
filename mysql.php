@@ -41,7 +41,6 @@
         }else
         {
             $query = "INSERT INTO $table($column) VALUES ('$value');";
-            echo $query;
             $result = $db->query($query);
             if ($result)
             {
