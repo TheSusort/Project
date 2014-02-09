@@ -8,10 +8,7 @@ body {
 		
 img
 		{
-			display: block;
-			margin: 20px auto 10px;
 			max-width: 900px;
-			outline: none;			
 		}
 		
 img:active

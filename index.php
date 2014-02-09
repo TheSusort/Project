@@ -3,9 +3,12 @@
 <head>
 	<title>Gruppe F's fantastiske løsning til å laste opp filer</title>
 	<link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="lightbox.css" />
 </head>
 <!-------------------------------------------------------------------------------------->
 <body>
+<script src="jquery-1.10.2.min.js"></script>
+<script src="lightbox-2.6.min.js"></script>
 	<?php
 		include_once("Metadata.php");
 		include_once("Bildeviser.php");
@@ -46,7 +49,7 @@
         </div>
 		
         <div id="terriblemusic">
-	               <embed height="50" width="100" src="Kalimba.mp3" style= visibilty: hidden>
+<!--	               <embed height="50" width="100" src="Kalimba.mp3" style= visibilty: hidden>-->
         </div>
         
     </div>
