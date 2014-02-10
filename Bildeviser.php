@@ -40,7 +40,7 @@
                 echo '
                         <td id="bilde" align="center">
                             <a href="fullscreen.php?bilde='.$big.$file.'">
-                                <img src="' . $images . $file . ' "width="200px" length="auto" />
+                                <img src="' . $images . $file . '" />
                             </a>
                         </td>';
                 $colCtr++;
@@ -70,7 +70,7 @@
         $f = scandir($dir);
         $files = null;
         foreach ($f as $file){
-            if(preg_match("/\.jp.?g$|\.png$/i", $file)){
+            if(preg_match("/\.jp.?g$|\.png$|\.gif$/i", $file)){
                 $files[] = $file;
             }
         }
