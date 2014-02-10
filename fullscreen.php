@@ -15,11 +15,11 @@
        <div id="fullscreenpic">
            <?php
                 //print_r($_GET);
-                echo("<img src=".$_GET['bilde'].">");
+                echo("<img src=".$_GET['bilde']." height=500px >");
             ?>
         
        </div>
-       <div id="butans">
+       <div id="buttons">
        <p>
            Buttons here</p>
        </div>

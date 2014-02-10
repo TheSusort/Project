@@ -39,7 +39,7 @@
                         <tr>';
                 echo '
                         <td id="bilde" align="center">
-                            <a href="fullscreen.php?bilde='.$big.$file.'">
+                            <a href="fullscreen.php?bilde='.$big.$file.'" target="_blank">
                                 <img src="' . $images . $file . '" />
                             </a>
                         </td>';
