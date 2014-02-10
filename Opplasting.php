@@ -1,11 +1,14 @@
 <?php
+
+    include_once("thumbnail.php");
+
 	$mappeForBilder = "Bilder/";
 	
 	if (count($_FILES["bildefil"]["tmp_name"]))
 	{
 		for ($i = 0; count($_FILES["bildefil"]["tmp_name"]) > $i; $i++)
 		{
-			//sjekker om filen eksisterer fra før av.
+			//sjekker om filen eksisterer fra fï¿½r av.
 			if (file_exists($mappeForBilder . $_FILES["bildefil"]["tmp_name"][$i]))
 			{
 				echo $_FILES["bildefil"]["tmp_name"] . " har samme navn som en annen fil.";
@@ -19,8 +22,11 @@
 			echo "Type: " . $_FILES["bildefil"]["type"][$i] . "<br>";
 			echo "Size: " . ($_FILES["bildefil"]["size"][$i] / 1024) . " kB<br>";
 			echo "Temp file: " . $_FILES["bildefil"]["tmp_name"][$i] . "<br>";
+            
+            //lager thumbnail av bilde
+            createThumbs($_FILES["bildefil"]["name"][$i], $mappeForBilder, "Bilder/thumbs/", 200);
 		}
 	}
-	//Gå tilbake til index etter 3s
+	//Gï¿½ tilbake til index etter 3s
 	echo '<meta http-equiv="refresh" content="3;URL=index.php" /> '
 ?>
