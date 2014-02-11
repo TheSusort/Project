@@ -3,7 +3,7 @@
 function createThumbs($filename, $path_to_image_directory, $path_to_thumbs_directory, $final_width_of_image) {
      
      //sjekker hva slags bilde det er snakk om, og loader det.
-    if(preg_match('/[.](jpg)$/i', $filename) or preg_match('/[.](jpeg)$/i', $filename)) {
+    if(preg_match('/[.](jp.?g)$/i', $filename)){
         $im = imagecreatefromjpeg($path_to_image_directory . $filename);
     } else if (preg_match('/[.](gif)$/i', $filename)) {
         $im = imagecreatefromgif($path_to_image_directory . $filename);
