@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 09, 2014 at 06:20 PM
+-- Generation Time: Feb 11, 2014 at 03:00 PM
 -- Server version: 5.6.14
 -- PHP Version: 5.5.6
 
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `gruppef`
 --
-CREATE DATABASE IF NOT EXISTS `gruppef` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `gruppef`;
 
 -- --------------------------------------------------------
 
@@ -28,7 +26,6 @@ USE `gruppef`;
 -- Table structure for table `file_liste`
 --
 
-DROP TABLE IF EXISTS `file_liste`;
 CREATE TABLE IF NOT EXISTS `file_liste` (
   `fileid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `filename` varchar(60) NOT NULL,
@@ -37,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `file_liste` (
   PRIMARY KEY (`fileid`),
   UNIQUE KEY `fileid_UNIQUE` (`fileid`),
   UNIQUE KEY `filename_UNIQUE` (`filename`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=138 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=352 ;
 
 --
 -- Dumping data for table `file_liste`
@@ -54,10 +51,18 @@ INSERT INTO `file_liste` (`fileid`, `filename`, `commentary`, `rating`) VALUES
 (131, '1497863_637766332932353_1505618577_o[1].jpg', NULL, NULL),
 (132, '5j6gdg38.jpg', NULL, NULL),
 (133, '894759_606032306105756_939174192_o[1].jpg', NULL, NULL),
-(134, 'Horse_Denver.jpeg', NULL, NULL),
 (135, 'victoria-harbour.jpg', NULL, NULL),
 (136, 'win95-boxes.jpg', NULL, NULL),
-(137, 'windows-95-wallpaper.jpg', NULL, NULL);
+(137, 'windows-95-wallpaper.jpg', NULL, NULL),
+(163, 'Horse_Denver.jpeg', NULL, NULL),
+(306, 'Chrysanthemum.jpg', NULL, NULL),
+(307, 'Desert.jpg', NULL, NULL),
+(308, 'Hydrangeas.jpg', NULL, NULL),
+(309, 'Jellyfish.jpg', NULL, NULL),
+(327, 'Koala.jpg', NULL, NULL),
+(328, 'Lighthouse.jpg', NULL, NULL),
+(329, 'Penguins.jpg', NULL, NULL),
+(330, 'Tulips.jpg', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -65,12 +70,24 @@ INSERT INTO `file_liste` (`fileid`, `filename`, `commentary`, `rating`) VALUES
 -- Table structure for table `tag`
 --
 
-DROP TABLE IF EXISTS `tag`;
 CREATE TABLE IF NOT EXISTS `tag` (
   `fileid` int(10) unsigned NOT NULL,
   `tags` varchar(60) NOT NULL,
   PRIMARY KEY (`fileid`,`tags`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tag`
+--
+
+INSERT INTO `tag` (`fileid`, `tags`) VALUES
+(106, 'sol'),
+(106, 'tre'),
+(107, 'hund'),
+(108, 'stol'),
+(109, 'bord'),
+(110, 'pc'),
+(129, 'bord');
 
 --
 -- Constraints for dumped tables
