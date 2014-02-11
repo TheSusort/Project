@@ -1,10 +1,9 @@
 <?php
-include_once("thumbnail.php");
 
 $images = "Bilder/thumbs/";         # Location of small versions
 $big    = "Bilder/";                # Location of big versions (assumed to be a subdir of above)
 $cols   = 3;                        # Number of columns to display
-$files  = null;   # List of the files from disk
+$files  = null;                     # List of the files from disk
 
 // Transformation array to string
     function array_to_string($array)
@@ -31,50 +30,65 @@ $files  = null;   # List of the files from disk
     function check_img_modification($dir)
     {
         global $files;
-        $files  = get_img_list($dir);
-        check_for_new_img($files);
-        check_for_del_img($files);
+        $files_on_disc  = get_img_list($dir);
+        $files_in_db    = db_select('file_liste', 'filename', 'ORDER BY rating', 'filename');
+        check_for_new_img($files_on_disc, $files_in_db);
+        check_for_del_img($files_on_disc, $files_in_db);
+        if ($files == null){
+            $files = $files_in_db;
+        }
     }
 
 // check images which are not registered in database and add them to the db
-    function check_for_new_img($files_on_disc)
+    function check_for_new_img($files_on_disc, $files_in_db)
     {
-        $files_in_db    = db_select('file_liste', 'filename', 'rating', 'filename');
-
-        if      ($files_on_disc <> null & $files_in_db == null){
+        global $files, $big, $images;
+        $result = null;
+        $files_add = 'Downloaded manually:';
+        if ($files_on_disc <> null & $files_in_db == null){
             $result = $files_on_disc;
-        }elseif ($files_on_disc == null & $files_in_db <> null){
-            $result = $files_in_db;
         }elseif ($files_on_disc <> null & $files_in_db <> null){
             $result = array_diff($files_on_disc, $files_in_db);
         }else{
-            return;
+            return FALSE;
         }
         foreach($result as $rslt)
         {
-			if (db_insert('file_liste', 'filename', $rslt))
+            if (db_insert('file_liste', 'filename', $rslt))
             {
-                alert_message($rslt.' was downloaded manually. \r\n Inserted into database.');
+                $files_add = $files_add.'\n\t'.$rslt;
+                createThumbs($rslt, $big, $images, 200);
             }
+        }
+        if (!empty($result)){
+            alert_message($files_add);
+            $files = db_select('file_liste', 'filename', 'ORDER BY rating', 'filename');
         }
     }
 
 // check images which are deleted from disc and delete them from the db.
-    function check_for_del_img($files_on_disc)
+    function check_for_del_img($files_on_disc, $files_in_db)
     {
-        $files_in_db    = db_select('file_liste', 'filename', 'rating', 'filename');
-
+        global $files, $images;
+        $result = null;
+        $files_del = 'Was deleted manually:';
         if ($files_on_disc == null & $files_in_db <> null){
             $result = $files_in_db;
         }elseif($files_on_disc <> null & $files_in_db <> null){
             $result = array_diff($files_in_db, $files_on_disc);
         }else{
-            return;
+            return FALSE;
         }
         foreach($result as $rslt)
         {
-            unlink($GLOBALS['images'].$rslt);
-            db_delete('file_liste', 'filename', $rslt);
+            if(db_delete('file_liste', 'filename', $rslt)){
+                $files_del = $files_del.'\n\t'.$rslt;
+                unlink($images.$rslt);
+            }
+        }
+        if (!empty($result)){
+            alert_message($files_del);
+            $files = db_select('file_liste', 'filename', 'ORDER BY rating', 'filename');
         }
     }
 
@@ -182,8 +196,41 @@ $files  = null;   # List of the files from disk
 
     function get_tags()
     {
-        $tag_list = db_select('tag', 'tags', 'tags', 'tags');
+        $tag_list = db_select('tag', 'tags', 'GROUP BY tags', 'tags');
         return $tag_list;
     }
+
+    function createThumbs($filename, $path_to_image_directory, $path_to_thumbs_directory, $final_width_of_image) {
+
+        //sjekker hva slags bilde det er snakk om, og loader det.
+        if(preg_match('/[.](jp.?g)$/i', $filename)){
+            $im = imagecreatefromjpeg($path_to_image_directory . $filename);
+        } else if (preg_match('/[.](gif)$/i', $filename)) {
+            $im = imagecreatefromgif($path_to_image_directory . $filename);
+        } else if (preg_match('/[.](png)$/i', $filename)) {
+            $im = imagecreatefrompng($path_to_image_directory . $filename);
+        }
+
+        //finner dimensjoner
+        $ox = imagesx($im);
+        $oy = imagesy($im);
+
+        //regner ut thumbnaildimensjoner
+        $nx = $final_width_of_image;
+        $ny = floor($oy * ($final_width_of_image / $ox));
+
+        //Lager nytt bilde i thumbnailstørrelse, kopierer og resizer bilde til thumbnailfilen.
+        $nm = imagecreatetruecolor($nx, $ny);
+        imagecopyresized($nm, $im, 0,0,0,0,$nx,$ny,$ox,$oy);
+
+        if(!file_exists($path_to_thumbs_directory)) {
+            if(!mkdir($path_to_thumbs_directory)) {
+                die("There was a problem with creating the thumbnail. Please try again!");
+            }
+        }
+        //lagrer thumbnailen til mappe.
+        imagejpeg($nm, $path_to_thumbs_directory . $filename);
+
+}
 
 ?>

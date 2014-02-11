@@ -59,22 +59,22 @@ include_once('funksjoner.php');
     if (!$db_is_connected)
     {
         alert_message("Error: Could not connect to database.");
-        return;
+        return FALSE;
 //        exit(alert_message("Error: Could not connect to database."));
     }elseif(count($column) <> count($value))
     {
         alert_message("SQL delete query is incorrect");
-        exit;
+        return FALSE;
     }else
     {
         $query = "DELETE FROM $table WHERE $column = '$value';";
         $result = $db->query($query);
         if ($result)
         {
-            alert_message($value.' was deleted manually. \r\n Deleted from database.');
+            return TRUE;
         }
     }
-    return;
+    return FALSE;
 }
 
 // Select data from database
@@ -89,7 +89,7 @@ include_once('funksjoner.php');
 //            exit(alert_message("Error: Could not connect ot database."));
         }else
         {
-            $query = "SELECT $column FROM $table GROUP BY $group;";
+            $query = "SELECT $column FROM $table $group;";
             $rslt = $db->query($query);
             if (!$rslt)
             {

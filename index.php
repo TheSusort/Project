@@ -11,11 +11,13 @@
 
     if ($GLOBALS['db_is_connected'])
     {
-        check_img_modification('Bilder');
+        check_img_modification('Bilder/');
     }
+
     $gallery = VisBilder();
-    $tags = get_tags();
     $main = preg_replace('/#gallery#/', $gallery, $main);
+
+    $tags = get_tags();
     $tags_str = array_to_string($tags);
     $main = preg_replace('/#tags#/', $tags_str, $main);
     echo($main);	//displays the contents of the file main.html
