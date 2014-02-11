@@ -39,7 +39,7 @@ $files  = null;   # List of the files from disk
 // check images which are not registered in database and add them to the db
     function check_for_new_img($files_on_disc)
     {
-        $files_in_db    = db_select('file_liste', 'filename');
+        $files_in_db    = db_select('file_liste', 'filename', 'rating', 'filename');
 
         if      ($files_on_disc <> null & $files_in_db == null){
             $result = $files_on_disc;
@@ -62,7 +62,7 @@ $files  = null;   # List of the files from disk
 // check images which are deleted from disc and delete them from the db.
     function check_for_del_img($files_on_disc)
     {
-        $files_in_db    = db_select('file_liste', 'filename');
+        $files_in_db    = db_select('file_liste', 'filename', 'rating', 'filename');
 
         if ($files_on_disc == null & $files_in_db <> null){
             $result = $files_in_db;
@@ -116,8 +116,6 @@ $files  = null;   # List of the files from disk
         global $images, $big, $cols, $files;
         $colCtr = 0;
         $gallery = "";
-//        $files  = get_img_list("Bilder");
-
         if ($files != null)
         {
             $gallery =  '
@@ -180,6 +178,12 @@ $files  = null;   # List of the files from disk
             }
         }
         return $files;
+    }
+
+    function get_tags()
+    {
+        $tag_list = db_select('tag', 'tags', 'tags', 'tags');
+        return $tag_list;
     }
 
 ?>
