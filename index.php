@@ -15,7 +15,7 @@
     <div id="containermain">
         
         <div id="title">
-				<h1>Gruppe F's fantastiske løsning til å laste opp filer</h1>
+				<h1>Web Photo Gallery</h1>
                 <?php db_connnect(); ?>
         </div>
         

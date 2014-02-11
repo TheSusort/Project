@@ -33,7 +33,6 @@
                         </tr>
                         <tr>
                             <td colspan="'.$cols.'">
-                                <hr />
                             </td>
                         </tr>
                         <tr>';
