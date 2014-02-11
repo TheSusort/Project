@@ -1,54 +1,23 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-	<title>Gruppe F's fantastiske løsning til å laste opp filer</title>
-	<link rel="stylesheet" href="style.css">
-</head>
-<!-------------------------------------------------------------------------------------->
-<body>
-	<?php
+﻿<?php
 		include_once("Metadata.php");
-		include_once("Bildeviser.php");
-        include_once("mysql.php")
-	?>
-    
-    <div id="containermain">
-        
-        <div id="title">
-				<h1>Gruppe F's fantastiske løsning til å laste opp filer</h1>
-                <?php db_connnect(); ?>
-        </div>
-        
-        <div id="containerleft">
-        
-        <div id="upload">
-				<form action="Opplasting.php" method="post" enctype="multipart/form-data">
-					<input name="bildefil[]" id="bildefil" type="file" multiple=""><br>
-					<input type="submit" name="submit" value="Submit">
-				</form>
-        </div>
-        
-        <div id="directory">
-				<p>This is the directory script</p>
-        </div>
-            
-        <div id="exif">
-				<p>This is the EXIF script</p>
-        </div>
-            
-        </div>
-            
-        <div id="gallery">
-				<?php					
-					LastInnMetadata();
-					VisBilder();
-				?> 
-        </div>
+        include_once("mysql.php");
+		include_once("funksjoner.php");
+		db_connnect();
+		$main = file_get_contents('main.html');
+
+		if ($_FILES != null){
+			save_file();
+		}
 		
-        <div id="terriblemusic">
-<!--	               <embed height="50" width="100" src="Kalimba.mp3" style= visibilty: hidden>-->
-        </div>
-        
-    </div>
-</body>
-</html>
+		if ($GLOBALS['db_is_connected'])
+        {
+            check_for_new_img('Bilder');
+            check_for_del_img('Bilder');
+        }
+		$gallery = VisBilder();
+		
+		$main = preg_replace('/#gallery#/', $gallery, $main);
+
+		echo($main);	//displays the contents of the file main.html
+		
+	?>
