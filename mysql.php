@@ -34,22 +34,22 @@ include_once('funksjoner.php');
         if (!$db_is_connected)
         {
             alert_message("Error: Could not connect to database.");
-            return;
+            return FALSE;
 //            exit(alert_message("Error: Could not connect to database."));
         }elseif(count($column) <> count($value))
         {
             alert_message("SQL insert query is incorrect");
-            exit;
+            return FALSE;
         }else
         {
             $query = "INSERT INTO $table($column) VALUES ('$value');";
             $result = $db->query($query);
             if ($result)
             {
-                alert_message($value.' was downloaded manually. \r\n Inserted into database.');
+                return TRUE;
             }
         }
-        return;
+        return FALSE;
     }
 
 // Delete data from database

@@ -1,10 +1,10 @@
 <?php
 include_once("thumbnail.php");
 
-$images = "Bilder/thumbs/";                # Location of small versions
-$big    = "Bilder/";                       # Location of big versions (assumed to be a subdir of above)
+$images = "Bilder/thumbs/";         # Location of small versions
+$big    = "Bilder/";                # Location of big versions (assumed to be a subdir of above)
 $cols   = 3;                        # Number of columns to display
-$files  = get_img_list("Bilder");   # List of the files from disk
+$files  = null;   # List of the files from disk
 
 // Transformation array to string
     function array_to_string($array)
@@ -27,11 +27,18 @@ $files  = get_img_list("Bilder");   # List of the files from disk
                 </script>
             ");
     }
-	
-// check images which are not registered in database and add them to the db
-    function check_for_new_img($dir)
+
+    function check_img_modification($dir)
     {
-        $files_on_disc  = $GLOBALS['files'];
+        global $files;
+        $files  = get_img_list($dir);
+        check_for_new_img($files);
+        check_for_del_img($files);
+    }
+
+// check images which are not registered in database and add them to the db
+    function check_for_new_img($files_on_disc)
+    {
         $files_in_db    = db_select('file_liste', 'filename');
 
         if      ($files_on_disc <> null & $files_in_db == null){
@@ -53,9 +60,8 @@ $files  = get_img_list("Bilder");   # List of the files from disk
     }
 
 // check images which are deleted from disc and delete them from the db.
-    function check_for_del_img($dir)
+    function check_for_del_img($files_on_disc)
     {
-        $files_on_disc  = $GLOBALS['files'];
         $files_in_db    = db_select('file_liste', 'filename');
 
         if ($files_on_disc == null & $files_in_db <> null){
@@ -67,7 +73,7 @@ $files  = get_img_list("Bilder");   # List of the files from disk
         }
         foreach($result as $rslt)
         {
-            unlink($GLOBALS['files'].$rslt);
+            unlink($GLOBALS['images'].$rslt);
             db_delete('file_liste', 'filename', $rslt);
         }
     }
@@ -84,7 +90,7 @@ $files  = get_img_list("Bilder");   # List of the files from disk
                     if (file_exists($big.$_FILES["bildefil"]["name"][$i]))
                     {
                         $files_not_add = $files_not_add."\\n ".$_FILES["bildefil"]["name"][$i];
-                    }elseif (!move_uploaded_file($file, $images."/".$_FILES["bildefil"]["name"][$i])){
+                    }elseif (!move_uploaded_file($file, $big.$_FILES["bildefil"]["name"][$i])){
                         alert_message("Alt gikk galt. :-(");
                     }else{
                         $files_add = $files_add."\\n ".$_FILES["bildefil"]["name"][$i].". \\t\\tSeze: ".round(($_FILES["bildefil"]["size"][$i] / 1024),2)."KB";
@@ -92,9 +98,9 @@ $files  = get_img_list("Bilder");   # List of the files from disk
                         createThumbs($_FILES["bildefil"]["name"][$i], $big, "Bilder/thumbs/", 200);
                         if ($GLOBALS['db_is_connected'])
                         {
-                            if (db_insert('file_liste', 'filename', $_FILES["bildefil"]["name"][$i]))
+                            if (!db_insert('file_liste', 'filename', $_FILES["bildefil"]["name"][$i]))
                             {
-                                alert_message($_FILES["bildefil"]["name"][$i].' was downloaded . \r\n Inserted into database.');
+                                alert_message('ERROR. can\'t insert into database.');
                             };
                         }
                     }
@@ -110,11 +116,8 @@ $files  = get_img_list("Bilder");   # List of the files from disk
         global $images, $big, $cols, $files;
         $colCtr = 0;
         $gallery = "";
-        if ($GLOBALS['db_is_connected'])
-        {
-            check_for_new_img('Bilder');
-            check_for_del_img('Bilder');
-        }
+//        $files  = get_img_list("Bilder");
+
         if ($files != null)
         {
             $gallery =  '
