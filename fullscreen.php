@@ -15,6 +15,7 @@
                     <h1>Fullscreenview</h1>
                    </div>
            
+           
            <!rødt felt>
            <div id="fullscreenpic">
                <?php
@@ -52,10 +53,9 @@
     </span>
                    
                    <!kommentarfelt>
-                   <textarea rows="1" cols="120" placeholder="Kommentar"></textarea>
-                   
+                   <textarea rows="1,5" cols="120" placeholder="Comment"></textarea>
                    <!toolsbutton>
-                   <input type="button" style="background-color:pink; width:100px;" value="Tools"></button>
+                   <input type="button" style="background-color:light grey; width:100px;" value="Tools"></button>
                </div>
                
                <!brunt felt>

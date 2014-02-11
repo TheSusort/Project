@@ -1,7 +1,7 @@
 body {
     margin: 0 auto 20px;
     padding: 0;
-    background-image:url('img/background.jpg');
+    background-image:url('img/backgroundgreen.jpg');
     text-align: center;
 }
 
@@ -27,6 +27,7 @@ h1 {
 
 #title {
     width:100%;
+    height:40px;
     border-style:dotted;
     border-color:blue;
 }
@@ -104,6 +105,7 @@ h1 {
 }
 
 #toprow {
+    display: inline-block;
     width:100%;
     height:50%;
     border-style:dotted;
@@ -141,3 +143,9 @@ h1 {
       }
 
 
+
+.descriptionarea {
+    min-width: 490px;
+    position: relative;
+    display: inline-block;
+}
