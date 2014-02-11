@@ -3,7 +3,7 @@
     include_once("thumbnail.php");
 
 	$mappeForBilder = "Bilder/";
-
+	
 	if (count($_FILES["bildefil"]["tmp_name"]))
 	{
 		for ($i = 0; count($_FILES["bildefil"]["tmp_name"]) > $i; $i++)

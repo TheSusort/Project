@@ -6,10 +6,8 @@
  * Time: 11:12
  */
 
-$db_is_connected = false;
-include_once('funksjoner.php');
-
 //  Connection to data base;
+    $db_is_connected = false;
     function db_connnect()
     {
         global $db;
@@ -102,5 +100,28 @@ include_once('funksjoner.php');
         }
         return $result;
     }
+
+// Transformation array to string
+    function array_to_string($array)
+    {
+        reset($array);
+        $str = current($array);
+        while (next($array) <> null)
+        {
+            $str = "$str, ". current($array);
+        }
+        return $str;
+    }
+
+// Show message in the new window
+    function alert_message($message)
+    {
+        echo("
+                <script type=\"text/javascript\">
+                    alert(\"$message\");
+                </script>
+            ");
+    }
+
 
 ?>
