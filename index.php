@@ -1,13 +1,6 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-	<title>Gruppe F's fantastiske løsning til å laste opp filer</title>
-	<link rel="stylesheet" href="style.css">
-</head>
-<!-------------------------------------------------------------------------------------->
-<body>
-	<?php
+﻿<?php
 		include_once("Metadata.php");
+<<<<<<< HEAD
 		include_once("Bildeviser.php");
         include_once("mysql.php")
 	?>
@@ -44,11 +37,26 @@
 					VisBilder();
 				?> 
         </div>
+=======
+        include_once("mysql.php");
+		include_once("funksjoner.php");
+		db_connnect();
+		$main = file_get_contents('main.html');
+
+		if ($_FILES != null){
+			save_file();
+		}
 		
-        <div id="terriblemusic">
-<!--	               <embed height="50" width="100" src="Kalimba.mp3" style= visibilty: hidden>-->
-        </div>
-        
-    </div>
-</body>
-</html>
+		if ($GLOBALS['db_is_connected'])
+        {
+            check_img_modification('Bilder');
+        }
+		$gallery = VisBilder();
+		$tags = get_tags();
+		$main = preg_replace('/#gallery#/', $gallery, $main);
+        $tags_str = array_to_string($tags);
+        $main = preg_replace('/#tags#/', $tags_str, $main);
+		echo($main);	//displays the contents of the file main.html
+>>>>>>> origin/tihan-code
+		
+	?>

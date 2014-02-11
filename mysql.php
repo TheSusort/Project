@@ -6,8 +6,10 @@
  * Time: 11:12
  */
 
+$db_is_connected = false;
+include_once('funksjoner.php');
+
 //  Connection to data base;
-    $db_is_connected = false;
     function db_connnect()
     {
         global $db;
@@ -32,22 +34,22 @@
         if (!$db_is_connected)
         {
             alert_message("Error: Could not connect to database.");
-            return;
+            return FALSE;
 //            exit(alert_message("Error: Could not connect to database."));
         }elseif(count($column) <> count($value))
         {
             alert_message("SQL insert query is incorrect");
-            exit;
+            return FALSE;
         }else
         {
             $query = "INSERT INTO $table($column) VALUES ('$value');";
             $result = $db->query($query);
             if ($result)
             {
-                alert_message($value.' was downloaded manually. \r\n Inserted into database.');
+                return TRUE;
             }
         }
-        return;
+        return FALSE;
     }
 
 // Delete data from database
@@ -76,52 +78,31 @@
 }
 
 // Select data from database
-    function db_select($table, $column)
+    function db_select($table, $column, $group, $ret)
     {
         $result = null;
         global $db_is_connected, $db;
         if (!$db_is_connected)
         {
             alert_message("Error: Could not connect ot database.");
-            return;
+            return FALSE;
 //            exit(alert_message("Error: Could not connect ot database."));
         }else
         {
-            $query = "SELECT $column FROM $table ;";
+            $query = "SELECT $column FROM $table GROUP BY $group;";
             $rslt = $db->query($query);
             if (!$rslt)
             {
                 alert_message($query." isn't correct .");
+                return FALSE;
             }else{
                 while ($row = $rslt->fetch_assoc()) {
-                    $result[] = $row['filename'];
+                    $result[] = $row["$ret"];
                 }
+                return $result;
             }
         }
-        return $result;
+        return FALSE;
     }
-
-// Transformation array to string
-    function array_to_string($array)
-    {
-        reset($array);
-        $str = current($array);
-        while (next($array) <> null)
-        {
-            $str = "$str, ". current($array);
-        }
-        return $str;
-    }
-
-// Show message in the new window
-    function alert_message($message)
-    {
-        echo("
-                <script type=\"text/javascript\">
-                    alert(\"$message\");
-                </script>
-            ");
-    }
-
 
 ?>
