@@ -26,6 +26,9 @@
            </div>
        
            <!grønt felt>
+          
+           
+           
            <div id="buttons">
                
                <!gult felt>
@@ -35,9 +38,10 @@
                    
                    <!ratingknapper>
                    <span class="rating">
+                       
         <input type="radio" class="rating-input"
             id="rating-input-1-5" name="rating-input-1">
-        <label for="rating-input-1-5" class="rating-star"></label>
+        <label for="rating-input-1-5" class="rating-star"; ></label>
         <input type="radio" class="rating-input"
             id="rating-input-1-4" name="rating-input-1">
         <label for="rating-input-1-4" class="rating-star"></label>
@@ -50,20 +54,25 @@
         <input type="radio" class="rating-input"
             id="rating-input-1-1" name="rating-input-1">
         <label for="rating-input-1-1" class="rating-star"></label>
+                       
     </span>
                    
                    <!kommentarfelt>
-                   <textarea rows="1,5" cols="120" placeholder="Comment"></textarea>
+                   <textarea rows="1,5" cols="100" placeholder="Comment"></textarea>
                    <!toolsbutton>
-                   <input type="button" style="background-color:light grey; width:100px;" value="Tools"></button>
+                   <input type="button" style="background-color:lightgrey; width:100px; position: absolute;" value="Tools">
+                   
                </div>
-               
+                      
+           
+           
+           
+           
+           
                <!brunt felt>
-               <div id="bottomrow">
-                   
-                   <!tagfelt>
-                   <textarea rows="1" cols="20" placeholder="Tags"></textarea>
-                   
+               <div id="bottomrow">    
+                <!tagfelt>
+                   <textarea rows="1,5" cols="30" placeholder="Tags"></textarea>
                </div>
             
            </div>
