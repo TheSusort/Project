@@ -129,7 +129,7 @@ $files  = null;                     # List of the files from disk
         }
 
 // Generate HTML cod for gallery. Return sting.
-    function VisBilder()
+    function VisBilder($files)
     {
         global $images, $big, $cols, $files;
         $colCtr = 0;
@@ -174,16 +174,24 @@ $files  = null;                     # List of the files from disk
 // Generate HTML cod for tags list
 	function gen_tags()
 	{
-		$tags_str = "<ul>\n\r";
+		$tags_str = "<ul class=\"nav\">\n\r";
 		$tags = get_tags();
+		$tags_str = $tags_str."<li><a href=\"index.php\"><span>All</span></a></li>\r\n";
 		if (!empty($tags)){
 			foreach($tags as $tag)
 			{
-				$tags_str = $tags_str."<li><a href=\"#\"><span>".$tag."</span></a></li>\r\n";
+				$tags_str = $tags_str."<li><a href=\"?tag=$tag\"><span>".$tag."</span></a></li>\r\n";
 			}
 		}
 		$tags_str = $tags_str."</ul>";
 		return $tags_str;
+	}
+
+// 
+	function get_img_by_tag($tag)
+	{
+		$files = db_select('file_liste', 'filename', 'INNER JOIN tag ON file_liste.fileid = tag.fileid WHERE tag.tags = \''.$tag.'\'', 'filename');
+		return $files;
 	}
 
 // return array of files names from dir.

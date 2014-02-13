@@ -144,7 +144,7 @@ h1 {
           display: block;
           width: 16px;
           height: 16px;
-          background: url('http://kubyshkin.ru/samples/star-rating/star.png') 0 -16px;
+          background: url('img/star.png') 0 -16px;
       }
 
 .descriptionarea {
@@ -153,73 +153,40 @@ h1 {
     display: inline-block;
 }
 
-#menu{
-		width:206px;
-		margin:-10px;
-	}
-		#menu ul{
-			list-style:none;
-		}
-			#menu li{
-				list-style:none;
-				display:block;
-				line-height:32px;
-				height:32px;
-				margin:10px 0;
-				width:206px;			
-			}
-				#menu li a{
-					display:block;
-					height:32px;
-					text-transform:uppercase;
-					font-size:10px;
-					font-weight:bold;
-					line-height:32px;
-					padding:0 0 0 25px;
-					text-decoration:none;
-					color:#808080;
-					cursor:pointer;
-					background:url(images/menu_014_l.jpg) no-repeat left;
-				}
-				#menu li a span{
-					display:block;
-					height:32px;
-					line-height:32px;
-					padding:0 105px 0 20px;
-					color:#808080;
-					background:url(images/menu_014_r.jpg) no-repeat right;										
-				}
-					#menu li a:hover{
-						display:block;
-						background:url(images/menu_014_h_l.jpg) no-repeat left;
-						height:32px;
-						color:#676767;
-					}
-					#menu li a:hover span{
-						display:block;
-						float:left;					
-						background:url(images/menu_014_h_r.jpg) no-repeat right;
-						color:#676767;
-						height:32px;
-					}
-				#menu li a.current, #menu li a.current:hover{
-					display:block;
-					height:32px;
-					color:#676767;
-					text-transform:uppercase;
-					font-size:11px;
-					font-weight:bold;
-					background:url(images/menu_014_h_l.jpg) no-repeat left;
-					line-height:32px;
-					padding:0 0 0 25px;
-					text-decoration:none;
-				}
-				#menu li a.current span, #menu li a.current:hover span{					
-					display:block;
-					float:left;
-					background:url(images/menu_014_h_r.jpg) no-repeat right;
-					height:32px;
-					color:#676767;
-					line-height:32px;
-					padding:0 130px 0 20px;
-				}
+.navbox {
+	position: relative;
+	float: left;
+}
+
+ul.nav {
+	list-style: none;
+	display: block;
+	width: 200px;
+	position: relative;
+	top: 0px;
+	left: 10px;
+	padding: 0 0 60px 0;
+}
+
+li {
+	margin: 5px 0 0 0;
+}
+
+ul.nav li a {
+	-webkit-transition: all 0.3s ease-out;
+	background: #cbcbcb no-repeat;
+	color: #174867;
+	padding: 7px 15px 7px 0;
+	-webkit-border-top-right-radius: 10px;
+ 	-webkit-border-bottom-right-radius: 10px;
+	width: 100px;
+	display: block;
+	text-decoration: none;
+	-webkit-box-shadow: 2px 2px 4px #888;
+}
+
+ul.nav li a:hover {
+	background: #ebebeb no-repeat;
+	color: #67a5cd;
+	padding: 7px 15px 7px 30px;
+}

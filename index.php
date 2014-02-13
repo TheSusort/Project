@@ -9,14 +9,19 @@
     if ($_FILES != null){
         $message = "$message".save_file();
     }
-
+	
     if ($GLOBALS['db_is_connected'])
     {
         $message = $message.check_img_modification('Bilder/');
     }
-
-    $gallery = VisBilder();
-    $main = preg_replace('/#gallery#/', $gallery, $main);
+	
+	if (!empty($_GET['tag'])){
+		$files = get_img_by_tag($_GET['tag']);
+		$gallery = VisBilder($files);
+	}else{
+		$gallery = VisBilder("");
+	}
+	$main = preg_replace('/#gallery#/', $gallery, $main);
 
     $tags_str = gen_tags();
     $main = preg_replace('/#tags#/', $tags_str, $main);
