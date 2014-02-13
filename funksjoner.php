@@ -27,6 +27,7 @@ $files  = null;                     # List of the files from disk
             ");
     }
 
+	// Check for image modification
     function check_img_modification($dir)
     {
         global $files;
@@ -91,40 +92,43 @@ $files  = null;                     # List of the files from disk
             $files = db_select('file_liste', 'filename', 'ORDER BY rating', 'filename');
         }
     }
-
+	
+// Upload files
     function save_file()
         {
             global $images, $big;
             $i=0;
-            $files_add = "\\tLagres paa serveren:\\n";
-            $files_not_add = "\\n\\n\\tVar samme navn som en annen fil:\\n";
+            $files_add = '\tLagres paa serveren:\n';
+            $files_not_add = '\n\n\tVar samme navn som en annen fil:\n';
             if (!empty($_FILES["bildefil"]["tmp_name"][0])){
                 foreach ($_FILES["bildefil"]["tmp_name"] as $file)
                 {
                     if (file_exists($big.$_FILES["bildefil"]["name"][$i]))
                     {
-                        $files_not_add = $files_not_add."\\n ".$_FILES["bildefil"]["name"][$i];
+                        $files_not_add = $files_not_add.'\n '.$_FILES["bildefil"]["name"][$i];
                     }elseif (!move_uploaded_file($file, $big.$_FILES["bildefil"]["name"][$i])){
                         alert_message("Alt gikk galt. :-(");
+                        return FALSE;
                     }else{
-                        $files_add = $files_add."\\n ".$_FILES["bildefil"]["name"][$i].". \\t\\tSeze: ".round(($_FILES["bildefil"]["size"][$i] / 1024),2)."KB";
+                        $files_add = $files_add.'\n'.$_FILES["bildefil"]["name"][$i].'. \t\tSeze: '.round(($_FILES["bildefil"]["size"][$i] / 1024),2)."KB";
                         //lager thumbnail av bilde
-                        createThumbs($_FILES["bildefil"]["name"][$i], $big, "Bilder/thumbs/", 200);
+                        createThumbs($_FILES["bildefil"]["name"][$i], $big, $images, 200);
                         if ($GLOBALS['db_is_connected'])
                         {
                             if (!db_insert('file_liste', 'filename', $_FILES["bildefil"]["name"][$i]))
                             {
                                 alert_message('ERROR. can\'t insert into database.');
+                                return FALSE;
                             };
                         }
                     }
                     $i++;
                 }
-
-                alert_message("$files_add"."$files_not_add");
+                return "$files_add"."$files_not_add";
             }
         }
 
+// Generate HTML cod for gallery. Return sting.
     function VisBilder()
     {
         global $images, $big, $cols, $files;
@@ -167,7 +171,22 @@ $files  = null;                     # List of the files from disk
         return $gallery;
     }
 
-    // return array of files names from dir.
+// Generate HTML cod for tags list
+	function gen_tags()
+	{
+		$tags_str = "<ul>\n\r";
+		$tags = get_tags();
+		if (!empty($tags)){
+			foreach($tags as $tag)
+			{
+				$tags_str = $tags_str."<li><a href=\"#\"><span>".$tag."</span></a></li>\r\n";
+			}
+		}
+		$tags_str = $tags_str."</ul>";
+		return $tags_str;
+	}
+
+// return array of files names from dir.
     function get_File_List($big, $images)
     {
         if ($handle = opendir($images)) {
@@ -181,7 +200,7 @@ $files  = null;                     # List of the files from disk
         return $files;
     }
 
-    // return array of .jpg and .bmp files names from dir.
+// return array of .jpg and .bmp files names from dir.
     function get_img_list($dir)
     {
         $f = scandir($dir);
@@ -194,12 +213,15 @@ $files  = null;                     # List of the files from disk
         return $files;
     }
 
+// Get tags list from db
+//	return: tags list [array]
     function get_tags()
     {
         $tag_list = db_select('tag', 'tags', 'GROUP BY tags', 'tags');
         return $tag_list;
     }
 
+// Generate Thumbs
     function createThumbs($filename, $path_to_image_directory, $path_to_thumbs_directory, $final_width_of_image) {
 
         //sjekker hva slags bilde det er snakk om, og loader det.
@@ -230,7 +252,6 @@ $files  = null;                     # List of the files from disk
         }
         //lagrer thumbnailen til mappe.
         imagejpeg($nm, $path_to_thumbs_directory . $filename);
-
-}
+	}
 
 ?>
