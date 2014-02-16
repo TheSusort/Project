@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
     <html>
     <head>
         <title>fullscreen</title>
@@ -6,7 +6,14 @@
     </head>
     <!-------------------------------------------------------------------------------------->
     <body>
-        
+
+    
+    <?php
+    include_once("Metadata.php");
+    include_once("mysql.php");
+    include_once("funksjoner.php");
+    db_connnect();
+    ?>
         
        <div id="containermain">
            
@@ -27,6 +34,7 @@
            
            </div>
 
+          
            <form action="NextPrevButton">
 <input type="image" src="Lbutton.png" alt="Submit" width="40" height="40">
 <input type="image" src="Rbutton.png" alt="Submit" width="40" height="40">
@@ -68,7 +76,7 @@
                    <!kommentarfelt>
                    <textarea rows="1,5" cols="100" placeholder="Comment"></textarea>
                    <!toolsbutton>
-                   <input type="button" style="background-color:lightgrey; width:100px; position: absolute;" value="Tools">
+                   <input type="button" style="background-color:lightgrey; width:80px; position: absolute;" value="Tools">
                    
                </div>
                       
@@ -80,7 +88,47 @@
                <!brunt felt>
                <div id="bottomrow">    
                 <!tagfelt>
-                   <textarea rows="1,5" cols="30" placeholder="Tags"></textarea>
+                   
+                   <?php
+                   
+                   echo '<form action="" method="post">
+                       <input type="text" name="tag" />
+                       <input type="submit" value="Tag!" />
+                    </form>'
+                    ;
+            
+            $currentImage = substr($_GET['bilde'],7);
+            print_r($currentImage);
+            
+            
+            
+            $query1 = "SELECT fileid FROM file_liste WHERE filename='$currentImage'";
+            print "the query is<i>$query1</i>";
+
+            $result1 = mysql_query($query1);
+            
+            if($result1) {
+                while ($row = mysql_fetch_row($result1)) {
+                    print '<tr>';
+                    foreach ($row as $field) {
+                        print "<td> $field</td>";
+                    }
+                    print '</tr>';
+                    
+                    }
+                } else { die ("query= $query1 Failed");}
+
+                       
+
+            
+
+
+            $svaret = $_POST['tag'];
+            $query = "INSERT INTO tag(fileid, tags) VALUES ('$result1' , '$svaret')";
+            $result = $db->query($query);
+
+
+                   ?>  
                    
                </div>
                
