@@ -85,6 +85,8 @@ h1 {
     border-style:dotted;
     border-color:red;
     height:500px;
+    position: relative;
+  
 }
 
 #butans {
@@ -189,4 +191,9 @@ ul.nav li a:hover {
 	background: #ebebeb no-repeat;
 	color: #67a5cd;
 	padding: 7px 15px 7px 30px;
+}
+#next {
+
+    z-index: 9999;
+}
 }
