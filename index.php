@@ -7,12 +7,15 @@
     $message = "";
 
     if ($_FILES != null){
-        $message = "$message".save_file();
+        $message = $message.save_file();
     }
 	
     if ($GLOBALS['db_is_connected'])
     {
-        $message = $message.check_img_modification('Bilder/');
+		$mdf = check_img_modification('Bilder/');
+		if ($mdf){
+			$message = $message.'\n'.$mdf;
+		}
     }
 	
 	if (!empty($_GET['tag'])){
@@ -21,6 +24,7 @@
 	}else{
 		$gallery = VisBilder("");
 	}
+	
 	$main = preg_replace('/#gallery#/', $gallery, $main);
 
     $tags_str = gen_tags();
