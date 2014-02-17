@@ -31,13 +31,17 @@ $files  = null;                     # List of the files from disk
     function check_img_modification($dir)
     {
         global $files;
+		$message = '';
         $files_on_disc  = get_img_list($dir);
         $files_in_db    = db_select('file_liste', 'filename', 'ORDER BY rating', 'filename');
-        check_for_new_img($files_on_disc, $files_in_db);
-        check_for_del_img($files_on_disc, $files_in_db);
+		$new = check_for_new_img($files_on_disc, $files_in_db);
+		$del = check_for_del_img($files_on_disc, $files_in_db);
+		if ($new) { $message = $message . $new;}
+        if ($del) { $message = $message . '\n' . $del;}
         if ($files == null){
             $files = $files_in_db;
         }
+		return $message;
     }
 
 // check images which are not registered in database and add them to the db
@@ -45,7 +49,7 @@ $files  = null;                     # List of the files from disk
     {
         global $files, $big, $images;
         $result = null;
-        $files_add = 'Downloaded manually:';
+        $files_new_str = 'Downloaded manually:';
         if ($files_on_disc <> null & $files_in_db == null){
             $result = $files_on_disc;
         }elseif ($files_on_disc <> null & $files_in_db <> null){
@@ -57,13 +61,13 @@ $files  = null;                     # List of the files from disk
         {
             if (db_insert('file_liste', 'filename', $rslt))
             {
-                $files_add = $files_add.'\n\t'.$rslt;
+                $files_new_str = $files_new_str.'\n\t'.$rslt;
                 createThumbs($rslt, $big, $images, 200);
             }
         }
         if (!empty($result)){
-            alert_message($files_add);
             $files = db_select('file_liste', 'filename', 'ORDER BY rating', 'filename');
+			return $files_new_str;
         }
     }
 
@@ -72,7 +76,7 @@ $files  = null;                     # List of the files from disk
     {
         global $files, $images;
         $result = null;
-        $files_del = 'Was deleted manually:';
+        $files_del_str = 'Was deleted manually:';
         if ($files_on_disc == null & $files_in_db <> null){
             $result = $files_in_db;
         }elseif($files_on_disc <> null & $files_in_db <> null){
@@ -83,13 +87,16 @@ $files  = null;                     # List of the files from disk
         foreach($result as $rslt)
         {
             if(db_delete('file_liste', 'filename', $rslt)){
-                $files_del = $files_del.'\n\t'.$rslt;
-                unlink($images.$rslt);
+                $files_del_str = $files_del_str.'\n\t'.$rslt;
+				if (file_exists($images.$rslt))
+				{
+					unlink($images.$rslt);
+				}
             }
         }
         if (!empty($result)){
-            alert_message($files_del);
             $files = db_select('file_liste', 'filename', 'ORDER BY rating', 'filename');
+			return $files_del_str;
         }
     }
 	
@@ -98,6 +105,8 @@ $files  = null;                     # List of the files from disk
         {
             global $images, $big;
             $i=0;
+			$add = FALSE;
+			$not_add = FALSE;
             $files_add = '\tLagres paa serveren:\n';
             $files_not_add = '\n\n\tVar samme navn som en annen fil:\n';
             if (!empty($_FILES["bildefil"]["tmp_name"][0])){
@@ -106,11 +115,13 @@ $files  = null;                     # List of the files from disk
                     if (file_exists($big.$_FILES["bildefil"]["name"][$i]))
                     {
                         $files_not_add = $files_not_add.'\n '.$_FILES["bildefil"]["name"][$i];
+						$n = TRUE;
                     }elseif (!move_uploaded_file($file, $big.$_FILES["bildefil"]["name"][$i])){
                         alert_message("Alt gikk galt. :-(");
                         return FALSE;
                     }else{
                         $files_add = $files_add.'\n'.$_FILES["bildefil"]["name"][$i].'. \t\tSeze: '.round(($_FILES["bildefil"]["size"][$i] / 1024),2)."KB";
+						$add = TRUE;
                         //lager thumbnail av bilde
                         createThumbs($_FILES["bildefil"]["name"][$i], $big, $images, 200);
                         if ($GLOBALS['db_is_connected'])
@@ -124,7 +135,15 @@ $files  = null;                     # List of the files from disk
                     }
                     $i++;
                 }
-                return "$files_add"."$files_not_add";
+				if ($add && $not_add){
+					return $files_add.$files_not_add;
+				}elseif($add){
+					return $files_add;
+				}elseif($not_add){
+					return $files_not_add;
+				}else{
+					return FALSE;
+				}
             }
         }
 
@@ -134,7 +153,10 @@ $files  = null;                     # List of the files from disk
         global $images, $big, $cols, $files;
         $colCtr = 0;
         $gallery = "";
-        if ($files != null)
+        if (empty($files)){
+			$files = get_img_list($big);
+		}
+		if (!empty($files))
         {
             $gallery =  '
                 <table width="100%" cellspacing="3">
