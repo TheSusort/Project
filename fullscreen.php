@@ -99,36 +99,25 @@
             
             $currentImage = substr($_GET['bilde'],7);
             print_r($currentImage);
-            
-            
-            
+
             $query1 = "SELECT fileid FROM file_liste WHERE filename='$currentImage'";
-            print "the query is<i>$query1</i>";
-
-            $result1 = mysql_query($query1);
-            
-            if($result1) {
-                while ($row = mysql_fetch_row($result1)) {
-                    print '<tr>';
-                    foreach ($row as $field) {
-                        print "<td> $field</td>";
-                    }
-                    print '</tr>';
-                    
-                    }
-                } else { die ("query= $query1 Failed");}
-
-                       
-
-            
-
-
-            $svaret = $_POST['tag'];
-            $query = "INSERT INTO tag(fileid, tags) VALUES ('$result1' , '$svaret')";
-            $result = $db->query($query);
-
-
-                   ?>  
+            $result1 = $db->query($query1);
+         	
+			
+			if (!empty($result1)){
+			foreach($result1 as $rr)
+			{
+				$result3 = (array_to_string($rr));
+			}
+		}
+			
+			if(!empty($_POST['tag'])){
+				$svaret = $_POST['tag'];
+				$query = "INSERT INTO tag(fileid, tags) VALUES ($result3 , '$svaret')";
+				$result = $db->query($query);
+			}
+			
+			?>  
                    
                </div>
                
