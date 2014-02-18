@@ -193,7 +193,7 @@ $files  = null;                     # List of the files from disk
                         <tr>';
                 $gallery = $gallery. '
                             <td id="bilde" align="center" 
-									onClick=onClick=viuwEXIF("'.$big.$file.'")
+									onClick=viuwEXIF("'.$big.$file.'")
 									onDblClick = openFulskr("'.$big.$file.'")>
 								<img src="' . $images . $file . '" />
                             </td>';
