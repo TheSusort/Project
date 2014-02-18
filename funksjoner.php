@@ -192,11 +192,12 @@ $files  = null;                     # List of the files from disk
                         </tr>
                         <tr>';
                 $gallery = $gallery. '
-                            <td id="bilde" align="center">
-                                <a href="fullscreen.php?bilde='.$big.$file.'" target="_blank">
-                                    <img src="' . $images . $file . '" />
-                                </a>
+                            <td id="bilde" align="center" 
+									onClick=onClick=viuwEXIF("'.$big.$file.'")
+									onDblClick = openFulskr("'.$big.$file.'")>
+								<img src="' . $images . $file . '" />
                             </td>';
+							// viuwEXIF("'.get_EXIF($big.$file).'") 
                 $colCtr++;
             }
 
@@ -221,13 +222,31 @@ $files  = null;                     # List of the files from disk
 		return $tags_str;
 	}
 
-// 
+// get images list by tag
 	function get_img_by_tag($tag)
 	{
 		$files = db_select('file_liste', 'filename', 'INNER JOIN tag ON file_liste.fileid = tag.fileid WHERE tag.tags = \''.$tag.'\'', 'filename');
 		return $files;
 	}
 
+// get EXIF data
+	function get_EXIF($file)
+	{
+		$type = array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_TIFF_II, IMAGETYPE_TIFF_MM);
+		// foreach($files as $file){
+			if (in_array(exif_imagetype($file), $type, TRUE)) {
+				$exif = exif_read_data($file, 'IFD0');
+				if ($exif===false){ echo("EXIF feil");}
+				$exif = exif_read_data($file, 0, true);
+				foreach ($exif as $key => $section) {
+					foreach ($section as $name => $val) {
+						echo "$key.$name: $val<br />\n";
+					}
+				}
+			}
+		// }
+	}
+	
 // return array of files names from dir.
     function get_File_List($big, $images)
     {
@@ -258,11 +277,7 @@ $files  = null;                     # List of the files from disk
 //Sjekke at bildet er en støttet type
 	function check_img($img_name)
 	{
-		if(preg_match("/\.jp.?g$|
-						\.png$|
-						\.gif$|
-						\.ti.?f$/i", 
-						$img_name))
+		if(preg_match("/\.jp.?g$|\.png$|\.gif$|\.ti.?f$/i", $img_name))
 		{
 			return TRUE;
         }
