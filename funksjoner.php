@@ -102,50 +102,62 @@ $files  = null;                     # List of the files from disk
 	
 // Upload files
     function save_file()
-        {
-            global $images, $big;
-            $i=0;
-			$add = FALSE;
-			$not_add = FALSE;
-            $files_add = '\tLagres paa serveren:\n';
-            $files_not_add = '\n\n\tVar samme navn som en annen fil:\n';
-            if (!empty($_FILES["bildefil"]["tmp_name"][0])){
-                foreach ($_FILES["bildefil"]["tmp_name"] as $file)
-                {
-                    if (file_exists($big.$_FILES["bildefil"]["name"][$i]))
-                    {
-                        $files_not_add = $files_not_add.'\n '.$_FILES["bildefil"]["name"][$i];
+	{
+		global $images, $big;
+		$i=0;
+		$add = FALSE;
+		$not_add = FALSE;
+		$files_add = '\tLagres paa serveren:\n';
+		$files_not_add = '\n\n\tVar samme navn som en annen fil:\n';
+		$file_name = $_FILES["bildefil"]["name"];
+		$file_tmp_name = $_FILES["bildefil"]["tmp_name"];
+		
+		if (!empty($file_tmp_name[0])){
+			foreach ($file_tmp_name as $file)
+			{
+				if (check_img($file_name[$i])){
+					if (file_exists($big.$file_name[$i]))
+					{
+						$files_not_add = $files_not_add.'\n '.$file_name[$i];
 						$n = TRUE;
-                    }elseif (!move_uploaded_file($file, $big.$_FILES["bildefil"]["name"][$i])){
-                        alert_message("Alt gikk galt. :-(");
-                        return FALSE;
-                    }else{
-                        $files_add = $files_add.'\n'.$_FILES["bildefil"]["name"][$i].'. \t\tSeze: '.round(($_FILES["bildefil"]["size"][$i] / 1024),2)."KB";
+					}elseif (!move_uploaded_file($file, $big.$file_name[$i]))
+					{
+						alert_message("Alt gikk galt. :-(");
+						return FALSE;
+					}elseif (check_img($file_name[$i]))
+					{
+						$files_add = $files_add.'\n'.$file_name[$i].
+									'.\tSeze: '.round(($_FILES["bildefil"]["size"][$i] / 1024),2)."KB";
 						$add = TRUE;
-                        //lager thumbnail av bilde
-                        createThumbs($_FILES["bildefil"]["name"][$i], $big, $images, 200);
-                        if ($GLOBALS['db_is_connected'])
-                        {
-                            if (!db_insert('file_liste', 'filename', $_FILES["bildefil"]["name"][$i]))
-                            {
-                                alert_message('ERROR. can\'t insert into database.');
-                                return FALSE;
-                            };
-                        }
-                    }
-                    $i++;
-                }
-				if ($add && $not_add){
-					return $files_add.$files_not_add;
-				}elseif($add){
-					return $files_add;
-				}elseif($not_add){
-					return $files_not_add;
-				}else{
-					return FALSE;
+						//lager thumbnail av bilde
+						createThumbs($file_name[$i], $big, $images, 200);
+						if ($GLOBALS['db_is_connected'])
+						{
+							if (!db_insert('file_liste', 'filename', $file_name[$i]))
+							{
+								alert_message('ERROR. can\'t insert into database.');
+								return FALSE;
+							};
+						}
+					}
+				}else
+				{
+					alert_message("Illegal image type. $file_name[$i]");
+					// return FALSE;
 				}
-            }
-        }
+				$i++;
+			}
+			if ($add && $not_add){
+				return $files_add.$files_not_add;
+			}elseif($add){
+				return $files_add;
+			}elseif($not_add){
+				return $files_not_add;
+			}else{
+				return FALSE;
+			}
+		}
+	}
 
 // Generate HTML cod for gallery. Return sting.
     function VisBilder($files)
@@ -236,13 +248,26 @@ $files  = null;                     # List of the files from disk
         $f = scandir($dir);
         $files = null;
         foreach ($f as $file){
-            if(preg_match("/\.jp.?g$|\.png$|\.gif$/i", $file)){
+            if(check_img($file)){
                 $files[] = $file;
             }
         }
         return $files;
     }
 
+//Sjekke at bildet er en støttet type
+	function check_img($img_name)
+	{
+		if(preg_match("/\.jp.?g$|
+						\.png$|
+						\.gif$|
+						\.ti.?f$/i", 
+						$img_name))
+		{
+			return TRUE;
+        }
+		return FALSE;
+	}
 // Get tags list from db
 //	return: tags list [array]
     function get_tags()
@@ -261,7 +286,10 @@ $files  = null;                     # List of the files from disk
             $im = imagecreatefromgif($path_to_image_directory . $filename);
         } else if (preg_match('/[.](png)$/i', $filename)) {
             $im = imagecreatefrompng($path_to_image_directory . $filename);
-        }
+        } elseif (preg_match('/[.](ti.?f)$/i', $filename)) {
+			
+			$im = imagecreatefromstring(file_get_contents($path_to_image_directory . $filename));
+		} else return FALSE;
 
         //finner dimensjoner
         $ox = imagesx($im);
