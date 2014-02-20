@@ -1,7 +1,7 @@
 body {
     margin: 0 auto 20px;
     padding: 0;
-    background-image:url('img/backgroundgreen.jpg');
+    background-color:#C0C0C0;
     background-repeat:round;
     background-attachment: fixed;
     text-align: center;
@@ -86,6 +86,7 @@ h1 {
     border-color:red;
     height:500px;
     position: relative;
+    
   
 }
 
@@ -196,4 +197,30 @@ ul.nav li a:hover {
 
     z-index: 9999;
 }
+}
+
+{
+    padding-left:20px;
+    background:transparent url(button.gif) no-repeat left top;
+
+}
+
+.o {
+        background:none;
+    border:none;
+    color:#ffffff;
+    font-weight:bold;
+    text-align:left;
+}
+button div.o{
+    padding-left:20px;
+    background:transparent url(button.gif) no-repeat left top;
+}
+button div.i{
+    padding-right:20px;
+    background:transparent url(button.gif) no-repeat right -36px;
+    height:36px;
+    line-height:36px;
+    white-space:nowrap;
+
 }

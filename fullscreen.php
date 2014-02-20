@@ -21,17 +21,23 @@
            <div id="title">
                     <h1>Fullscreenview</h1>
                    </div>
+               
+                     
+            <FORM action="CloseFullscreen">>
+                   <input type="image" src="closex.png" onClick="window.close('fs')" align="right" width="40" height="40">
+</FORM>
            
-           
-           <!rødt felt>
+         <!rødt felt>
            <div id="fullscreenpic">
                <?php
                     //print_r($_GET);
                     echo("<img src=".$_GET['bilde']." height=500px >");
                
                 ?>
-            
-           
+              
+               
+               
+               
            </div>
 
           
@@ -40,6 +46,7 @@
 <input type="image" src="Rbutton.png" alt="Submit" width="40" height="40">
                
 </form>
+           
        
            <!grønt felt>
           
