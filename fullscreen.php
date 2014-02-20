@@ -12,7 +12,20 @@
     include_once("Metadata.php");
     include_once("mysql.php");
     include_once("funksjoner.php");
+	include_once("fullscreen.php");
     db_connnect();
+	
+	$currentImage = substr($_GET['bilde'],7);
+	
+	$query1 = "SELECT fileid FROM file_liste WHERE filename='$currentImage'";
+					$result1 = $db->query($query1);
+         	
+					if (!empty($result1)){
+						foreach($result1 as $rr)
+						{
+							$result3 = (array_to_string($rr));
+						}	
+					}
     ?>
         
        <div id="containermain">
@@ -36,10 +49,77 @@
 
           
            <form action="NextPrevButton">
-<input type="image" src="Lbutton.png" alt="Submit" width="40" height="40">
-<input type="image" src="Rbutton.png" alt="Submit" width="40" height="40">
-               
-</form>
+				<input type="image" src="Lbutton.png" alt="Submit" width="40" height="40">
+				<input type="image" src="Rbutton.png" alt="Submit" width="40" height="40">
+			</form>               
+			   
+			   <div id="details">
+					<h3>Picture details</h3>
+					<b>Current file: </b>
+					<?php print_r($currentImage);?><br>
+					<b>Tags:</b>
+					
+					<?php 	
+					
+					$query2 = "SELECT tags FROM tag WHERE fileid=$result3";
+					$result2 = $db->query($query2);
+					if (!empty($result2)){
+						foreach($result2 as $rr)
+						{
+							print "#";
+							print_r(array_to_string($rr));
+							print " ";
+						}	
+					}
+					
+					?><br>
+					<b>Comment:</b>
+					
+					<?php 	
+					
+					$query2 = "SELECT commentary FROM file_liste WHERE fileid=$result3";
+					$result2 = $db->query($query2);
+					if (!empty($result2)){
+						foreach($result2 as $rr)
+						{
+							print_r(array_to_string($rr));
+							print " ";
+						}	
+					}
+					
+					?>
+					
+					<br>
+					<b>Rating:</b>
+					
+					<?php 	
+					
+					$query2 = "SELECT rating FROM file_liste WHERE fileid=$result3";
+					$result2 = $db->query($query2);
+					if (!empty($result2)){
+						foreach($result2 as $rr)
+						{
+							print_r(array_to_string($rr));
+							print " ";
+						}	
+					}
+				
+					
+					?>
+					
+					<?php
+					//	$rating = 'Not rated';
+					//	if(isset($_POST['ratinginput'])){
+					//		if(!empty($_POST['ratinginput'])){
+					//			$rating = $_POST['ratinginput'];
+					//		}
+					//	}
+					//	print_r($rating);
+					?>			
+					<br>
+			   </div>
+			   
+
        
            <!grønt felt>
           
@@ -53,31 +133,57 @@
                <div id="toprow">
                    
                    <!ratingknapper>
-                   <span class="rating">
-                       
-        <input type="radio" class="rating-input"
-            id="rating-input-1-5" name="rating-input-1">
-        <label for="rating-input-1-5" class="rating-star"; ></label>
-        <input type="radio" class="rating-input"
-            id="rating-input-1-4" name="rating-input-1">
-        <label for="rating-input-1-4" class="rating-star"></label>
-        <input type="radio" class="rating-input"
-            id="rating-input-1-3" name="rating-input-1">
-        <label for="rating-input-1-3" class="rating-star"></label>
-        <input type="radio" class="rating-input"
-            id="rating-input-1-2" name="rating-input-1">
-        <label for="rating-input-1-2" class="rating-star"></label>
-        <input type="radio" class="rating-input"
-            id="rating-input-1-1" name="rating-input-1">
-        <label for="rating-input-1-1" class="rating-star"></label>
-                       
-    </span>
+                
+				<form action="" method="post">	
+					<span class="rating"> 
+					<input type="radio" value="5" class="rating-input"
+						id="rating-input-1-5" name="ratinginput">
+					<label for="rating-input-1-5" class="rating-star"; ></label>
+					
+					<input type="radio" value="4" class="rating-input"
+						id="rating-input-1-4" name="ratinginput">
+					<label for="rating-input-1-4" class="rating-star"></label>
+					
+					<input type="radio" value="3" class="rating-input"
+						id="rating-input-1-3" name="ratinginput">
+					<label for="rating-input-1-3" class="rating-star"></label>
+					
+					<input type="radio" value="2" class="rating-input"
+						id="rating-input-1-2" name="ratinginput">
+					<label for="rating-input-1-2" class="rating-star"></label>
+					
+					<input type="radio" value="1" class="rating-input"
+						id="rating-input-1-1" name="ratinginput">
+					<label for="rating-input-1-1" class="rating-star"></label>
+				</span>
+					<input type='hidden' name='ratingid' id='rateingid' value='<?php echo $_GET["id"]; ?>' />
+					<input type="submit" name="submit" value="Rate!"></p>
+				</form>
+				
+				<?php
+					if(!empty($_POST['ratinginput'])){
+						$svaret = $_POST['ratinginput'];
+						$query = "UPDATE file_liste SET rating='$svaret' WHERE fileid=$result3";
+						$result = $db->query($query);
+					}
+				?>				
+				
+				
                    
                    <!kommentarfelt>
-                   <textarea rows="1,5" cols="100" placeholder="Comment"></textarea>
-                   <!toolsbutton>
-                   <input type="button" style="background-color:lightgrey; width:80px; position: absolute;" value="Tools">
-                   
+				   <form action="" method="post">
+                       <input type="text" name="comment" size="50"/>
+                       <input type="submit" value="Comment!" />
+                    </form>
+			
+					<?php
+					if(!empty($_POST['comment'])){
+						$svaret = $_POST['comment'];
+						$query = "UPDATE file_liste SET commentary='$svaret' WHERE fileid=$result3";
+						$result = $db->query($query);
+					}
+					?>
+					
                </div>
                       
            
@@ -96,28 +202,17 @@
                        <input type="submit" value="Tag!" />
                     </form>'
                     ;
-            
-            $currentImage = substr($_GET['bilde'],7);
-            print_r($currentImage);
-
-            $query1 = "SELECT fileid FROM file_liste WHERE filename='$currentImage'";
-            $result1 = $db->query($query1);
-         	
+  
+				
+					
 			
-			if (!empty($result1)){
-			foreach($result1 as $rr)
-			{
-				$result3 = (array_to_string($rr));
-			}
-		}
+					if(!empty($_POST['tag'])){
+						$svaret = $_POST['tag'];
+						$query = "INSERT INTO tag(fileid, tags) VALUES ($result3 , '$svaret')";
+						$result = $db->query($query);
+					}
 			
-			if(!empty($_POST['tag'])){
-				$svaret = $_POST['tag'];
-				$query = "INSERT INTO tag(fileid, tags) VALUES ($result3 , '$svaret')";
-				$result = $db->query($query);
-			}
-			
-			?>  
+					?>  
                    
                </div>
                
