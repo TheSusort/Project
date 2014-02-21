@@ -88,6 +88,7 @@
 					}
 					
 					?>
+					 
 					
 					<br>
 					<b>Rating:</b>
@@ -99,6 +100,7 @@
 					if (!empty($result2)){
 						foreach($result2 as $rr)
 						{
+							$currentRating = array_to_string($rr);
 							print_r(array_to_string($rr));
 							print " ";
 						}	
@@ -133,31 +135,47 @@
                <div id="toprow">
                    
                    <!ratingknapper>
-                
-				<form action="" method="post">	
+               
+				<?php
+				
+                $rating1=NULL;
+                $rating2=NULL;
+                $rating3=NULL;
+                $rating4=NULL;
+                $rating5=NULL;
+                if (strcmp($currentRating,"1") == 0) $rating1="checked";
+                if (strcmp($currentRating,"2") == 0) $rating2="checked";
+                if (strcmp($currentRating,"3") == 0) $rating3="checked";
+                if (strcmp($currentRating,"4") == 0) $rating4="checked";
+                if (strcmp($currentRating,"5") == 0) $rating5="checked";
+				echo '<form action="" method="post">	
 					<span class="rating"> 
 					<input type="radio" value="5" class="rating-input"
-						id="rating-input-1-5" name="ratinginput">
-					<label for="rating-input-1-5" class="rating-star"; ></label>
+						id="rating-input-1-5" name="ratinginput" '.$rating5.' >
+					<label for="rating-input-1-5" class="rating-star"></label>
 					
 					<input type="radio" value="4" class="rating-input"
-						id="rating-input-1-4" name="ratinginput">
+						id="rating-input-1-4" name="ratinginput" '.$rating4.' >
 					<label for="rating-input-1-4" class="rating-star"></label>
 					
 					<input type="radio" value="3" class="rating-input"
-						id="rating-input-1-3" name="ratinginput">
+						id="rating-input-1-3" name="ratinginput" '.$rating3.' >
 					<label for="rating-input-1-3" class="rating-star"></label>
 					
 					<input type="radio" value="2" class="rating-input"
-						id="rating-input-1-2" name="ratinginput">
+						id="rating-input-1-2" name="ratinginput" '.$rating2.' >
 					<label for="rating-input-1-2" class="rating-star"></label>
 					
 					<input type="radio" value="1" class="rating-input"
-						id="rating-input-1-1" name="ratinginput">
+						id="rating-input-1-1" name="ratinginput" '.$rating1.' >
 					<label for="rating-input-1-1" class="rating-star"></label>
+				</span>';
+				?>
+					
 				</span>
 					<input type='hidden' name='ratingid' id='rateingid' value='<?php echo $_GET["id"]; ?>' />
 					<input type="submit" name="submit" value="Rate!"></p>
+					
 				</form>
 				
 				<?php
@@ -165,7 +183,9 @@
 						$svaret = $_POST['ratinginput'];
 						$query = "UPDATE file_liste SET rating='$svaret' WHERE fileid=$result3";
 						$result = $db->query($query);
+						echo'<meta http-equiv="refresh" content="0" />';
 					}
+					
 				?>				
 				
 				
@@ -181,8 +201,11 @@
 						$svaret = $_POST['comment'];
 						$query = "UPDATE file_liste SET commentary='$svaret' WHERE fileid=$result3";
 						$result = $db->query($query);
+						echo'<meta http-equiv="refresh" content="0" />';
+					
 					}
 					?>
+					
 					
                </div>
                       
@@ -210,10 +233,36 @@
 						$svaret = $_POST['tag'];
 						$query = "INSERT INTO tag(fileid, tags) VALUES ($result3 , '$svaret')";
 						$result = $db->query($query);
+						echo'<meta http-equiv="refresh" content="0" />';
 					}
 			
 					?>  
                    
+				 <!nullstill>
+
+				 <?php
+				 
+					echo '<form action="" method="post">
+                       <input type="submit" name="reset" value="Reset!" />
+                    </form>'
+                    ;
+			
+					if ( isset( $_POST['reset'] ) ) { 
+							$query = "UPDATE file_liste SET commentary = NULL WHERE fileid=$result3;";
+							$result = $db->query($query);
+							
+							$query = "UPDATE file_liste SET rating = NULL WHERE fileid=$result3;";
+							$result = $db->query($query);
+							
+							$query = "DELETE FROM tag WHERE fileid=$result3;";
+							$result = $db->query($query);
+							
+							echo'<meta http-equiv="refresh" content="0" />';
+					}
+
+					
+					?>
+				  
                </div>
                
             
