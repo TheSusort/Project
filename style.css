@@ -1,10 +1,11 @@
 body {
     margin: 0 auto 20px;
     padding: 0;
-    background-color:#C0C0C0;
+    background-color:#232323;
     background-repeat:round;
     background-attachment: fixed;
     text-align: center;
+    color:#dcdcdc;
 }
 
 		
