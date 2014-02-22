@@ -12,8 +12,12 @@
 			div.innerHTML = file;
 		}
 		function openFulskr(file) {
-			window.open("fullscreen.php?bilde="+file);
+            tag = getURLParameter('tag');
+			window.open("fullscreen.php?tag="+ tag +"&bilde="+file);
 		}
+        function getURLParameter(name) {
+  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
+}
 	</script>
     
     <div id="containermain">
