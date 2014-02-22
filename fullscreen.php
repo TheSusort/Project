@@ -30,22 +30,38 @@
          <!rødt felt>
            <div id="fullscreenpic">
                <?php
-                    //print_r($_GET);
-                    echo("<img src=".$_GET['bilde']." height=500px >");
+
+                    if(!empty($_GET['tag'])) {
+                    $files = get_img_by_tag($_GET['tag']);
+                    }else $files = get_img_list($big);
+
+                    $number = count($files);
+                    $key = array_search(basename($_GET['bilde']), $files);
+    
+                    
+                    if (isset($_GET['previous'])){
+                        if ($key == 0) $key = $number;
+                        $showFile = $files[$key - 1];
+                    }
+                    else if (isset($_GET['next'])){
+                        if($key == $number-1) $key = -1;
+                        $showFile = $files[$key + 1];
+                    }
+                    else $showFile = substr($_GET['bilde'], 7);
+                  
+                    echo '<img src='.$big.$showFile.' height=400px ><br/>'; 
+                    
+
+                    echo '<a href="?previous=1&amp;bilde='.urlencode($big.$showFile).'">
+                    <img src= "Lbutton.png"width="40" height="40"></a>';
+                    echo '<a href="?next=1&amp;bilde='.urlencode($big.$showFile).'">
+                    <img src= "Rbutton.png"width="40" height="40"></a>';
                
                 ?>
               
                
                
                
-           </div>
-
-          
-           <form action="NextPrevButton">
-<input type="image" src="Lbutton.png" alt="Submit" width="40" height="40">
-<input type="image" src="Rbutton.png" alt="Submit" width="40" height="40">
-               
-</form>
            
        
            <!grønt felt>
