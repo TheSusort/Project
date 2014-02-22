@@ -33,10 +33,8 @@
 
                     if(($_GET['tag'] === "null") or ($_GET['tag'] === null)) {
                         $files = get_img_list($big);
-                        echo 'bilder fra mappe';
                     }else {
                         $files = get_img_by_tag($_GET['tag']);
-                        echo 'bilder fra tag';
                     }
                     
                     
