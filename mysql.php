@@ -23,6 +23,7 @@ include_once('funksjoner.php');
 //            exit(alert_message("Error: Could not connect ot database. Please try again later."));
         }else{
             $db_is_connected = true;
+            $db->query("SET NAMES 'utf8'");
         }
         return;
     }
