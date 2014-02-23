@@ -1,5 +1,4 @@
 body {
-    margin: 0 auto 20px;
     background-color:#232323;
     text-align: center;
     color:#D9DCDC;
@@ -57,7 +56,7 @@ h1 {
     border-width:2px;
     border-color:#141818;
     overflow:auto;
-    height:80%;
+    height:90%;
 }
 
 #exif {
@@ -74,9 +73,6 @@ h1 {
 #fullscreenpic {
     width:100%;
     height:500px;
-   
-    
-  
 }
 
 #buttons {
@@ -174,37 +170,6 @@ ul.nav li a:hover {
 	background: #D9DCDC no-repeat;
 	color: #141818;
 	padding: 7px 15px 7px 30px;
-}
-
-#next {
-    z-index: 9999;
-}
-}
-
-{
-    padding-left:20px;
-    background:transparent url(button.gif) no-repeat left top;
-
-}
-
-.o {
-    background:none;
-    border:none;
-    color:#ffffff;
-    font-weight:bold;
-    text-align:left;
-}
-button div.o{
-    padding-left:20px;
-    background:transparent url(button.gif) no-repeat left top;
-}
-button div.i{
-    padding-right:20px;
-    background:transparent url(button.gif) no-repeat right -36px;
-    height:36px;
-    line-height:36px;
-    white-space:nowrap;
-
 }
 
 #navbox {
