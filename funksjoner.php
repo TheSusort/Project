@@ -2,7 +2,7 @@
 
 $images = "Bilder/thumbs/";         # Location of small versions
 $big    = "Bilder/";                # Location of big versions (assumed to be a subdir of above)
-$cols   = 3;                        # Number of columns to display
+$cols   = 4;                        # Number of columns to display
 $files  = null;                     # List of the files from disk
 
 // Transformation array to string

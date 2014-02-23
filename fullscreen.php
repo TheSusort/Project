@@ -2,6 +2,7 @@
     <html>
     <head>
         <title>fullscreen</title>
+        <meta http-equiv="content-type" content="=text/html; charset=utf-8"/>
         <link rel="stylesheet" href="style.css">
         <link rel="shortcut icon" href="img/favicon.ico">
     </head>
@@ -31,7 +32,7 @@
         
        <div id="containermain">
            
-           <div id="title">
+           <div id="fullscreentitle">
                     <h1>Fullscreenview</h1>
                    </div>
                

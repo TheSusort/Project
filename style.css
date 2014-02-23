@@ -24,7 +24,7 @@ h1 {
 
 #title {
     height:50px;
-    width:100%;
+    margin-left:260px;
     border-radius:25px;
     background-color:#415050;
     border-style:solid;
@@ -35,9 +35,9 @@ h1 {
 #containerleft {
     float:left;
     width:250px;
+    height:100%;
     background-color:#415050;
     border-radius:25px;
-    margin-top:10px;
     border-style:solid;
     border-width:2px;
     border-color:#141818;
@@ -56,11 +56,13 @@ h1 {
     border-style:solid;
     border-width:2px;
     border-color:#141818;
+    overflow:auto;
+    height:80%;
 }
 
 #exif {
     width:100%;
-    height:200px;
+    height:150px;
 }
 
 
@@ -207,10 +209,24 @@ button div.i{
 
 #navbox {
     overflow:auto;
-    height:400px;
+    height:300px;
 }
 
 #details {
     border-style:dotted;
     border-color:green;
+}
+
+#search {
+    height:70px;
+}
+
+#fullscreentitle {
+    height:50px;
+    width:100%;
+    border-radius:25px;
+    background-color:#415050;
+    border-style:solid;
+    border-width:2px;
+    border-color:#141818; 
 }
