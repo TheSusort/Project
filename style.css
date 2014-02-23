@@ -1,106 +1,91 @@
 body {
     margin: 0 auto 20px;
-    padding: 0;
     background-color:#232323;
-    background-repeat:round;
-    background-attachment: fixed;
     text-align: center;
-    color:#dcdcdc;
+    color:#D9DCDC;
 }
 
 		
-img
-		{
-			max-width: 900px;
-		}
+img {
+    max-width: 900px;
+}
 		
-img:active
-		{
-			max-width: 100%;
-		}
+img:active  {
+    max-width: 100%;
+}
 		
-a:focus
-		{
-			outline: none;
-		}
+a:focus {
+    outline: none;
+}
 
 h1 {
     font-size: 25px;
-    }
+}
 
 #title {
+    height:50px;
     width:100%;
-    height:40px;
-    border-style:dotted;
-    border-color:blue;
+    border-radius:25px;
+    background-color:#415050;
+    border-style:solid;
+    border-width:2px;
+    border-color:#141818; 
 }
 
 #containerleft {
     float:left;
     width:250px;
-    border-style:dotted;
-    border-color:red;
+    background-color:#415050;
+    border-radius:25px;
+    margin-top:10px;
+    border-style:solid;
+    border-width:2px;
+    border-color:#141818;
 }
 
 #upload {
     width:100%;
     height:60px;
-    border-style:dotted;
-    border-color:green;
-}
-
-#directory {
-    width:100%;
-    height:400px;
-    overflow:auto;
-    border-style:dotted;
-    border-color:purple;
 }
 
 #gallery {
     margin-left:260px;
-    border-style:dotted;
-    border-color:brown;
+    background-color:#415050;
+    border-radius:25px;
+    margin-top:10px;
+    border-style:solid;
+    border-width:2px;
+    border-color:#141818;
 }
 
 #exif {
     width:100%;
     height:200px;
-    border-style:dotted;
-    border-color:yellow;
 }
 
-#terriblemusic {
-    width:100%;
-    border-style:dotted;
-    border-color:black;
-}
 
 #bilde:hover{
-    background: #786b59;
+    background: #B3B9B9;
     color: #ffe;
 }
 
 #fullscreenpic {
     width:100%;
-    border-style:dotted;
-    border-color:red;
     height:500px;
-    position: relative;
+   
     
   
-}
-
-#butans {
-    width:100%;
-    height:100px;
 }
 
 #buttons {
     width:100%;
     height:80px;
-    border-style:dotted;
-    border-color:green;
+    background-color:#415050;
+    border-radius:25px;
+    margin-top:3px;
+    border-style:solid;
+    border-width:2px;
+    border-color:#141818;
 }
 
 #prevnext {
@@ -113,43 +98,37 @@ h1 {
 #toprow {
     display: inline-block;
     width:100%;
-    height:50%;
-    border-style:dotted;
-    border-color:yellow;
-  
+    height:50%;  
 }
 
 #bottomrow {
     width:100%;
     height:50%;
-    border-style:dotted;
-    border-color:brown;    
-    width: 100%; 
     float: left;
 }
 
 .rating {
-          overflow: hidden;
-          display: inline-block;
-      }
-      .rating-input {
-          position: absolute;
-          left: 0;
-          top: -50px;
-      }
-      .rating:hover .rating-star:hover,
-      .rating:hover .rating-star:hover ~ .rating-star,
-      .rating-input:checked ~ .rating-star {
-          background-position: 0 0;
-      }
-      .rating-star,
-      .rating:hover .rating-star {
-          float: right;
-          display: block;
-          width: 16px;
-          height: 16px;
-          background: url('img/star.png') 0 -16px;
-      }
+    overflow: hidden;
+    display: inline-block;
+}
+.rating-input {
+    position: absolute;
+    left: 0;
+    top: -50px;
+}
+.rating:hover .rating-star:hover,
+.rating:hover .rating-star:hover ~ .rating-star,
+.rating-input:checked ~ .rating-star {
+    background-position: 0 0;
+}
+.rating-star,
+.rating:hover .rating-star {
+    float: right;
+    display: block;
+    width: 16px;
+    height: 16px;
+    background: url('img/star.png') 0 -16px;
+}
 
 .descriptionarea {
     min-width: 490px;
@@ -169,7 +148,7 @@ ul.nav {
 	position: relative;
 	top: 0px;
 	left: 10px;
-	padding: 0 0 60px 0;
+	padding: 0 0 10px 0;
 }
 
 li {
@@ -178,8 +157,8 @@ li {
 
 ul.nav li a {
 	-webkit-transition: all 0.3s ease-out;
-	background: #cbcbcb no-repeat;
-	color: #174867;
+	background: #B3B9B9 no-repeat;
+	color: #141818;
 	padding: 7px 15px 7px 0;
 	-webkit-border-top-right-radius: 10px;
  	-webkit-border-bottom-right-radius: 10px;
@@ -190,12 +169,12 @@ ul.nav li a {
 }
 
 ul.nav li a:hover {
-	background: #ebebeb no-repeat;
-	color: #67a5cd;
+	background: #D9DCDC no-repeat;
+	color: #141818;
 	padding: 7px 15px 7px 30px;
 }
-#next {
 
+#next {
     z-index: 9999;
 }
 }
@@ -207,7 +186,7 @@ ul.nav li a:hover {
 }
 
 .o {
-        background:none;
+    background:none;
     border:none;
     color:#ffffff;
     font-weight:bold;

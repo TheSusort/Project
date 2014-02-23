@@ -3,6 +3,7 @@
     <head>
         <title>fullscreen</title>
         <link rel="stylesheet" href="style.css">
+        <link rel="shortcut icon" href="img/favicon.ico">
     </head>
     <!-------------------------------------------------------------------------------------->
     <body>
@@ -17,7 +18,6 @@
         
        <div id="containermain">
            
-           <!blått felt>
            <div id="title">
                     <h1>Fullscreenview</h1>
                    </div>
@@ -27,7 +27,6 @@
                    <input type="image" src="closex.png" onClick="window.close('fs')" align="right" width="40" height="40">
 </FORM>
            
-         <!rødt felt>
            <div id="fullscreenpic">
                <?php
 
@@ -61,20 +60,10 @@
                     <img src= "Rbutton.png"width="40" height="40"></a>';
                
                 ?>
-              
-               
-               
-               
-           
-       
-           <!grønt felt>
-          
            
            
            <div id="buttons">
-               
-               <!gult felt>
-               
+    
                
                <div id="toprow">
                    
@@ -102,17 +91,12 @@
                    <!kommentarfelt>
                    <textarea rows="1,5" cols="100" placeholder="Comment"></textarea>
                    <!toolsbutton>
-                   <input type="button" style="background-color:lightgrey; width:80px; position: absolute;" value="Tools">
+                   <input type="button" style="background-color:#D9DCDC; width:80px; position: absolute;" value="Tools">
                    
                </div>
-                      
            
-           
-           
-           
-           
-               <!brunt felt>
-               <div id="bottomrow">    
+               <div id="bottomrow">   
+                   
                 <!tagfelt>
                    
                    <?php
