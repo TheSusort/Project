@@ -35,7 +35,6 @@ h1 {
 #containerleft {
     float:left;
     width:250px;
-    height:700px;
     background-color:#415050;
     border-radius:25px;
     margin-top:10px;
@@ -204,4 +203,14 @@ button div.i{
     line-height:36px;
     white-space:nowrap;
 
+}
+
+#navbox {
+    overflow:auto;
+    height:400px;
+}
+
+#details {
+    border-style:dotted;
+    border-color:green;
 }

@@ -36,7 +36,7 @@
                    </div>
                
                      
-            <FORM action="CloseFullscreen">>
+            <FORM action="CloseFullscreen">
                    <input type="image" src="closex.png" onClick="window.close('fs')" align="right" width="40" height="40">
 </FORM>
            
@@ -74,7 +74,7 @@
                 ?>
 
                       
-			   
+			   <div id="buttons">
 			   <div id="details">
 					<h3>Picture details</h3>
 					<b>Current file: </b>
@@ -149,7 +149,7 @@
           
            
            
-           <div id="buttons">
+        
     
                
                <div id="toprow">
