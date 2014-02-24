@@ -39,7 +39,7 @@
                      
             <FORM action="CloseFullscreen">
                    <input type="image" src="closex.png" onClick="window.close('fs')" align="right" width="40" height="40">
-</FORM>
+           </FORM>           
            
            <div id="fullscreenpic">
                <?php
@@ -70,9 +70,26 @@
                     echo '<a href="?previous=1&amp;tag='.$_GET['tag'].'&amp;bilde='.urlencode($big.$showFile).'">
                     <img src= "Lbutton.png"width="40" height="40"></a>';
                     echo '<a href="?next=1&amp;tag='.$_GET['tag'].'&amp;bilde='.urlencode($big.$showFile).'">
-                    <img src= "Rbutton.png"width="40" height="40"></a>';
+                    <img src= "Rbutton.png"width="40" height="40"></a>'; 
                
                 ?>
+               
+ 
+    
+               
+               <script type="text/javascript">
+                    window.onload=function() {
+                        document.onkeyup = key_event;
+                    }
+   
+                    function key_event(e) {
+                        if (e.keyCode == 27) doStuff();
+                    }
+   
+                    function doStuff() {
+                        window.close('fs'); 
+                    }
+               </script>
 
                       
 			   <div id="buttons">
