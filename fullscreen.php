@@ -32,68 +32,8 @@
         
        <div id="containermain">
            
-           <div id="fullscreentitle">
-                    <h1>Fullscreenview</h1>
-                   </div>
-               
-                     
-            <FORM action="CloseFullscreen">
-                   <input type="image" src="closex.png" onClick="window.close('fs')" align="right" width="40" height="40">
-           </FORM>           
-           
-           <div id="fullscreenpic">
-          <?php
-                    if(($_GET['tag'] === "null")) {
-                        $files = get_img_list($big);
-                    }else {
-                        $files = get_img_by_tag($_GET['tag']);
-                    }
-                    
-                    
-                    $number = count($files);
-                    $key = array_search(basename($_GET['bilde']), $files);
-
-                    
-                    if (isset($_GET['previous'])){
-                        if ($key == 0) $key = $number;
-                        $showFile = $files[$key - 1];
-                    }
-                    else if (isset($_GET['next'])){
-                        if($key == $number-1) $key = -1;
-                        $showFile = $files[$key + 1];
-                    }
-                    else { $showFile = substr($_GET['bilde'], 7);
-                    echo '<img src='.$big.$showFile.' height=400px ><br/>'; 
-                         }
-                    if ((isset($_GET['previous'])) or (isset($_GET['next']))) {
-                        echo '<img src='.$_GET['bilde'].' height=400px ><br/>'; 
-
-                    }
-                    echo '<a href="?previous=1&amp;tag='.$_GET['tag'].'&amp;bilde='.urlencode($big.$showFile).'">
-                    <img src= "Lbutton.png"width="40" height="40"></a>';
-                    echo '<a href="?next=1&amp;tag='.$_GET['tag'].'&amp;bilde='.urlencode($big.$showFile).'">
-                    <img src= "Rbutton.png"width="40" height="40"></a>';
-               
-                ?>
- 
-    
-               
-               <script type="text/javascript">
-                    window.onload=function() {
-                        document.onkeyup = key_event;
-                    }
-   
-                    function key_event(e) {
-                        if (e.keyCode == 27) doStuff();
-                    }
-   
-                    function doStuff() {
-                        window.close('fs'); 
-                    }
-               </script>
-
+           <div id="leftcontainer">
                       
-			   <div id="buttons">
 			   <div id="details">
 					<h3>Picture details</h3>
 					<b>Current file: </b>
@@ -161,17 +101,9 @@
 					?>			
 					<br>
 			   </div>
-			   
-
-       
-           <!grønt felt>
-          
-           
-           
-        
-    
                
-               <div id="toprow">
+                <!containerwithcomments,rating>
+               <div id="buttoncontainer">
                    
                    <!ratingknapper>
                
@@ -233,9 +165,11 @@
                    
                    
 				   <form action="" method="post">
-                       <input type="text" name="comment" size="50"/>
+                       <input type="text" name="comment" size="40"/>
                        <input type="submit" value="Comment!" />
                     </form>
+                
+                    <p>
 			
 					<?php
 					if(!empty($_POST['comment'])){
@@ -248,9 +182,9 @@
 					?>
 					
 					
-               </div>
+               
            
-               <div id="bottomrow">   
+                 
                    
                 <!tagfelt>
                    
@@ -273,6 +207,8 @@
 					}
 			
 					?>  
+                        
+                    <p>
                    
 				 <!nullstill>
 
@@ -299,12 +235,67 @@
 					
 					?>
 				  
-               </div>
+               <p>
+
+            </div>
+           
+           </div>
+
+    <FORM action="CloseFullscreen">
+                   <input type="image" src="closex.png" onClick="window.close('fs')" align="right" width="40" height="40">
+           </FORM>           
+           
+           <div id="fullscreenpic">
+          <?php
+                    if(($_GET['tag'] === "null")) {
+                        $files = get_img_list($big);
+                    }else {
+                        $files = get_img_by_tag($_GET['tag']);
+                    }
+                    
+                    
+                    $number = count($files);
+                    $key = array_search(basename($_GET['bilde']), $files);
+
+                    
+                    if (isset($_GET['previous'])){
+                        if ($key == 0) $key = $number;
+                        $showFile = $files[$key - 1];
+                    }
+                    else if (isset($_GET['next'])){
+                        if($key == $number-1) $key = -1;
+                        $showFile = $files[$key + 1];
+                    }
+                    else { $showFile = substr($_GET['bilde'], 7);
+                    echo '<img src='.$big.$showFile.' height=85% ><br/>'; 
+                         }
+                    if ((isset($_GET['previous'])) or (isset($_GET['next']))) {
+                        echo '<img src='.$_GET['bilde'].' height=85% ><br/>'; 
+
+                    }
+                    echo '<a href="?previous=1&amp;tag='.$_GET['tag'].'&amp;bilde='.urlencode($big.$showFile).'">
+                    <img src= "Lbutton.png"width="40" height="40"></a>';
+                    echo '<a href="?next=1&amp;tag='.$_GET['tag'].'&amp;bilde='.urlencode($big.$showFile).'">
+                    <img src= "Rbutton.png"width="40" height="40"></a>';
                
-            
-           </div>
-           </div>
+                ?>
+ 
     
+               
+               <script type="text/javascript">
+                    window.onload=function() {
+                        document.onkeyup = key_event;
+                    }
+   
+                    function key_event(e) {
+                        if (e.keyCode == 27) doStuff();
+                    }
+   
+                    function doStuff() {
+                        window.close('fs'); 
+                    }
+               </script>
+</div>
         
     </body>
     </html>

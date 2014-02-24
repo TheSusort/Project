@@ -71,38 +71,19 @@ h1 {
 }
 
 #fullscreenpic {
-    width:100%;
-    height:500px;
-}
-
-#buttons {
-    width:100%;
-    height:80px;
+    margin-left:310px;
+    height:100%;
     background-color:#415050;
     border-radius:25px;
-    margin-top:3px;
     border-style:solid;
     border-width:2px;
     border-color:#141818;
+   
 }
 
-#prevnext {
-    width:200px;
-    border-style:dotted;
-    border-color:purple;
-    height:50px;
-}
-
-#toprow {
-    display: inline-block;
-    width:100%;
-    height:50%;  
-}
-
-#bottomrow {
-    width:100%;
+#buttoncontainer {
     height:50%;
-    float: left;
+    width:100%;
 }
 
 .rating {
@@ -178,20 +159,21 @@ ul.nav li a:hover {
 }
 
 #details {
-    border-style:dotted;
-    border-color:green;
+    height:300px;
+    width:100%
 }
 
 #search {
     height:70px;
 }
 
-#fullscreentitle {
-    height:50px;
-    width:100%;
-    border-radius:25px;
+#leftcontainer {
+    float:left;
+    width:300px;
+    height:100%;
     background-color:#415050;
+    border-radius:25px;
     border-style:solid;
     border-width:2px;
-    border-color:#141818; 
+    border-color:#141818;
 }
