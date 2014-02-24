@@ -42,8 +42,8 @@
            </FORM>           
            
            <div id="fullscreenpic">
-               <?php
-                    if(($_GET['tag'] === "null") or ($_GET['tag'] === null)) {
+          <?php
+                    if(($_GET['tag'] === "null")) {
                         $files = get_img_list($big);
                     }else {
                         $files = get_img_by_tag($_GET['tag']);
@@ -52,7 +52,7 @@
                     
                     $number = count($files);
                     $key = array_search(basename($_GET['bilde']), $files);
-    
+
                     
                     if (isset($_GET['previous'])){
                         if ($key == 0) $key = $number;
@@ -62,18 +62,19 @@
                         if($key == $number-1) $key = -1;
                         $showFile = $files[$key + 1];
                     }
-                    else $showFile = substr($_GET['bilde'], 7);
-                  
+                    else { $showFile = substr($_GET['bilde'], 7);
                     echo '<img src='.$big.$showFile.' height=400px ><br/>'; 
-                    
+                         }
+                    if ((isset($_GET['previous'])) or (isset($_GET['next']))) {
+                        echo '<img src='.$_GET['bilde'].' height=400px ><br/>'; 
 
+                    }
                     echo '<a href="?previous=1&amp;tag='.$_GET['tag'].'&amp;bilde='.urlencode($big.$showFile).'">
                     <img src= "Lbutton.png"width="40" height="40"></a>';
                     echo '<a href="?next=1&amp;tag='.$_GET['tag'].'&amp;bilde='.urlencode($big.$showFile).'">
-                    <img src= "Rbutton.png"width="40" height="40"></a>'; 
+                    <img src= "Rbutton.png"width="40" height="40"></a>';
                
                 ?>
-               
  
     
                
