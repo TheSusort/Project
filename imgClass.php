@@ -8,6 +8,7 @@ class img{
 	public	$url;
 	private	$exif_objekt;
 	private	$ifd0;
+	private $marker;
 	public 	$comment;
 	public	$tag;
 	public	$rate;
@@ -39,7 +40,7 @@ class img{
 		   * PelJpeg object which will hold it.  When we want to save the
 		   * image again, we need to know which object to same (using the
 		   * getBytes method), so we store $jpeg as $file too. */
-			$jpeg = $this->pel_objekt = new PelJpeg();
+			$jpeg = $this->exif_objekt = new PelJpeg();
 
 		  /* We then load the data from the PelDataWindow into our PelJpeg
 		   * object.  No copying of data will be done, the PelJpeg object will
@@ -75,7 +76,7 @@ class img{
 		  /* The data was recognized as TIFF data.  We prepare a PelTiff
 		   * object to hold it, and record in $file that the PelTiff object is
 		   * the top-most object (the one on which we will call getBytes). */
-			$tiff = $this->pel_objekt = new PelTiff();
+			$tiff = $this->exif_objekt = new PelTiff();
 		  /* Now load the data. */
 			$tiff->load($data);
 		} else {
@@ -105,31 +106,47 @@ class img{
 		}
 	}
 
-	private function get_Marker($marker)
-	{
+	public function get_Marker($mrkr){
 		/* Each entry in an IFD is identified with a tag.  This will load the
 		 * ImageDescription entry if it is present.  If the IFD does not
 		 * contain such an entry, null will be returned. */
-		$tag = $this->ifd0->getEntry(constant('PelTag::'. $marker));
+		$marker = $this->ifd0->getEntry(constant('PelTag::'. $mrkr));
 
 		/* We need to check if the image already had a Marker stored. */
-		if ($tag == null) {
+		if ($marker == null) {
 			/* The was no $marker in the image. */
-			echo("Added new empty Marker $marker, bat not stored in file.");
+			echo("Added new empty Marker $mrkr, bat not stored in file.");
 
 			/* In this case we simply create a new PelEntryAscii object to hold
 			 * the Marker.  The constructor for PelEntryAscii needs to know
 			 * the tag and contents of the new entry. */
-			$tag = new PelEntryAscii(constant('PelTag::'. $marker), '');
+			$marker = new PelEntryAscii(constant('PelTag::'. $mrkr), '');
 
 			/* This will insert the newly created entry with the Marker
 			 * into the IFD. */
-			$this->ifd0->addEntry($tag);
+			$this->ifd0->addEntry($marker);
 			return '';
 		}else {
-			return($marker_value = $tag->getValue());
+			return($marker_value = $marker->getValue());
 		}
 	}
+	
+	public function set_to_Marker($mrkr, $value){
+		$marker = $this->ifd0->getEntry(constant('PelTag::'. $mrkr));
+		$marker->setValue($value);
+		$this->exif_objekt->saveFile($this->url);
+	}
+	
+	public function add_to_Marker($mrkr, $value){
+		$old_value = $this->get_Marker($mrkr);
+		$marker = $this->ifd0->getEntry(constant('PelTag::'. $mrkr));
+		$marker->setValue($old_value.$value);
+		$this->exif_objekt->saveFile($this->url);
+	}
+	
 }
-new img('Bilder/Repin_Cossacks.jpg');
+// $test = new img('Bilder/Repin_Cossacks.jpg');
+// $test->set_to_marker('XP_COMMENT', 'poluchite moi koment!!!');
+// $test->add_to_marker('XP_COMMENT', ' HA HA HA');
+// echo($test->get_marker('XP_AUTHOR'));
 ?>
