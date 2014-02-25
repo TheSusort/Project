@@ -3,8 +3,8 @@
 <head>
 	<title>Web Photo Gallery</title>
     <meta http-equiv="content-type" content="=text/html; charset=utf-8"/>
+	<link rel="shortcut icon" href="img/favicon.ico">
 	<link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" href="img/favicon.ico">
 </head>
 <!-------------------------------------------------------------------------------------->
 <body>
@@ -18,46 +18,40 @@
 			window.open("fullscreen.php?tag="+ tag +"&bilde="+file);
 		}
         function getURLParameter(name) {
-  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
-}
+		  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
+		}
 	</script>
     
     <div id="containermain">
-        
-       
-        
         <div id="containerleft">
-        
-        <div id="upload">
-            <p>Import: </p>
+			<div id="upload">
+				<p>Import: </p>
 				<form action="index.php" method="post" enctype="multipart/form-data">
 					<input name="bildefil[]" id="bildefil" type="file" multiple=""><br>
 					<input type="submit" name="submit" value="Import">
 				</form>
-        </div>
-        <div id="search">
-            <p>Search:</p>
-            <form action="" method="post">
-                <input type="text" name="search" size="20"/>
-                <input type="submit" value="Search" />
-            </form>
-        </div>
-        <div id="navbox">
+			</div>
+			<div id="search">
+				<p>Search:</p>
+				<form action="" method="post">
+					<input type="text" name="search" size="20"/>
+					<input type="submit" value="Search" />
+				</form>
+			</div>
+			<div id="navbox">
 				<p>#tags#</p>
-        </div>
-            
-        <div id="exif">
+			</div>
+			<div id="exif">
 				<p>Click an image to view EXIF. Doubleclick for fullscreen.</p>
-        </div>
-            
+			</div>
         </div>
                     
-                    <div id="title">
-				<h1>Web Photo Gallery<h1>
+		<div id="title">
+			<h1>Web Photo Gallery<h1>
         </div>
             
         <div id="gallery">
-				#gallery#
+			#gallery#
         </div>
         
     </div>

@@ -193,11 +193,12 @@ $files  = null;                     # List of the files from disk
                         <tr>';
                 $gallery = $gallery. '
                             <td id="bilde" align="center" 
-									onClick=viuwEXIF("'.$big.$file.'")
+									onClick = viuwEXIF("'.get_EXIF($big.$file).'") 
 									onDblClick = openFulskr("'.$big.$file.'")>
 								<img src="' . $images . $file . '" />
                             </td>';
 							// viuwEXIF("'.get_EXIF($big.$file).'") 
+							// viuwEXIF("'.$big.$file.'")
                 $colCtr++;
             }
 
@@ -233,18 +234,23 @@ $files  = null;                     # List of the files from disk
 	function get_EXIF($file)
 	{
 		$type = array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_TIFF_II, IMAGETYPE_TIFF_MM);
-		// foreach($files as $file){
-			if (in_array(exif_imagetype($file), $type, TRUE)) {
-				$exif = exif_read_data($file, 'IFD0');
-				if ($exif===false){ echo("EXIF feil");}
+		if (in_array(exif_imagetype($file), $type, TRUE)) {
+			$exif = exif_read_data($file);
+			if ($exif===false){ 
+				echo("<br/>EXIF feil");
+			}else{
 				$exif = exif_read_data($file, 0, true);
-				foreach ($exif as $key => $section) {
-					foreach ($section as $name => $val) {
-						echo "$key.$name: $val<br />\n";
-					}
-				}
+				$tagg['comment'] = $exif['COMPUTED']['UserComment'];
+				$tagg['rating'] = $exif['IFD0']['UndefinedTag:0x4746'];
+				$tagg['tag'] = $exif['IFD0']['Keywords'];
+				
+				print_r($exif);
+				echo ( 'Comment: ' 	. $tagg['comment'] ."<br>");
+				echo ( 'Rating: ' 	. $tagg['rating'] ."<br>");
+				echo ( 'Tag: ' 		. $tagg['tag'] ."<br>");
+				echo("-------------------------------------------------------------------------------------------<br/>");
 			}
-		// }
+		}
 	}
 	
 // return array of files names from dir.
