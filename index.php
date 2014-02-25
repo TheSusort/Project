@@ -1,6 +1,6 @@
 ﻿<?php
-    Echo "<link rel='shortcut icon' href='img/favicon.ico'>";
-    // include_once("Metadata.php");
+    // Echo "<link rel='shortcut icon' href='img/favicon.ico'>";
+    include_once("Metadata.php");
     include_once("mysql.php");
     include_once("funksjoner.php");
     db_connnect();

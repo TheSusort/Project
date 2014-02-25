@@ -233,24 +233,24 @@ $files  = null;                     # List of the files from disk
 // get EXIF data
 	function get_EXIF($file)
 	{
-		$type = array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_TIFF_II, IMAGETYPE_TIFF_MM);
-		if (in_array(exif_imagetype($file), $type, TRUE)) {
-			$exif = exif_read_data($file);
-			if ($exif===false){ 
-				echo("<br/>EXIF feil");
-			}else{
-				$exif = exif_read_data($file, 0, true);
-				$tagg['comment'] = $exif['COMPUTED']['UserComment'];
-				$tagg['rating'] = $exif['IFD0']['UndefinedTag:0x4746'];
-				$tagg['tag'] = $exif['IFD0']['Keywords'];
+		// $type = array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_TIFF_II, IMAGETYPE_TIFF_MM);
+		// if (in_array(exif_imagetype($file), $type, TRUE)) {
+			// $exif = exif_read_data($file);
+			// if ($exif===false){ 
+				// echo("<br/>EXIF feil");
+			// }else{
+				// $exif = exif_read_data($file, 0, true);
+				// $tagg['comment'] = $exif['COMPUTED']['UserComment'];
+				// $tagg['rating'] = $exif['IFD0']['UndefinedTag:0x4746'];
+				// $tagg['tag'] = $exif['IFD0']['Keywords'];
 				
-				print_r($exif);
-				echo ( 'Comment: ' 	. $tagg['comment'] ."<br>");
-				echo ( 'Rating: ' 	. $tagg['rating'] ."<br>");
-				echo ( 'Tag: ' 		. $tagg['tag'] ."<br>");
-				echo("-------------------------------------------------------------------------------------------<br/>");
-			}
-		}
+				// print_r($exif);
+				// echo ( 'Comment: ' 	. $tagg['comment'] ."<br>");
+				// echo ( 'Rating: ' 	. $tagg['rating'] ."<br>");
+				// echo ( 'Tag: ' 		. $tagg['tag'] ."<br>");
+				// echo("-------------------------------------------------------------------------------------------<br/>");
+			// }
+		// }
 	}
 	
 // return array of files names from dir.
