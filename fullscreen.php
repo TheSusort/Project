@@ -28,7 +28,7 @@
 
     
     <?php
-    include_once("Metadata.php");
+    // include_once("Metadata.php");
     include_once("mysql.php");
     include_once("funksjoner.php");
 	include_once("fullscreen.php");

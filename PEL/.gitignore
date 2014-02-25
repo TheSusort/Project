@@ -1,0 +1,7 @@
+.settings/*
+.buildpath
+.project
+locale/*
+doc/*
+ChangeLog
+build-base*
