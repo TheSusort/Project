@@ -177,3 +177,7 @@ ul.nav li a:hover {
     border-width:2px;
     border-color:#141818;
 }
+
+.replace {
+display:none;
+}

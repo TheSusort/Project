@@ -5,6 +5,23 @@
         <meta http-equiv="content-type" content="=text/html; charset=utf-8"/>
         <link rel="stylesheet" href="style.css">
         <link rel="shortcut icon" href="img/favicon.ico">
+        
+        <script type="text/javascript">
+            function exchange(el){
+                var ie=document.all&&!document.getElementById? document.all : 0;
+                var toObjId=/b$/.test(el.id)? el.id.replace(/b$/,'') : el.id+'b';
+                var toObj=ie? ie[toObjId] : document.getElementById(toObjId);
+                if(/b$/.test(el.id))
+                    toObj.innerHTML=el.value;
+                else{
+                    toObj.style.width=el.offsetWidth+7+'px';
+                    toObj.value=el.innerHTML;
+                }
+                el.style.display='none';
+                toObj.style.display='inline';
+            }
+        </script>
+        
     </head>
     <!-------------------------------------------------------------------------------------->
     <body>
@@ -162,11 +179,25 @@
 				
                    
                    <!kommentarfelt>
-                   
-                   
-				   <form action="" method="post">
-                       <input type="text" name="comment" size="40"/>
-                       <input type="submit" value="Comment!" />
+        
+                <form action="" method="post">
+                    <span id="itm1" onclick="exchange(this);">
+                        <?php 	
+					
+					$query2 = "SELECT commentary FROM file_liste WHERE fileid=$result3";
+					$result2 = $db->query($query2);
+					if (!empty($result2)){
+						foreach($result2 as $rr)
+						{
+							print_r(array_to_string($rr));
+							print "click to comment";
+						}	
+					}
+					
+					?>
+                    </span>
+                    <input ondblclick="exchange(this);" id="itm1b" class="replace" type="text" value=""  name="comment">
+                    <input type="submit" value="Comment!"/>
                     </form>
                 
                     <p>
