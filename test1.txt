@@ -1,0 +1,91 @@
+<x:xmpmeta xmlns:x="adobe:ns:meta/">	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">		<rdf:Description rdf:about="uuid:faf5bdd5-ba3d-11da-ad31-d33d75182f1b" xmlns:xmp="http://ns.adobe.com/xap/1.0/">			<xmp:Rating>				4			</xmp:Rating>		</rdf:Description>		<rdf:Description rdf:about="uuid:faf5bdd5-ba3d-11da-ad31-d33d75182f1b" xmlns:MicrosoftPhoto="http://ns.microsoft.com/photo/1.0/">			<MicrosoftPhoto:Rating>75</MicrosoftPhoto:Rating>		</rdf:Description>	</rdf:RDF></x:xmpmeta>
+
+<x:xmpmeta xmlns:x="adobe:ns:meta/">
+	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+		<rdf:Description rdf:about="uuid:faf5bdd5-ba3d-11da-ad31-d33d75182f1b" xmlns:xmp="http://ns.adobe.com/xap/1.0/">
+			<xmp:Rating>
+				1
+			</xmp:Rating>
+		</rdf:Description>
+		<rdf:Description rdf:about="uuid:faf5bdd5-ba3d-11da-ad31-d33d75182f1b" xmlns:MicrosoftPhoto="http://ns.microsoft.com/photo/1.0/">
+			<MicrosoftPhoto:LastKeywordXMP>
+				<rdf:Bag xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+					<rdf:li>
+						test
+					</rdf:li>
+					<rdf:li>
+						тест
+					</rdf:li>
+				</rdf:Bag>
+			</MicrosoftPhoto:LastKeywordXMP>
+			<MicrosoftPhoto:Rating>
+				0
+			</MicrosoftPhoto:Rating>
+		</rdf:Description>
+		<rdf:Description xmlns:dc="http://purl.org/dc/elements/1.1/">
+			<dc:subject>
+				<rdf:Bag xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+					<rdf:li>
+						test
+					</rdf:li>
+					<rdf:li>
+						тест
+					</rdf:li>
+				</rdf:Bag>
+			</dc:subject>
+		</rdf:Description>
+		<rdf:Description xmlns:dc="http://purl.org/dc/elements/1.1/"/>
+	</rdf:RDF>
+</x:xmpmeta>
+
+
+
+
+
+
+
+
+
+<x:xmpmeta xmlns:x="adobe:ns:meta/">
+	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+		<rdf:Description rdf:about="uuid:faf5bdd5-ba3d-11da-ad31-d33d75182f1b" xmlns:xmp="http://ns.adobe.com/xap/1.0/">
+			<xmp:Rating>
+				4
+			</xmp:Rating>
+		</rdf:Description>
+		<rdf:Description rdf:about="uuid:faf5bdd5-ba3d-11da-ad31-d33d75182f1b" xmlns:MicrosoftPhoto="http://ns.microsoft.com/photo/1.0/">
+			<MicrosoftPhoto:Rating>
+				75
+			</MicrosoftPhoto:Rating>
+			<MicrosoftPhoto:LastKeywordXMP>
+				<rdf:Bag xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+					<rdf:li>
+						Tihan
+					</rdf:li>
+					<rdf:li>
+						Photo
+					</rdf:li>
+				</rdf:Bag>
+			</MicrosoftPhoto:LastKeywordXMP>
+		</rdf:Description>
+		<rdf:Description xmlns:dc="http://purl.org/dc/elements/1.1/">
+			<dc:subject>
+				<rdf:Bag xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+					<rdf:li>
+						Tihan
+					</rdf:li>
+					<rdf:li>
+						Photo
+					</rdf:li>
+				</rdf:Bag>
+			</dc:subject>
+		</rdf:Description>
+	</rdf:RDF>
+</x:xmpmeta>
+
+
+
+
+
+
+

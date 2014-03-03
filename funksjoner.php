@@ -1,5 +1,5 @@
 <?php
-
+include_once('imgClass.php');
 $images = "Bilder/thumbs/";         # Location of small versions
 $big    = "Bilder/";                # Location of big versions (assumed to be a subdir of above)
 $cols   = 4;                        # Number of columns to display
@@ -233,24 +233,8 @@ $files  = null;                     # List of the files from disk
 // get EXIF data
 	function get_EXIF($file)
 	{
-		// $type = array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_TIFF_II, IMAGETYPE_TIFF_MM);
-		// if (in_array(exif_imagetype($file), $type, TRUE)) {
-			// $exif = exif_read_data($file);
-			// if ($exif===false){ 
-				// echo("<br/>EXIF feil");
-			// }else{
-				// $exif = exif_read_data($file, 0, true);
-				// $tagg['comment'] = $exif['COMPUTED']['UserComment'];
-				// $tagg['rating'] = $exif['IFD0']['UndefinedTag:0x4746'];
-				// $tagg['tag'] = $exif['IFD0']['Keywords'];
-				
-				// print_r($exif);
-				// echo ( 'Comment: ' 	. $tagg['comment'] ."<br>");
-				// echo ( 'Rating: ' 	. $tagg['rating'] ."<br>");
-				// echo ( 'Tag: ' 		. $tagg['tag'] ."<br>");
-				// echo("-------------------------------------------------------------------------------------------<br/>");
-			// }
-		// }
+		// $img_ob = new img($file);
+		// return $img_ob;
 	}
 	
 // return array of files names from dir.
@@ -308,7 +292,6 @@ $files  = null;                     # List of the files from disk
         } else if (preg_match('/[.](png)$/i', $filename)) {
             $im = imagecreatefrompng($path_to_image_directory . $filename);
         } elseif (preg_match('/[.](ti.?f)$/i', $filename)) {
-			
 			$im = imagecreatefromstring(file_get_contents($path_to_image_directory . $filename));
 		} else return FALSE;
 
