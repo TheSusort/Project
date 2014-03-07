@@ -1,8 +1,10 @@
 ﻿<?php
     Echo "<link rel='shortcut icon' href='img/favicon.ico'>";
-    include_once("Metadata.php");
+    include_once("index.php");//test
+	include_once("Metadata.php");
     include_once("mysql.php");
     include_once("funksjoner.php");
+	
     db_connnect();
     $main = file_get_contents('main.html');
     $message = "";
@@ -19,12 +21,25 @@
 		}
     }
 	
+	
+	
 	if (!empty($_GET['tag'])){
 		$files = get_img_by_tag($_GET['tag']);
 		$gallery = VisBilder($files);
-	}else{
+	}
+	else{
 		$gallery = VisBilder("");
 	}
+	
+	//test search function
+	
+	if (!empty($_POST['search']) && !empty($_POST['searchw'])){
+		$files = giveSearch($_POST['search'], $_POST['searchw']);
+		$gallery = VisBilder($files);
+	}
+	
+	//test
+	
 	
 	$main = preg_replace('/#gallery#/', $gallery, $main);
 

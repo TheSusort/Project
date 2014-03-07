@@ -14,9 +14,11 @@
     include_once("Metadata.php");
     include_once("mysql.php");
     include_once("funksjoner.php");
-	include_once("fullscreen.php");
     db_connnect();
 	
+	
+	global $currentImage;
+	global $result3;
 	$currentImage = substr($_GET['bilde'],7);
 	
 	$query1 = "SELECT fileid FROM file_liste WHERE filename='$currentImage'";
@@ -52,9 +54,8 @@
                     
                     $number = count($files);
                     $key = array_search(basename($_GET['bilde']), $files);
-    
-                    
-                    if (isset($_GET['previous'])){
+					
+					if (isset($_GET['previous'])){
                         if ($key == 0) $key = $number;
                         $showFile = $files[$key - 1];
                     }
