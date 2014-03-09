@@ -12,21 +12,26 @@ class img{
 	public 	$comment;
 	public	$tag;
 	public	$rate;
+	public	$orientation;
 	
 	public function __construct($url){
-		$this->url 		= $url;
+		$this->url 			= $url;
 		$this->get_EXIF($url);
-		$this->comment 	= $this->get_Marker('XP_COMMENT');
-		$this->tag 		= $this->get_Marker('XP_KEYWORDS');
-		echo($this->tag."<br/>".$this->comment."<br/>");
-		// $this->rate 	= get_Marker('');
+		$this->comment 		= $this->get_Marker('XP_COMMENT');
+		$this->tag 			= $this->get_Marker('XP_KEYWORDS');
+		// $this->rate 		= $this->get_Marker('');
 	}
 	
+	public function refrash(){
+		$this->comment 		= $this->get_Marker('XP_COMMENT');
+		$this->tag 			= $this->get_Marker('XP_KEYWORDS');
+		// $this->rate 		= $this->get_Marker('');
+	}
 	private function get_EXIF($url){
 
 		/* We typically need lots of RAM to parse TIFF images since they tend
 		 * to be big and uncompressed. */
-		ini_set('memory_limit', '32M');
+		ini_set('memory_limit', '124M');
 		 
 		/* The input file is now read into a PelDataWindow object.  At this
 		 * point we do not know if the file stores JPEG or TIFF data, so
@@ -56,7 +61,7 @@ class img{
 			if ($exif == null) {
 			/* Ups, there is no APP1 section in the JPEG file.  This is where
 			 * the Exif data should be. */
-				echo('No APP1 section found, added new.');
+				// echo('No APP1 section found, added new.<br/>');
 
 			/* In this case we simply create a new APP1 section (a PelExif
 			 * object) and adds it to the PelJpeg object. */
@@ -69,7 +74,7 @@ class img{
 			} else {
 			/* Surprice, surprice: Exif data is really just TIFF data!  So we
 			 * extract the PelTiff object for later use. */
-				echo('Found existing APP1 section.');
+				// echo('Found existing APP1 section.<br/>');
 				$tiff = $exif->getTiff();
 			}
 		} elseif (PelTiff::isValid($data)) {
@@ -82,7 +87,7 @@ class img{
 		} else {
 		  /* The data was not recognized as either JPEG or TIFF data.
 		   * Complain loudly, dump the first 16 bytes, and exit. */
-			echo('Unrecognized image format! The first 16 bytes follow:');
+			echo('Unrecognized image format! The first 16 bytes follow:<br/>');
 			PelConvert::bytesToDump($data->getBytes(0, 16));
 			exit(1);
 		}
@@ -100,7 +105,7 @@ class img{
 		   * didn't have any Exif information to start with, and so an empty
 		   * PelTiff object was inserted by the code above.  But this is no
 		   * problem, we just create and inserts an empty PelIfd object. */
-		  echo('No IFD found, adding new.');
+		  // echo('No IFD found, adding new.<br/>');
 		  $this->ifd0 = new PelIfd(PelIfd::IFD0);
 		  $tiff->setIfd($this->ifd0);
 		}
@@ -115,7 +120,7 @@ class img{
 		/* We need to check if the image already had a Marker stored. */
 		if ($marker == null) {
 			/* The was no $marker in the image. */
-			echo("Added new empty Marker $mrkr, bat not stored in file.");
+			// echo("Added new empty Marker $mrkr, bat not stored in file.<br/>");
 
 			/* In this case we simply create a new PelEntryAscii object to hold
 			 * the Marker.  The constructor for PelEntryAscii needs to know
@@ -127,6 +132,7 @@ class img{
 			$this->ifd0->addEntry($marker);
 			return '';
 		}else {
+			echo($marker.': '.$marker->getValue().'<br/>');
 			return($marker_value = $marker->getValue());
 		}
 	}
@@ -144,9 +150,51 @@ class img{
 		$this->exif_objekt->saveFile($this->url);
 	}
 	
+	public function getRotation(){
+		$orientation = $this->get_Marker('ORIENTATION');
+		if (isset($orientation)){
+			$orientation = (int)$orientation ;
+		}else{
+			$orientation = 0;
+		}
+		
+		switch($orientation) {
+            case 1:
+            case 2:
+                return 0;
+            break;
+            case 3:
+            case 4:
+                return 180;
+            break;
+            case 5:
+            case 6:
+                return 90;
+            break;
+            case 7:
+            case 8:
+                return 270;
+            break;
+            default:
+                return 0;
+            break;
+        }
+	}
+	
+	public function turnOn($turnOn){
+		if(!isset($turnOn)){
+			$turnOn =  $this->getRotation();
+		}
+		echo('orientation: '.$turnOn.'<br>');
+		if ($turnOn > 0) {
+			$imagick = new Imagick();
+			$imagick->readImage(__DIR__ . DIRECTORY_SEPARATOR . $this->url); 
+			$imagick->rotateImage(new ImagickPixel('none'), $turnOn); 
+			$imagick->writeImage(__DIR__ . DIRECTORY_SEPARATOR . $this->url); 
+			$imagick->clear(); 
+			$imagick->destroy();
+		}
+	}
 }
-// $test = new img('Bilder/Repin_Cossacks.jpg');
-// $test->set_to_marker('XP_COMMENT', 'poluchite moi koment!!!');
-// $test->add_to_marker('XP_COMMENT', ' HA HA HA');
-// echo($test->get_marker('XP_AUTHOR'));
+
 ?>
