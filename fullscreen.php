@@ -20,6 +20,7 @@
                 el.style.display='none';
                 toObj.style.display='inline';
             }
+			
         </script>
         
     </head>
@@ -33,6 +34,8 @@
     include_once("funksjoner.php");
 	include_once("fullscreen.php");
     db_connnect();
+	
+	// alert_message("POST allert: ".print_r($_POST));
 	
 	$currentImage = substr($_GET['bilde'],7);
 	
@@ -90,23 +93,20 @@
 					
 					<br>
 					<b>Rating:</b>
-					
+					<span id='ratingStr'>
 					<?php 	
-					
-					$query2 = "SELECT rating FROM file_liste WHERE fileid=$result3";
-					$result2 = $db->query($query2);
-					if (!empty($result2)){
-						foreach($result2 as $rr)
-						{
-							$currentRating = array_to_string($rr);
-							print_r(array_to_string($rr));
-							print " ";
-						}	
-					}
-				
-					
+						$query2 = "SELECT rating FROM file_liste WHERE fileid=$result3";
+						$result2 = $db->query($query2);
+						if (!empty($result2)){
+							foreach($result2 as $rr)
+							{
+								$currentRating = array_to_string($rr);
+								print_r(array_to_string($rr));
+								print " ";
+							}	
+						}
 					?>
-					
+					</span>
 					<?php
 					//	$rating = 'Not rated';
 					//	if(isset($_POST['ratinginput'])){
@@ -136,36 +136,76 @@
                 if (strcmp($currentRating,"3") == 0) $rating3="checked";
                 if (strcmp($currentRating,"4") == 0) $rating4="checked";
                 if (strcmp($currentRating,"5") == 0) $rating5="checked";
-				echo '<form action="" method="post">	
+				echo '<form id="ratingForm" method="post">	
 					<span class="rating"> 
-					<input type="radio" value="5" class="rating-input"
-						id="rating-input-1-5" name="ratinginput" '.$rating5.' >
-					<label for="rating-input-1-5" class="rating-star"></label>
-					
-					<input type="radio" value="4" class="rating-input"
-						id="rating-input-1-4" name="ratinginput" '.$rating4.' >
-					<label for="rating-input-1-4" class="rating-star"></label>
-					
-					<input type="radio" value="3" class="rating-input"
-						id="rating-input-1-3" name="ratinginput" '.$rating3.' >
-					<label for="rating-input-1-3" class="rating-star"></label>
-					
-					<input type="radio" value="2" class="rating-input"
-						id="rating-input-1-2" name="ratinginput" '.$rating2.' >
-					<label for="rating-input-1-2" class="rating-star"></label>
-					
-					<input type="radio" value="1" class="rating-input"
-						id="rating-input-1-1" name="ratinginput" '.$rating1.' >
-					<label for="rating-input-1-1" class="rating-star"></label>
-				</span>';
+						<input type="radio" value="5" class="rating-input"
+							id="rating-input-1-5" name="ratinginput" '.$rating5.' onChange="rateFunction(5)">
+						<label for="rating-input-1-5" class="rating-star"></label>
+						
+						<input type="radio" value="4" class="rating-input"
+							id="rating-input-1-4" name="ratinginput" '.$rating4.' onChange="rateFunction(4)">
+						<label for="rating-input-1-4" class="rating-star"></label>
+						
+						<input type="radio" value="3" class="rating-input"
+							id="rating-input-1-3" name="ratinginput" '.$rating3.' onChange="rateFunction(3)">
+						<label for="rating-input-1-3" class="rating-star"></label>
+						
+						<input type="radio" value="2" class="rating-input"
+							id="rating-input-1-2" name="ratinginput" '.$rating2.' onChange="rateFunction(2)">
+						<label for="rating-input-1-2" class="rating-star"></label>
+						
+						<input type="radio" value="1" class="rating-input"
+							id="rating-input-1-1" name="ratinginput" '.$rating1.' onChange="rateFunction(1)">
+						<label for="rating-input-1-1" class="rating-star"></label>
+					</span>';
 				?>
-					
-				</span>
-					<input type='hidden' name='ratingid' id='rateingid' value='<?php echo $_GET["id"]; ?>' />
-					<input type="submit" name="submit" value="Rate!"></p>
-					
-				</form>
 				
+				</form>
+				<script>
+					function getXmlHttp(){
+						var xmlhttp;
+						try {
+							xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+						} catch (e) {
+							try {
+								xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+							} catch (E) {
+								xmlhttp = false;
+							}
+						}
+						if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
+							xmlhttp = new XMLHttpRequest();
+						}
+						return xmlhttp;
+					}
+					
+					function parseGetParams() { 
+					   var $_GET = {}; 
+					   var __GET = window.location.search.substring(1).split("&"); 
+					   for(var i=0; i<__GET.length; i++) { 
+						  var getVar = __GET[i].split("="); 
+						  $_GET[getVar[0]] = typeof(getVar[1])=="undefined" ? "" : getVar[1]; 
+					   } 
+					   return $_GET; 
+					} 
+					
+					function rateFunction(rate){
+						var xmlhttp = getXmlHttp();
+						var getArr = parseGetParams();
+						var fileName = getArr['bilde'];
+						
+						xmlhttp.open('POST', 'test.php', false);
+						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+						xmlhttp.send("rate=" + encodeURIComponent(rate) + "&name=" + encodeURIComponent(fileName));
+						if(xmlhttp.status == 200) {
+							if (xmlhttp.responseText==""){
+								var span = document.getElementById('ratingStr');
+								span.innerHTML = rate;
+							};
+						}
+					}
+							
+				</script>
 				<?php
 					if(!empty($_POST['ratinginput'])){
 						$svaret = $_POST['ratinginput'];
@@ -183,14 +223,13 @@
                 <form action="" method="post">
                     <span id="itm1" onclick="exchange(this);">
                         <?php 	
-					
 					$query2 = "SELECT commentary FROM file_liste WHERE fileid=$result3";
 					$result2 = $db->query($query2);
 					if (!empty($result2)){
 						foreach($result2 as $rr)
 						{
 							print_r(array_to_string($rr));
-							print "click to comment";
+							echo( "click to comment");
 						}	
 					}
 					
