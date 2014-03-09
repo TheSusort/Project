@@ -4,13 +4,13 @@ PHP_JPEG_Metadata_Toolkit_1.12
 */
 
 $Toolkit_Dir = "./PHP_JPEG_Metadata_Toolkit_1.12/";
-include $Toolkit_Dir . 'Toolkit_Version.php';          // Change: added as of version 1.11
-include $Toolkit_Dir . 'JPEG.php';                     // Change: Allow this example file to be easily relocatable - as of version 1.11
-include $Toolkit_Dir . 'JFIF.php';
-include $Toolkit_Dir . 'PictureInfo.php';
-include $Toolkit_Dir . 'XMP.php';
-include $Toolkit_Dir . 'Photoshop_IRB.php';
-include $Toolkit_Dir . 'EXIF.php';
+include_once $Toolkit_Dir . 'Toolkit_Version.php';          // Change: added as of version 1.11
+include_once $Toolkit_Dir . 'JPEG.php';                     // Change: Allow this example file to be easily relocatable - as of version 1.11
+include_once $Toolkit_Dir . 'JFIF.php';
+include_once $Toolkit_Dir . 'PictureInfo.php';
+include_once $Toolkit_Dir . 'XMP.php';
+include_once $Toolkit_Dir . 'Photoshop_IRB.php';
+include_once $Toolkit_Dir . 'EXIF.php';
 
 class img{
 	public	$url;
@@ -25,7 +25,7 @@ class img{
 	
 	public function __construct($url){
 		$this->url 		= $url;
-		$this->get_EXIF($url);
+		// $this->get_EXIF($url);
 	}
 	
 	public function refrash(){
@@ -86,14 +86,7 @@ class img{
 		}else{
 			print_r($xmp_arr);
 		}
-				// echo $xmp_text;
-				$array = array(
-					1    => "a",
-					"1"  => "b",
-					1.5  => "c",
-					true => "d",
-				);
-		var_dump($array);
+		
 		$xmp_arr = read_XMP_array_from_text($xmp_text);
 		print_r($xmp_arr);
 		return $xmp_text;
@@ -139,37 +132,14 @@ class img{
 		
 	}
 	
-	function autoRotateImage() { 
-		$image = new Imagick();
-		$image->readImage(__DIR__ . DIRECTORY_SEPARATOR . $this->url); 
-		$orientation = $image->getImageOrientation(); 
 
-		switch($orientation) { 
-			case imagick::ORIENTATION_BOTTOMRIGHT: 
-				$image->rotateimage("#000", 180); // rotate 180 degrees 
-			break; 
-
-			case imagick::ORIENTATION_RIGHTTOP: 
-				$image->rotateimage("#000", 90); // rotate 90 degrees CW 
-			break; 
-
-			case imagick::ORIENTATION_LEFTBOTTOM: 
-				$image->rotateimage("#000", -90); // rotate 90 degrees CCW 
-			break; 
-		} 
-
-		// Now that it's auto-rotated, make sure the EXIF data is correct in case the EXIF gets saved with the image! 
-		$image->setImageOrientation(imagick::ORIENTATION_TOPLEFT); 
-		$image->writeImage(__DIR__ . DIRECTORY_SEPARATOR . $this->url); 
-		$image->clear(); 
-		$image->destroy();
-	} 
 }
-$img = new img('Bilder/output.jpg');
-$value = 3;
+// $img = new img('Bilder/output.jpg');
+// $imgThumb = new img('Bilder/thumbs/output.jpg');
+// $value = 3;
 
 /*	Rotation  */
-	$img->autoRotateImage();
+	
 
 // $img->get_Rating_xmp();
 // $img->get_Rating_MSPhoto();

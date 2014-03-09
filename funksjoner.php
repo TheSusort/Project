@@ -1,5 +1,5 @@
 <?php
-include_once('imgClass.php');
+include_once('image.php');
 $images = "Bilder/thumbs/";         # Location of small versions
 $big    = "Bilder/";                # Location of big versions (assumed to be a subdir of above)
 $cols   = 4;                        # Number of columns to display
@@ -105,10 +105,10 @@ $files  = null;                     # List of the files from disk
 	{
 		global $images, $big;
 		$i=0;
-		$add = FALSE;
+		// $add = FALSE;
 		$not_add = FALSE;
-		$files_add = '\tSaved on server:\n';
-		$files_not_add = '\n\n\tFile name already exist:\n';
+		// $files_add = '\tSaved on server:\n';
+		$files_not_add = '\tFile\'s not upload:\n';
 		$file_name = $_FILES["bildefil"]["name"];
 		$file_tmp_name = $_FILES["bildefil"]["tmp_name"];
 		
@@ -116,45 +116,35 @@ $files  = null;                     # List of the files from disk
 			foreach ($file_tmp_name as $file)
 			{
 				if (check_img($file_name[$i])){
-					if (file_exists($big.$file_name[$i]))
-					{
-						$files_not_add = $files_not_add.'\n '.$file_name[$i];
-						$n = TRUE;
-					}elseif (!move_uploaded_file($file, $big.$file_name[$i]))
-					{
-						alert_message("Something went wrong. :-(");
-						return FALSE;
-					}elseif (check_img($file_name[$i]))
-					{
-						$files_add = $files_add.'\n'.$file_name[$i].
-									'.\tSeze: '.round(($_FILES["bildefil"]["size"][$i] / 1024),2)."KB";
-						$add = TRUE;
-						//lager thumbnail av bilde
-						createThumbs($file_name[$i], $big, $images, 200);
-						if ($GLOBALS['db_is_connected'])
-						{
-							if (!db_insert('file_liste', 'filename', $file_name[$i]))
-							{
-								alert_message('ERROR. can\'t insert into database.');
-								return FALSE;
+					if (file_exists($big.$file_name[$i])){
+					
+						$files_not_add = $files_not_add.'\n '.$file_name[$i].' File name already exist';
+						$not_add = TRUE;
+					
+					}elseif (!move_uploaded_file($file, $big.$file_name[$i])){
+					
+						$files_not_add = $files_not_add.'\n '.$file_name[$i].' Something went wrong. :-(';
+						$not_add = TRUE;
+					
+					}elseif (check_img($file_name[$i])){
+						autoRotateImage(__DIR__ . DIRECTORY_SEPARATOR . $big . $file_name[$i],'');
+						createThumbs($file_name[$i], $big, $images, 200);	//lager thumbnail av bilde
+					
+						if ($GLOBALS['db_is_connected']){
+							if (!db_insert('file_liste', 'filename', $file_name[$i])){
+								// alert_message('ERROR. can\'t insert into database.');
+								// return FALSE;
 							};
 						}
 					}
-				}else
-				{
-					alert_message("Illegal image type. $file_name[$i]");
-					// return FALSE;
+				}else{
+					$files_not_add = $files_not_add.'\n '.$file_name[$i].' Illegal image type.';
+					$not_add = TRUE;
 				}
 				$i++;
 			}
-			if ($add && $not_add){
-				return $files_add.$files_not_add;
-			}elseif($add){
-				return $files_add;
-			}elseif($not_add){
+			if($not_add){
 				return $files_not_add;
-			}else{
-				return FALSE;
 			}
 		}
 	}

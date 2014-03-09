@@ -30,5 +30,5 @@
     $main = preg_replace('/#tags#/', $tags_str, $main);
 
     echo($main);	//displays the contents of the file main.html
-    //if (!empty($message)) alert_message($message);
+    if (!empty($message)) alert_message($message);	// pop-up message 
 ?>
