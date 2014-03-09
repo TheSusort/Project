@@ -1,4 +1,4 @@
-﻿<?php
+<?php
     // Echo "<link rel='shortcut icon' href='img/favicon.ico'>";
     include_once("Metadata.php");
     include_once("mysql.php");
@@ -32,5 +32,5 @@
     $main = preg_replace('/#tags#/', $tags_str, $main);
 
     echo($main);	//displays the contents of the file main.html
-    if (!empty($message)) alert_message($message);
+    //if (!empty($message)) alert_message($message);
 ?>

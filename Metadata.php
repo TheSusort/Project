@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 	$data;
 	
 	// Kjøres når programmet starter.

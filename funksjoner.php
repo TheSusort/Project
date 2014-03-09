@@ -107,8 +107,8 @@ $files  = null;                     # List of the files from disk
 		$i=0;
 		$add = FALSE;
 		$not_add = FALSE;
-		$files_add = '\tLagres paa serveren:\n';
-		$files_not_add = '\n\n\tVar samme navn som en annen fil:\n';
+		$files_add = '\tSaved on server:\n';
+		$files_not_add = '\n\n\tFile name already exist:\n';
 		$file_name = $_FILES["bildefil"]["name"];
 		$file_tmp_name = $_FILES["bildefil"]["tmp_name"];
 		
@@ -122,7 +122,7 @@ $files  = null;                     # List of the files from disk
 						$n = TRUE;
 					}elseif (!move_uploaded_file($file, $big.$file_name[$i]))
 					{
-						alert_message("Alt gikk galt. :-(");
+						alert_message("Something went wrong. :-(");
 						return FALSE;
 					}elseif (check_img($file_name[$i]))
 					{

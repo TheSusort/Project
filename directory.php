@@ -1,4 +1,4 @@
-﻿    <?php
+<?php
     //path to directory to scan. i have included a wildcard for a subdirectory
     $directory = "Bilder/*/";
      

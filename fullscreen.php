@@ -2,7 +2,7 @@
     <html>
     <head>
         <title>fullscreen</title>
-        <meta http-equiv="content-type" content="=text/html; charset=utf-8"/>
+        <meta http-equiv="content-type" content="=text/html; charset=utf-8 without BOM"/>
         <link rel="stylesheet" href="style.css">
         <link rel="shortcut icon" href="img/favicon.ico">
         
