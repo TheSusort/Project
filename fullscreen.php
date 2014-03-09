@@ -194,7 +194,7 @@
 						var getArr = parseGetParams();
 						var fileName = getArr['bilde'];
 						
-						xmlhttp.open('POST', 'test.php', false);
+						xmlhttp.open('POST', 'rating.php', false);
 						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 						xmlhttp.send("rate=" + encodeURIComponent(rate) + "&name=" + encodeURIComponent(fileName));
 						if(xmlhttp.status == 200) {
