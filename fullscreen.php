@@ -308,7 +308,14 @@
 
     <FORM action="CloseFullscreen">
                    <input type="image" src="closex.png" onClick="window.close('fs')" align="right" width="40" height="40">
-           </FORM>           
+           </FORM>
+        <FORM action="RotateRight">
+                   <input type="image" src="RotateRightButton.png" onClick="" align="right" width="40" height="40">
+           </FORM>
+          <FORM action="RotateLeft">
+                   <input type="image" src="RotateLeftButton.png" onClick="" align="right" width="40" height="40">
+           </FORM>
+          
            
            <div id="fullscreenpic">
           <?php
