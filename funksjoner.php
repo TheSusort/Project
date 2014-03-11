@@ -1,5 +1,8 @@
 <?php
 include_once('image.php');
+
+include_once("mysql.php");
+
 $images = "Bilder/thumbs/";         # Location of small versions
 $big    = "Bilder/";                # Location of big versions (assumed to be a subdir of above)
 $cols   = 4;                        # Number of columns to display
@@ -220,6 +223,13 @@ $files  = null;                     # List of the files from disk
 		return $files;
 	}
 
+// eksperiment get images list by rating
+	function get_img_by_rating($ratinglist)
+	{
+		$files = $ratinglist;
+		return $files;
+	}
+	
 // get EXIF data
 	function get_EXIF($file)
 	{
@@ -306,4 +316,51 @@ $files  = null;                     # List of the files from disk
         imagejpeg($nm, $path_to_thumbs_directory . $filename);
 	}
 
+	// test search function
+	
+		function giveSearch($search1, $searchw1){
+		
+			if(isset($_POST['submission'])){
+				$search = $search1;
+				$searchw = $searchw1;
+				
+				$where = 'file_liste';
+				$what = 'filename';
+				
+				$sQuery = "WHERE $searchw = $search";
+				
+				if($searchw=="commentary"){ 
+					$sQuery = "WHERE $searchw LIKE '%$search%'";
+					}
+				
+				if($searchw=="tag"){ 
+					//$sQuery = 'INNER JOIN tag ON file_liste.fileid = tag.fileid WHERE tag.tags LIKE \''.$search.'\'';
+					$sQuery = "INNER JOIN tag ON file_liste.fileid = tag.fileid WHERE tag.tags LIKE '$search%'";
+				}
+				
+				//if($searchw=="clear"){
+				//	$a = giveSearch($search, 'commentary');
+				//	$b = giveSearch($search, 'tag');
+				//	$c = $merge_array($a, $b);
+				//	return array_unique($c);
+				//}
+				
+				
+				$files = db_select($where, $what, $sQuery, $what);
+				if(!empty($files)){
+					$files = array_unique($files);
+					}
+				
+				if(!$files){
+					alert_message("Search yields no results");
+					return FALSE;
+				}
+				
+				return $files;
+				
+			}
+			
+		}
+	
+		
 ?>

@@ -105,5 +105,5 @@ include_once('funksjoner.php');
         }
         return FALSE;
     }
-
+		
 ?>

@@ -31,11 +31,14 @@
     <?php
     include_once("mysql.php");
     include_once("funksjoner.php");
-	include_once("fullscreen.php");
     db_connnect();
 	
 	// alert_message("POST allert: ".print_r($_POST));
 	
+
+	
+	global $currentImage;
+	global $result3;
 	$currentImage = substr($_GET['bilde'],7);
 	
 	$query1 = "SELECT fileid FROM file_liste WHERE filename='$currentImage'";
@@ -52,6 +55,8 @@
        <div id="containermain">
            
            <div id="leftcontainer">
+           
+
                       
 			   <div id="details">
 					<h3>Picture details</h3>
