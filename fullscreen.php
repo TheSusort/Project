@@ -220,35 +220,27 @@
                    <!kommentarfelt>
         
                 <form action="" method="post">
-                    <span id="itm1" onclick="exchange(this);">
-                        <?php 	
+                    <span id="itm1" onclick="exchange(this);"><?php 	
 					$query2 = "SELECT commentary FROM file_liste WHERE fileid=$result3";
 					$result2 = $db->query($query2);
+                	foreach($result2 as $rr)
+						
 					if (!empty($result2)){
-						foreach($result2 as $rr)
-						{
+						foreach($result2 as $rr) {
 							print_r(array_to_string($rr));
-							echo( "click to comment");
-						}	
-					}
-					
-					?>
-                    </span>
+							if(null === (array_to_string($rr))) echo("click to comment");
+						}
+                    }
+?>
+</span>
                     <input ondblclick="exchange(this);" id="itm1b" class="replace" type="text" value=""  name="comment">
-                    <input type="submit" value="Comment!"/>
-                    </form>
-                
-                    <p>
-			
-					<?php
+                    </form><?php
 					if(!empty($_POST['comment'])){
 						$svaret = $_POST['comment'];
 						$query = "UPDATE file_liste SET commentary='$svaret' WHERE fileid=$result3";
 						$result = $db->query($query);
 						echo'<meta http-equiv="refresh" content="0" />';
-					
-					}
-					?>
+					}?>
 					
 					
                
