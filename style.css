@@ -71,7 +71,7 @@ h1 {
 }
 
 #fullscreenpic {
-    margin-left:310px;
+    margin-left:260px;
     height:100%;
     background-color:#415050;
     border-radius:25px;
@@ -169,7 +169,7 @@ ul.nav li a:hover {
 
 #leftcontainer {
     float:left;
-    width:300px;
+    width:250px;
     height:100%;
     background-color:#415050;
     border-radius:25px;
