@@ -262,9 +262,13 @@
 			
 					if(!empty($_POST['tag'])){
 						$svaret = $_POST['tag'];
-						$query = "INSERT INTO tag(fileid, tags) VALUES ($result3 , '$svaret')";
-						$result = $db->query($query);
-						echo'<meta http-equiv="refresh" content="0" />';
+                        $stringarray = explode(" ", $svaret);
+                        foreach ($stringarray as $str)
+                        {
+                            $query = "INSERT INTO tag(fileid, tags) VALUES ($result3 , '$str')";
+                            $result = $db->query($query);
+                            echo'<meta http-equiv="refresh" content="0" />';
+                        }
 					}
 			
 					?>  
