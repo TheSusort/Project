@@ -350,14 +350,26 @@ $files  = null;                     # List of the files from disk
 				$sQuery = "WHERE $searchw = $search";
 				
 				if($searchw=="commentary"){ 
-					$sQuery = "WHERE $searchw = '$search'";
+					$sQuery = "WHERE $searchw LIKE '%$search%'";
 					}
 				
 				if($searchw=="tag"){ 
-					$sQuery = 'INNER JOIN tag ON file_liste.fileid = tag.fileid WHERE tag.tags = \''.$search.'\'';
-				}				
+					//$sQuery = 'INNER JOIN tag ON file_liste.fileid = tag.fileid WHERE tag.tags LIKE \''.$search.'\'';
+					$sQuery = "INNER JOIN tag ON file_liste.fileid = tag.fileid WHERE tag.tags LIKE '$search%'";
+				}
+				
+				//if($searchw=="clear"){
+				//	$a = giveSearch($search, 'commentary');
+				//	$b = giveSearch($search, 'tag');
+				//	$c = $merge_array($a, $b);
+				//	return array_unique($c);
+				//}
+				
 				
 				$files = db_select($where, $what, $sQuery, $what);
+				if(!empty($files)){
+					$files = array_unique($files);
+					}
 				
 				if(!$files){
 					alert_message("Search yields no results");
@@ -370,5 +382,5 @@ $files  = null;                     # List of the files from disk
 			
 		}
 	
-	
+		
 ?>

@@ -33,10 +33,12 @@
 	
 	//test search function
 	
-	if (!empty($_POST['search']) && !empty($_POST['searchw'])){
-		$files = giveSearch($_POST['search'], $_POST['searchw']);
-		$gallery = VisBilder($files);
-	}
+	
+		if (!empty($_POST['search']) && !empty($_POST['searchw'])){
+			$files = giveSearch($_POST['search'], $_POST['searchw']);
+			$gallery = VisBilder($files);
+		}
+	
 	
 	//test
 	
