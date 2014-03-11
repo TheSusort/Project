@@ -270,6 +270,27 @@
                             echo'<meta http-equiv="refresh" content="0" />';
                         }
 					}
+                    
+                    $query2 = "SELECT tags FROM tag WHERE fileid=$result3";
+                    $result2 = $db->query($query2);
+                    if (!empty($result2))
+                    {
+						foreach($result2 as $rr)
+						{
+							echo '<form action="" method="post">
+                                <input type="submit" name="' .
+                                array_to_string($rr) . '" value="' .
+                                array_to_string($rr) . '" />
+                                </form>';
+                            
+                            if (isset($_POST[array_to_string($rr)]))
+                            {
+                                $tag = array_to_string($rr);
+                                $query = "DELETE FROM tag WHERE tags = '$tag' AND fileid=$result3;";
+                                $result = $db->query($query);
+                            }
+						}	
+					}
 			
 					?>  
                         
