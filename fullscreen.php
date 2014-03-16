@@ -208,7 +208,25 @@
 							};
 						}
 					}
-							
+					
+					function rotate(angle){
+						var xmlhttp = getXmlHttp();
+						var getArr = parseGetParams();
+						var fileName = getArr['bilde'];
+						xmlhttp.open('POST', 'rotation.php', false);
+						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+						xmlhttp.send("angle=" + encodeURIComponent(angle) + "&name=" + encodeURIComponent(fileName));
+						if(xmlhttp.status == 200) {
+							if (xmlhttp.responseText!==""){
+								alert('Rotation '+angle+' Error!!! '+ xmlhttp.responseText);
+							}else{
+								hiddenImg= new Image();
+								hiddenImg.src= fileName;
+								var fullimg = document.getElementById('fullimg');
+								fullimg.src = hiddenImg.src;
+							};
+						}
+					}
 				</script>
 				<?php
 					if(!empty($_POST['ratinginput'])){
@@ -332,15 +350,14 @@
            
            </div>
 
-    <FORM action="CloseFullscreen">
-                   <input type="image" src="closex.png" onClick="window.close('fs')" align="right" width="40" height="40">
-           </FORM>
-        <FORM action="RotateRight">
-                   <input type="image" src="RotateRightButton.png" onClick="" align="right" width="40" height="40">
-           </FORM>
-          <FORM action="RotateLeft">
-                   <input type="image" src="RotateLeftButton.png" onClick="" align="right" width="40" height="40">
-           </FORM>
+			<FORM action="CloseFullscreen">
+			   <input type="image" src="closex.png" onClick="window.close('fs')" align="right" width="40" height="40">
+			</FORM>
+			
+			   <input type="image" src="RotateRightButton.png" onClick="rotate(90)" align="right" width="40" height="40">
+	
+			   <input type="image" src="RotateLeftButton.png" onClick="rotate(-90)" align="right" width="40" height="40">
+
           
            
            <div id="fullscreenpic">
@@ -364,12 +381,12 @@
                         if($key == $number-1) $key = -1;
                         $showFile = $files[$key + 1];
                     }
-                    else { $showFile = substr($_GET['bilde'], 7);
-                    echo '<img src='.$big.$showFile.' height=85% ><br/>'; 
-                         }
+                    else { 
+						$showFile = substr($_GET['bilde'], 7);
+						echo '<img id = "fullimg" src='.$big.$showFile.' height=85% ><br/>'; 
+					}
                     if ((isset($_GET['previous'])) or (isset($_GET['next']))) {
-                        echo '<img src='.$_GET['bilde'].' height=85% ><br/>'; 
-
+                        echo '<img id = "fullimg" src='.$_GET['bilde'].' height=85% ><br/>'; 
                     }
                     echo '<a href="?previous=1&amp;tag='.$_GET['tag'].'&amp;bilde='.urlencode($big.$showFile).'">
                     <img src= "Lbutton.png"width="40" height="40"></a>';
