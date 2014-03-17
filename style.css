@@ -9,10 +9,6 @@ img {
     max-width: 900px;
 }
 		
-img:active  {
-    max-width: 100%;
-}
-		
 a:focus {
     outline: none;
 }
@@ -72,7 +68,7 @@ h1 {
 
 #fullscreenpic {
     margin-left:260px;
-    height:100%;
+    height:90vh;
     background-color:#415050;
     border-radius:25px;
     border-style:solid;
