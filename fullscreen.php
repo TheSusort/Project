@@ -21,10 +21,66 @@
                 toObj.style.display='inline';
             }
 			
+             // IN PROGRESS
+            function leftArrowPressed() {
+                var list = imgList();
+                var imgLoc = getURLParameter('bilde');
+                var imgName = imgLoc.split("/");
+                var place = list.indexOf(imgName[1]);
+                if (place == 0)place = list.length;
+                var previous = list[place - 1];
+                
+               window.location.assign("fullscreen.php?tag=null&bilde=Bilder%2F" + previous);
+                    
+                      
+            }
+            
+            function rightArrowPressed() {
+                var list = imgList();
+                var imgLoc = getURLParameter('bilde');
+                var imgName = imgLoc.split("/");
+                var place = list.indexOf(imgName[1]);
+                var next = list[place + 1];
+                if (place == list.length)place = 0;
+
+               window.location.assign("fullscreen.php?tag=null&bilde=Bilder%2F" + next);
+            }
+            
+            function imgList() {
+                <?php
+                    include_once("funksjoner.php");
+                    $files = get_img_list($big);
+                    
+                    $number = count($files);
+                    $key = array_search(basename($_GET['bilde']), $files);
+                ?>
+                var imgList = <?php 
+                                echo json_encode($files);
+                                ?>;
+                return imgList;
+                    
+            }
+            
+            document.onkeydown = function(evt) {
+                evt = evt || window.event;
+                switch (evt.keyCode) {
+                    case 37:
+                        leftArrowPressed();
+                        break;
+                    case 39:
+                        rightArrowPressed();
+                        break;
+                }
+            };
+            
+            function getURLParameter(name) {
+                return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
+		}
+// PROGRESS
         </script>
         
     </head>
-    <!-------------------------------------------------------------------------------------->
+        
     <body>
 
     
