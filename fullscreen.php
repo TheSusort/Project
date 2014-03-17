@@ -6,6 +6,14 @@
         <link rel="stylesheet" href="style.css">
         <link rel="shortcut icon" href="img/favicon.ico">
         
+        <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
+        <link href="css/jquery.tagit.css" rel="stylesheet" type="text/css">
+        
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"   type="text/javascript" charset="utf-8"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js"    type="text/javascript" charset="utf-8"></script>
+        <script src="js/tag-it.js" type="text/javascript" charset="utf-8"></script>
+        
+        <!javascript kommentarboks>
         <script type="text/javascript">
             function exchange(el){
                 var ie=document.all&&!document.getElementById? document.all : 0;
@@ -327,6 +335,31 @@
                  
                    
                 <!tagfelt>
+               
+               <script type="text/javascript">
+                    $(document).ready(function() {
+                        $("#myTags").tagit();
+                    });
+                </script>
+               
+               
+
+               <ul id="myTags">
+            <!-- Existing list items will be pre-added to the tags -->
+         <?php
+
+            $query2 = "SELECT tags FROM tag WHERE fileid=$result3";
+                    $result2 = $db->query($query2);
+                    if (!empty($result2))
+                    {
+						foreach($result2 as $rr)
+						{
+							echo '<li>'. array_to_string($rr).'</li>';
+                            
+						}	
+					}
+                   ?>
+            </ul>
                    
                    <?php
                    
