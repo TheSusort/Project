@@ -99,7 +99,14 @@
 	
 	// alert_message("POST allert: ".print_r($_POST));
 	
-
+		global $imgListStr;
+		if (empty($_GET['tag']) || $_GET['tag']=='null'){
+			$imgList = db_select('file_liste', 'filename', '', 'filename');
+		}else{
+			$group = "inner join tag on file_liste.fileid = tag.fileid where tag.tags = '".$_GET['tag']."'";
+			$imgList = db_select('file_liste', 'filename', $group, 'filename');
+		}
+		$imgListStr = array_to_string($imgList);
 	
 	global $currentImage;
 	global $result3;
@@ -125,23 +132,25 @@
 			   <div id="details">
 					<h3>Picture details</h3>
 					<b>Current file: </b>
-					<?php print_r($currentImage);?><br>
+						<span id='nameStr'>
+							<?php print_r($currentImage);?>
+						</span><br>
 					<b>Tags:</b>
-					
+					<span id='tagsStr'>
 					<?php 	
+						$query2 = "SELECT tags FROM tag WHERE fileid=$result3";
+						$result2 = $db->query($query2);
+						if (!empty($result2)){
+							foreach($result2 as $rr)
+							{
+								print "#";
+								print_r(array_to_string($rr));
+								print " ";
+							}	
+						}
+					?>
+					</span><br>
 					
-					$query2 = "SELECT tags FROM tag WHERE fileid=$result3";
-					$result2 = $db->query($query2);
-					if (!empty($result2)){
-						foreach($result2 as $rr)
-						{
-							print "#";
-							print_r(array_to_string($rr));
-							print " ";
-						}	
-					}
-					
-					?><br>
 					<b>Comment:</b>
 					
 					<?php 	
@@ -230,6 +239,9 @@
 				
 				</form>
 				<script>
+					var corImg = getCurrentImg();
+					var fileNames = getImgList();
+					// alert(corImg);
 					function getXmlHttp(){
 						var xmlhttp;
 						try {
@@ -259,8 +271,8 @@
 					
 					function rateFunction(rate){
 						var xmlhttp = getXmlHttp();
-						var getArr = parseGetParams();
-						var fileName = getArr['bilde'];
+						// var getArr = parseGetParams();
+						var fileName = 'Bilder/'+fileNames[corImg];
 						
 						xmlhttp.open('POST', 'rating.php', false);
 						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -275,8 +287,7 @@
 					
 					function rotate(angle){
 						var xmlhttp = getXmlHttp();
-						var getArr = parseGetParams();
-						var fileName = getArr['bilde'];
+						var fileName = 'Bilder/'+fileNames[corImg];
 						xmlhttp.open('POST', 'rotation.php', false);
 						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 						xmlhttp.send("angle=" + encodeURIComponent(angle) + "&name=" + encodeURIComponent(fileName));
@@ -290,6 +301,71 @@
 								fullimg.src = hiddenImg.src;
 							};
 						}
+					}
+				
+					function getImgList(){
+						var str = "<?php   echo($imgListStr) ?>";
+						var imgList = str.split(', ')
+						return imgList;
+					}
+				
+					function getCurrentImg(){
+						var imgList = getImgList();
+						var getArr = parseGetParams();
+						var fileName = getArr['bilde'].substr(7);
+						for (var i=0,len=imgList.length; i<len; i++)
+						{ 
+							if (imgList[i] == fileName){
+								return i;
+							}
+						}
+					}
+					
+					function getRate(){
+						var xmlhttp = getXmlHttp();
+						var fileName = 'Bilder/'+fileNames[corImg];
+						
+						xmlhttp.open('POST', 'rating.php', false);
+						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+						xmlhttp.send("&name=" + encodeURIComponent(fileName));
+						if(xmlhttp.status == 200) {
+							if (xmlhttp.responseText!=""){
+								return(xmlhttp.responseText);
+							}else{
+								return false
+							};
+						}
+					}
+					
+					function nextImg(){
+						var length = fileNames.length;
+						var next = (corImg+1)%length;
+						var hiddenNextImg = new Image();
+						hiddenNextImg.src = 'Bilder/'+fileNames[next];
+						var fullimg = document.getElementById('fullimg');
+						fullimg.src = hiddenNextImg.src;
+						corImg = next;
+						var span = document.getElementById('ratingStr');
+						var rate = getRate();
+						if ( rate ){
+							span.innerHTML = rate;
+						}else{
+							span.innerHTML = "0";
+						};
+						document.getElementById('nameStr').innerHTML = fileNames[next]
+					}
+				
+					function prevImg(){
+						var length = fileNames.length;
+						var prev = (corImg-1)%length;
+						if (prev < 0){
+							prev = length-1;
+						}
+						var hiddenNextImg = new Image();
+						hiddenNextImg.src = 'Bilder/'+fileNames[prev];
+						var fullimg = document.getElementById('fullimg');
+						fullimg.src = hiddenNextImg.src;
+						corImg = prev;
 					}
 				</script>
 				<?php
@@ -477,13 +553,14 @@
                     if ((isset($_GET['previous'])) or (isset($_GET['next']))) {
                         echo '<img id = "fullimg" src='.$_GET['bilde'].' height=85% ><br/>'; 
                     }
-                    echo '<a href="?previous=1&amp;tag='.$_GET['tag'].'&amp;bilde='.urlencode($big.$showFile).'">
-                    <img src= "Lbutton.png"width="40" height="40"></a>';
-                    echo '<a href="?next=1&amp;tag='.$_GET['tag'].'&amp;bilde='.urlencode($big.$showFile).'">
-                    <img src= "Rbutton.png"width="40" height="40"></a>';
+                    // echo '<a href="?previous=1&amp;tag='.$_GET['tag'].'&amp;bilde='.urlencode($big.$showFile).'">
+                    // <img src= "Lbutton.png"width="40" height="40"></a>';
+                    // echo '<a href="?next=1&amp;tag='.$_GET['tag'].'&amp;bilde='.urlencode($big.$showFile).'">
+                    // <img src= "Rbutton.png"width="40" height="40"></a>';
                
                 ?>
- 
+					<input type="image" src= "Lbutton.png" onClick="prevImg()" width="40" height="40">
+					<input type="image" src= "Rbutton.png" onClick="nextImg()" width="40" height="40">
     
                
                <script type="text/javascript">

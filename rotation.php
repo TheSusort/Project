@@ -5,7 +5,9 @@
 		$angle = $_POST['angle'];
 		$fileName = substr($_POST['name'], 7);
 		$d_s = DIRECTORY_SEPARATOR;
-		RotateImage(__DIR__ . $d_s . 'Bilder' . $d_s . $fileName, '', $angle);
-		RotateImage(__DIR__ . $d_s . 'Bilder'. $d_s .'thumbs' . $d_s . $fileName, '', $angle);
+		$rot = RotateImage(__DIR__ . $d_s . 'Bilder' . $d_s . $fileName, '', $angle);
+		if($rot){
+			RotateImage(__DIR__ . $d_s . 'Bilder'. $d_s .'thumbs' . $d_s . $fileName, '', $angle);
+		}
 	}
 ?>
