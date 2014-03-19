@@ -286,7 +286,7 @@
 								alert('Rotation '+angle+' Error!!! '+ xmlhttp.responseText);
 							}else{
 								hiddenImg 		= new Image();
-								hiddenImg.src 	= fileName+'?'+Math.floor((Math.random()*100)+1);
+								hiddenImg.src 	= fileName+'?trash='+Math.random();
 								var fullimg 	= document.getElementById('fullimg');
 								fullimg.src 	= hiddenImg.src;
 							};
@@ -329,13 +329,13 @@
 						var length = fileNames.length;
 						var next = (corImg+1)%length;
 						var hiddenNextImg = new Image();
-						hiddenNextImg.src = 'Bilder/'+fileNames[next];
+						hiddenNextImg.src = 'Bilder/'+fileNames[next]+'?trash='+Math.random();
 						var fullimg = document.getElementById('fullimg');
 						fullimg.src = hiddenNextImg.src;
 						corImg = next;
 						var rate = getRate();
 						showRate(rate);
-						document.getElementById('nameStr').innerHTML = fileNames[next]
+						document.getElementById('nameStr').innerHTML = fileNames[next];
 						
 					}
 				
@@ -346,7 +346,7 @@
 							prev = length-1;
 						}
 						var hiddenNextImg = new Image();
-						hiddenNextImg.src = 'Bilder/'+fileNames[prev];
+						hiddenNextImg.src = 'Bilder/'+fileNames[prev]+'?trash='+Math.random();
 						var fullimg = document.getElementById('fullimg');
 						fullimg.src = hiddenNextImg.src;
 						corImg = prev;
