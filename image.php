@@ -1,5 +1,5 @@
 <?php
-	function rotateImage($url, $outUrl, $angle){
+	function rotateImage($url, $outUrl, $angle, $copy){
 		$image = new Imagick();
 		$image->readImage($url);  //__DIR__ . DIRECTORY_SEPARATOR .
 		$angle = (int)$angle; 
@@ -11,6 +11,9 @@
 			// Now that it's manuel-rotated, make sure the EXIF data is correct in case the EXIF gets saved with the image! 
 			$image->setImageOrientation(imagick::ORIENTATION_TOPLEFT); 
 			$image->writeImage($outUrl); //__DIR__ . DIRECTORY_SEPARATOR .
+			if (!empty($copy)){
+				$image->writeImage($copy);
+			}
 			$image->clear(); 
 			$image->destroy();
 			return TRUE;

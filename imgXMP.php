@@ -62,7 +62,6 @@ class img{
 	
 	private function check_xmp($xmp_text){
 		$xmp_arr = read_XMP_array_from_text($xmp_text);
-		// echo $xmp_text;
 		if (empty($xmp_arr)){
 			$xmp_text .=
 				'<x:xmpmeta xmlns:x="adobe:ns:meta/">' .
@@ -88,7 +87,7 @@ class img{
 		}
 		
 		$xmp_arr = read_XMP_array_from_text($xmp_text);
-		print_r($xmp_arr);
+		// print_r($xmp_arr);
 		return $xmp_text;
 	}
 	
@@ -97,7 +96,7 @@ class img{
 		$xmp_text = get_XMP_text( $this->header_data );
 		preg_match('(<MicrosoftPhoto:Rating>\d+</MicrosoftPhoto:Rating>)i', $xmp_text, $matches);
 		if (!empty($matches)){
-			print_r($matches);
+			// print_r($matches);
 			return $matches[0];
 		}
 	}
@@ -131,20 +130,15 @@ class img{
 	public function add_to_Marker($mrkr, $value){
 		
 	}
-	
-
 }
-// $img = new img('Bilder/output.jpg');
+$img = new img('Bilder/output.jpg');
 // $imgThumb = new img('Bilder/thumbs/output.jpg');
-// $value = 3;
+$value = 3;
 
-/*	Rotation  */
-	
-
-// $img->get_Rating_xmp();
+$img->get_Rating_xmp();
 // $img->get_Rating_MSPhoto();
 
-// $img->set_Rating($value);
+$img->set_Rating($value);
 // $img->set_EXIF();
 
 // $img->get_Rating_xmp();

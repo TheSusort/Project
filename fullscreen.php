@@ -183,17 +183,7 @@
 							}	
 						}
 					?>
-					</span>
-					<?php
-					//	$rating = 'Not rated';
-					//	if(isset($_POST['ratinginput'])){
-					//		if(!empty($_POST['ratinginput'])){
-					//			$rating = $_POST['ratinginput'];
-					//		}
-					//	}
-					//	print_r($rating);
-					?>			
-					<br>
+					</span><br>
 			   </div>
                
                 <!containerwithcomments,rating>
@@ -214,7 +204,7 @@
                 if (strcmp($currentRating,"4") == 0) $rating4="checked";
                 if (strcmp($currentRating,"5") == 0) $rating5="checked";
 				echo '<form id="ratingForm" method="post">	
-					<span class="rating"> 
+					<span class="rating" id = "ratingstar"> 
 						<input type="radio" value="5" class="rating-input"
 							id="rating-input-1-5" name="ratinginput" '.$rating5.' onChange="rateFunction(5)">
 						<label for="rating-input-1-5" class="rating-star"></label>
@@ -239,9 +229,10 @@
 				
 				</form>
 				<script>
-					var corImg = getCurrentImg();
+					var $_GET = parseGetParams();
 					var fileNames = getImgList();
-					// alert(corImg);
+					var corImg = getCurrentImg();
+					
 					function getXmlHttp(){
 						var xmlhttp;
 						try {
@@ -271,16 +262,15 @@
 					
 					function rateFunction(rate){
 						var xmlhttp = getXmlHttp();
-						// var getArr = parseGetParams();
 						var fileName = 'Bilder/'+fileNames[corImg];
-						
 						xmlhttp.open('POST', 'rating.php', false);
 						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 						xmlhttp.send("rate=" + encodeURIComponent(rate) + "&name=" + encodeURIComponent(fileName));
 						if(xmlhttp.status == 200) {
 							if (xmlhttp.responseText==""){
-								var span = document.getElementById('ratingStr');
-								span.innerHTML = rate;
+								showRate(rate);
+							}else{
+								alert('Rating Error!!! \n'+ xmlhttp.responseText);
 							};
 						}
 					}
@@ -295,10 +285,10 @@
 							if (xmlhttp.responseText!==""){
 								alert('Rotation '+angle+' Error!!! '+ xmlhttp.responseText);
 							}else{
-								hiddenImg= new Image();
-								hiddenImg.src= fileName;
-								var fullimg = document.getElementById('fullimg');
-								fullimg.src = hiddenImg.src;
+								hiddenImg 		= new Image();
+								hiddenImg.src 	= fileName+'?'+Math.floor((Math.random()*100)+1);
+								var fullimg 	= document.getElementById('fullimg');
+								fullimg.src 	= hiddenImg.src;
 							};
 						}
 					}
@@ -310,12 +300,10 @@
 					}
 				
 					function getCurrentImg(){
-						var imgList = getImgList();
-						var getArr = parseGetParams();
-						var fileName = getArr['bilde'].substr(7);
-						for (var i=0,len=imgList.length; i<len; i++)
+						var fileName = $_GET['bilde'].substr(7);
+						for (var i=0,len=fileNames.length; i<len; i++)
 						{ 
-							if (imgList[i] == fileName){
+							if (fileNames[i] == fileName){
 								return i;
 							}
 						}
@@ -345,14 +333,10 @@
 						var fullimg = document.getElementById('fullimg');
 						fullimg.src = hiddenNextImg.src;
 						corImg = next;
-						var span = document.getElementById('ratingStr');
 						var rate = getRate();
-						if ( rate ){
-							span.innerHTML = rate;
-						}else{
-							span.innerHTML = "0";
-						};
+						showRate(rate);
 						document.getElementById('nameStr').innerHTML = fileNames[next]
+						
 					}
 				
 					function prevImg(){
@@ -366,36 +350,110 @@
 						var fullimg = document.getElementById('fullimg');
 						fullimg.src = hiddenNextImg.src;
 						corImg = prev;
-					}
-				</script>
-				<?php
-					if(!empty($_POST['ratinginput'])){
-						$svaret = $_POST['ratinginput'];
-						$query = "UPDATE file_liste SET rating='$svaret' WHERE fileid=$result3";
-						$result = $db->query($query);
-						echo'<meta http-equiv="refresh" content="0" />';
+						var rate = getRate();
+						showRate(rate);
+						document.getElementById('nameStr').innerHTML = fileNames[prev];
+						
 					}
 					
-				?>				
+					function showRate(rate){
+						var rateI = parseInt(rate, 10);
+						var span = document.getElementById('ratingStr');
+						var star = document.getElementById('ratingstar');
+						if ( rateI ){
+							if (rateI> 0 & rateI < 6){
+								span.innerHTML = rateI;
+								switch(rateI){
+									case 1:
+										rating1 = 'checked';
+										rating2 = '';
+										rating3 = '';
+										rating4 = '';
+										rating5 = '';
+										break;
+									case 2:
+										rating1 = '';
+										rating2 = 'checked';
+										rating3 = '';
+										rating4 = '';
+										rating5 = '';
+										break;
+									case 3:
+										rating1 = '';
+										rating2 = '';
+										rating3 = 'checked';
+										rating4 = '';
+										rating5 = '';
+										break;
+									case 4:
+										rating1 = '';
+										rating2 = '';
+										rating3 = '';
+										rating4 = 'checked';
+										rating5 = '';
+										break;
+									case 5:
+										rating1 = '';
+										rating2 = '';
+										rating3 = '';
+										rating4 = '';
+										rating5 = 'checked';
+										break;
+								}
+							}else{
+								span.innerHTML = "0";
+								rating1 = '';
+								rating2 = '';
+								rating3 = '';
+								rating4 = '';
+								rating5 = '';
+							}
+						}else{
+							span.innerHTML = "0";
+							rating1 = '';
+							rating2 = '';
+							rating3 = '';
+							rating4 = '';
+							rating5 = '';
+
+						}
+						star.innerHTML = ''+
+								'<input type="radio" value="5" class="rating-input"'+
+									'id="rating-input-1-5" name="ratinginput" '+rating5+' onChange="rateFunction(5)">'+
+								'<label for="rating-input-1-5" class="rating-star"></label>'+
+								'<input type="radio" value="4" class="rating-input"'+
+									'id="rating-input-1-4" name="ratinginput" '+rating4+' onChange="rateFunction(4)">'+
+								'<label for="rating-input-1-4" class="rating-star"></label>'+
+								'<input type="radio" value="3" class="rating-input"'+
+									'id="rating-input-1-3" name="ratinginput" '+rating3+' onChange="rateFunction(3)">'+
+								'<label for="rating-input-1-3" class="rating-star"></label>'+
+								'<input type="radio" value="2" class="rating-input"'+
+									'id="rating-input-1-2" name="ratinginput" '+rating2+' onChange="rateFunction(2)">'+
+								'<label for="rating-input-1-2" class="rating-star"></label>'+
+								'<input type="radio" value="1" class="rating-input"'+
+									'id="rating-input-1-1" name="ratinginput" '+rating1+' onChange="rateFunction(1)">'+
+								'<label for="rating-input-1-1" class="rating-star"></label>';
+					}
+					
+				</script>
 				
-				
-                   
                    <!kommentarfelt>
         
                 <form action="" method="post">
-                    <span id="itm1" onclick="exchange(this);"><?php 	
-					$query2 = "SELECT commentary FROM file_liste WHERE fileid=$result3";
-					$result2 = $db->query($query2);
-                	foreach($result2 as $rr)
-						
-					if (!empty($result2)){
-						foreach($result2 as $rr) {
-							print_r(array_to_string($rr));
-							if(null === (array_to_string($rr))) echo("click to comment");
-						}
-                    }
-?>
-</span>
+                    <span id="itm1" onclick="exchange(this);">
+						<?php 	
+							$query2 = "SELECT commentary FROM file_liste WHERE fileid=$result3";
+							$result2 = $db->query($query2);
+							foreach($result2 as $rr)
+								
+							if (!empty($result2)){
+								foreach($result2 as $rr) {
+									print_r(array_to_string($rr));
+									if(null === (array_to_string($rr))) echo("click to comment");
+								}
+							}
+						?>
+					</span>
                     <input ondblclick="exchange(this);" id="itm1b" class="replace" type="text" value=""  name="comment">
                     </form><?php
 					if(!empty($_POST['comment'])){
