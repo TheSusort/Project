@@ -345,7 +345,6 @@
 			
 					function showData(){
 						var imgData = getImgData();
-						alert(imgData);
 						showRate(imgData[0]);
 						showComment(imgData[1]);
 						showTags(imgData[2]);
@@ -360,7 +359,6 @@
 					}
 			
 					function getImgData(){
-					// alert('getImgData');
 						var xmlhttp = getXmlHttp();
 						var fileName = 'Bilder/'+fileNames[corImg];
 						
@@ -378,12 +376,10 @@
 									var tags = getTags(imgStrData[2]);
 									
 									var imgData	= [rate,comment,tags];
-									alert(imgData);
 									return imgData;
 								}else{
 									return ['0','',['']];
 								}
-								// return(xmlhttp.responseText);
 							}else{
 								return [0,'',['']];
 							};
