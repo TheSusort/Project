@@ -2,7 +2,7 @@
 2)	Go in WINDOWS "system setings" (systemegenskaper) / "advanst"(avansert) / "environment variables"(miljøvariabler)
 	in the variables find variable "PATH" and add 
 		;C:\imagemagick
-3)	copy all files from folder "to_imagemagick" to the folde "C:\imagemagick"
+3)	copy all files from folder "to_imagemagick/test/" to the folde "C:\imagemagick"
 4)	copy all files from folder "C:\imagemagick\modules\coders\" to the folde "C:\imagemagick"
 5)	copy all files from folder "C:\imagemagick\modules\filters\" to the folde "C:\imagemagick"
 6)	copy all files from folder "to_PHP_ext" to the folder with PHP extensions "..\xampp\php\ext"
