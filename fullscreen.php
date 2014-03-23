@@ -12,7 +12,10 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"   type="text/javascript" charset="utf-8"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js"    type="text/javascript" charset="utf-8"></script>
         <script src="js/tag-it.js" type="text/javascript" charset="utf-8"></script>
-        
+		
+		<script type="text/javascript" src="exif-js-master/binaryajax.js"></script>
+		<script type="text/javascript" src="exif-js-master/exif.js"></script>
+
         <!javascript kommentarboks>
         <script type="text/javascript">
             function exchange(el){
@@ -40,7 +43,6 @@
                 
                window.location.assign("fullscreen.php?tag=null&bilde=Bilder%2F" + previous);
                     
-                      
             }
             
             function rightArrowPressed() {
@@ -73,10 +75,12 @@
                 evt = evt || window.event;
                 switch (evt.keyCode) {
                     case 37:
-                        leftArrowPressed();
+                        // leftArrowPressed();
+						prevImg();
                         break;
                     case 39:
-                        rightArrowPressed();
+                        // rightArrowPressed();
+						nextImg();
                         break;
                 }
             };
@@ -152,21 +156,19 @@
 					</span><br>
 					
 					<b>Comment:</b>
-					
-					<?php 	
-					
-					$query2 = "SELECT commentary FROM file_liste WHERE fileid=$result3";
-					$result2 = $db->query($query2);
-					if (!empty($result2)){
-						foreach($result2 as $rr)
-						{
-							print_r(array_to_string($rr));
-							print " ";
-						}	
-					}
-					
-					?>
-					 
+					<span id='CommentStr'>
+						<?php 	
+							$query2 = "SELECT commentary FROM file_liste WHERE fileid=$result3";
+							$result2 = $db->query($query2);
+							if (!empty($result2)){
+								foreach($result2 as $rr)
+								{
+									print_r(array_to_string($rr));
+									print " ";
+								}	
+							}
+						?>
+					</span>
 					
 					<br>
 					<b>Rating:</b>
@@ -263,7 +265,7 @@
 					function rateFunction(rate){
 						var xmlhttp = getXmlHttp();
 						var fileName = 'Bilder/'+fileNames[corImg];
-						xmlhttp.open('POST', 'rating.php', false);
+						xmlhttp.open('POST', 'imgData.php', false);
 						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 						xmlhttp.send("rate=" + encodeURIComponent(rate) + "&name=" + encodeURIComponent(fileName));
 						if(xmlhttp.status == 200) {
@@ -308,37 +310,22 @@
 							}
 						}
 					}
-					
-					function getRate(){
-						var xmlhttp = getXmlHttp();
-						var fileName = 'Bilder/'+fileNames[corImg];
-						
-						xmlhttp.open('POST', 'rating.php', false);
-						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-						xmlhttp.send("&name=" + encodeURIComponent(fileName));
-						if(xmlhttp.status == 200) {
-							if (xmlhttp.responseText!=""){
-								return(xmlhttp.responseText);
-							}else{
-								return false
-							};
-						}
-					}
-					
+			
 					function nextImg(){
 						var length = fileNames.length;
 						var next = (corImg+1)%length;
+						
 						var hiddenNextImg = new Image();
-						hiddenNextImg.src = 'Bilder/'+fileNames[next]+'?trash='+Math.random();
+						hiddenNextImg.src = 'Bilder/'+fileNames[next]+'?rand='+Math.random();
 						var fullimg = document.getElementById('fullimg');
 						fullimg.src = hiddenNextImg.src;
+						
 						corImg = next;
-						var rate = getRate();
-						showRate(rate);
-						document.getElementById('nameStr').innerHTML = fileNames[next];
+						
+						showData();
 						
 					}
-				
+		
 					function prevImg(){
 						var length = fileNames.length;
 						var prev = (corImg-1)%length;
@@ -346,16 +333,90 @@
 							prev = length-1;
 						}
 						var hiddenNextImg = new Image();
-						hiddenNextImg.src = 'Bilder/'+fileNames[prev]+'?trash='+Math.random();
+						hiddenNextImg.src = 'Bilder/'+fileNames[prev]+'?rand='+Math.random();
+						
 						var fullimg = document.getElementById('fullimg');
 						fullimg.src = hiddenNextImg.src;
-						corImg = prev;
-						var rate = getRate();
-						showRate(rate);
-						document.getElementById('nameStr').innerHTML = fileNames[prev];
 						
+						corImg = prev;
+						
+						showData();
 					}
-					
+			
+					function showData(){
+						var imgData = getImgData();
+						alert(imgData);
+						showRate(imgData[0]);
+						showComment(imgData[1]);
+						showTags(imgData[2]);
+						document.getElementById('nameStr').innerHTML = fileNames[corImg];
+					}
+				
+					//---- checks the string by template(rate: [1-5]#comment: STRING#tags: STRING,STRING,STRING;)
+					function checkImgData(str){
+						var checkStart 	= str.search("rate: ");
+						var checkEnd	= str[str.length-1];
+						return (checkStart==0 && checkEnd==';')
+					}
+			
+					function getImgData(){
+					// alert('getImgData');
+						var xmlhttp = getXmlHttp();
+						var fileName = 'Bilder/'+fileNames[corImg];
+						
+						xmlhttp.open('POST', 'imgData.php', false);
+						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+						xmlhttp.send("&name=" + encodeURIComponent(fileName));
+						if(xmlhttp.status == 200) {
+							if (xmlhttp.responseText!=""){
+								var respText = xmlhttp.responseText;
+								if (checkImgData(respText)){
+									var imgStrData 	= respText.split("#");
+
+									var rate = getRating(imgStrData[0]);
+									var comment	= getComment(imgStrData[1]);
+									var tags = getTags(imgStrData[2]);
+									
+									var imgData	= [rate,comment,tags];
+									alert(imgData);
+									return imgData;
+								}else{
+									return ['0','',['']];
+								}
+								// return(xmlhttp.responseText);
+							}else{
+								return [0,'',['']];
+							};
+						}
+					}
+		
+					function getRating(str){
+						if(str.length==7){
+							return str.substr(6,1);
+						}else{
+							return '0';
+						}
+					}
+		
+					function getComment(str){
+						if(str.length>9){
+							return str.substr(9);
+						}else{
+							return ' ';
+						}
+					}
+		
+					function getTags(str){
+						if(str.length>7){
+							str = str.substr(6);
+							str = str.slice(0,-1);
+							
+							return str.split(",");
+						}else{
+							return [' '];
+						}
+					}
+						
 					function showRate(rate){
 						var rateI = parseInt(rate, 10);
 						var span = document.getElementById('ratingStr');
@@ -434,7 +495,16 @@
 									'id="rating-input-1-1" name="ratinginput" '+rating1+' onChange="rateFunction(1)">'+
 								'<label for="rating-input-1-1" class="rating-star"></label>';
 					}
-					
+			// </script>	<script>			
+					function showComment(str){
+						var span = document.getElementById('CommentStr');
+						span.innerHTML = str;
+					}
+		// </script>	<script>				
+					function showTags(arr){
+						var span = document.getElementById('tagsStr');
+						span.innerHTML = arr.toString();
+					}
 				</script>
 				
                    <!kommentarfelt>
@@ -606,11 +676,12 @@
                     }
                     else { 
 						$showFile = substr($_GET['bilde'], 7);
-						echo '<img id = "fullimg" src='.$big.$showFile.' height=85% ><br/>'; 
+						// echo '<img id = "fullimg" src='.$big.$showFile.' height=85% onClick="getComment()"><br/>'; 
+						echo '<img id = "fullimg" src='.$big.$showFile.'?rand='.rand().' height=85% onClick="getComment()"><br/>'; 
 					}
-                    if ((isset($_GET['previous'])) or (isset($_GET['next']))) {
-                        echo '<img id = "fullimg" src='.$_GET['bilde'].' height=85% ><br/>'; 
-                    }
+                    // if ((isset($_GET['previous'])) or (isset($_GET['next']))) {
+                        // echo '<img id = "fullimg" src='.$_GET['bilde'].' height=85% ><br/>'; 
+                    // }
                     // echo '<a href="?previous=1&amp;tag='.$_GET['tag'].'&amp;bilde='.urlencode($big.$showFile).'">
                     // <img src= "Lbutton.png"width="40" height="40"></a>';
                     // echo '<a href="?next=1&amp;tag='.$_GET['tag'].'&amp;bilde='.urlencode($big.$showFile).'">
@@ -625,7 +696,7 @@
                     window.onload=function() {
                         document.onkeyup = key_event;
                     }
-   
+					
                     function key_event(e) {
                         if (e.keyCode == 27) doStuff();
                     }
@@ -635,6 +706,6 @@
                     }
                </script>
 </div>
-        
+        <div id='test'></div>
     </body>
     </html>

@@ -1,5 +1,5 @@
 <?php
-include_once('image.php');
+include_once('rotation.php');
 
 include_once("mysql.php");
 
