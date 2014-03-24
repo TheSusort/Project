@@ -318,35 +318,38 @@ $files  = null;                     # List of the files from disk
 
 	// test search function
 	
-		function giveSearch($search1, $searchw1){
+		//function giveSearch($search1, $searchw1){
+		function giveSearch($search1){
 		
 			if(isset($_POST['submission'])){
 				$search = $search1;
-				$searchw = $searchw1;
+				//$searchw = $searchw1;
 				
 				$where = 'file_liste';
 				$what = 'filename';
+				$files = null;
 				
-				$sQuery = "WHERE $searchw = $search";
+				//$sQuery0 = "WHERE $searchw = $search";
 				
-				if($searchw=="commentary"){ 
-					$sQuery = "WHERE $searchw LIKE '%$search%'";
-					}
+				$sQuery1 = "WHERE commentary LIKE '%$search%'";
 				
-				if($searchw=="tag"){ 
-					//$sQuery = 'INNER JOIN tag ON file_liste.fileid = tag.fileid WHERE tag.tags LIKE \''.$search.'\'';
-					$sQuery = "INNER JOIN tag ON file_liste.fileid = tag.fileid WHERE tag.tags LIKE '$search%'";
+				$sQuery2 = "INNER JOIN tag ON file_liste.fileid = tag.fileid WHERE tag.tags LIKE '$search%'";
+				
+				$files1 = db_select($where, $what, $sQuery1, $what);
+				$files2 = db_select($where, $what, $sQuery2, $what);
+				
+				if(is_array($files1) && is_array($files2)){
+					$files = array_merge($files1, $files2);
 				}
 				
-				//if($searchw=="clear"){
-				//	$a = giveSearch($search, 'commentary');
-				//	$b = giveSearch($search, 'tag');
-				//	$c = $merge_array($a, $b);
-				//	return array_unique($c);
-				//}
+				if(!empty($files1) && empty($files2)){
+					$files = $files1;
+				}
 				
+				if(empty($files1) && !empty($files2)){
+					$files = $files2;				
+				}
 				
-				$files = db_select($where, $what, $sQuery, $what);
 				if(!empty($files)){
 					$files = array_unique($files);
 					}
@@ -361,6 +364,30 @@ $files  = null;                     # List of the files from disk
 			}
 			
 		}
-	
 		
+		function giveRating($value1){
+			if(isset($_POST['submission'])){
+				
+				$value = $value1;
+				$where = 'file_liste';
+				$what = 'filename';
+				$files = null;
+				
+				$sQuery0 = "WHERE rating = $value";
+				
+				$files = db_select($where, $what, $sQuery0, $what);
+				
+				if(!empty($files)){
+					$files = array_unique($files);
+					}
+				
+				if(!$files){
+					alert_message("Search yields no results");
+					return FALSE;
+				}
+				
+				return $files;
+				
+			}
+		}
 ?>
