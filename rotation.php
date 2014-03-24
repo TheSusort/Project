@@ -5,14 +5,15 @@
 		$fileName = substr($_POST['name'], 7);
 		$d_s = DIRECTORY_SEPARATOR;
 		$imgURL = __DIR__ . $d_s . 'Bilder' . $d_s . $fileName;
-		$imgTempURL = __DIR__ . $d_s . 'Bilder' . $d_s . 'temp' . $d_s . 'temp.jpg';
-		$rot = RotateImage($imgURL, '', $angle, $imgTempURL);
+		// $imgTempURL = __DIR__ . $d_s . 'Bilder' . $d_s . 'temp' . $d_s . 'temp.jpg';
+		// $rot = RotateImage($imgURL, '', $angle, $imgTempURL);
+		$rot = RotateImage($imgURL, '', $angle);
 		if($rot){
 			RotateImage(__DIR__ . $d_s . 'Bilder'. $d_s .'thumbs' . $d_s . $fileName, '', $angle, '');
 		}
 	}
 	
-	function rotateImage($url, $outUrl, $angle, $copy){
+	function rotateImage($url, $outUrl, $angle){
 		$image = new Imagick();
 		$image->readImage($url);  //__DIR__ . DIRECTORY_SEPARATOR .
 		$angle = (int)$angle; 
@@ -24,9 +25,11 @@
 			// Now that it's manuel-rotated, make sure the EXIF data is correct in case the EXIF gets saved with the image! 
 			$image->setImageOrientation(imagick::ORIENTATION_TOPLEFT); 
 			$image->writeImage($outUrl); //__DIR__ . DIRECTORY_SEPARATOR .
-			if (!empty($copy)){
-				$image->writeImage($copy);
-			}
+
+//			if (!empty($copy)){
+//				$image->writeImage($copy);
+//			}
+
 			$image->clear(); 
 			$image->destroy();
 			return TRUE;
