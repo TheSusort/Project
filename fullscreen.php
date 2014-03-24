@@ -126,6 +126,21 @@
 						}	
 					}
     ?>
+	<?php	
+		$leggTilTaggnavn = $_GET["leggTilTaggnavn"];
+		if ("null" != $leggTilTaggnavn)
+		{
+			$query = "INSERT INTO tag(fileid, tags) VALUES ($result3 , '$leggTilTaggnavn')";
+			$result = $db->query($query);
+		}
+		
+		$slettTaggnavn = $_GET["slettTaggnavn"];
+		if ("null" != $slettTaggnavn)
+		{
+			$query = "DELETE FROM tag WHERE tags = '$slettTaggnavn' AND fileid=$result3;";
+			$result = $db->query($query);
+		}
+	?>
         
        <div id="containermain">
            
@@ -537,9 +552,26 @@
                 <!tagfelt>
                
                <script type="text/javascript">
-                    $(document).ready(function() {
+                    $(document).ready(function()
+					{
                         $("#myTags").tagit();
-                    });
+																		
+						var sletteTagHendelse = $('#myTags');
+						
+						sletteTagHendelse.tagit(
+						{
+							afterTagAdded: function(evt, ui)
+							{
+								window.location.assign("http://localhost/Project/fullscreen.php?tag=null&bilde=" + getURLParameter('bilde') + "&leggTilTaggnavn=" + $("#myTags").tagit('tagLabel', ui.tag) + "&slettTaggnavn=null");
+							},
+							afterTagRemoved: function(evt, ui)
+							{
+								window.location.assign("http://localhost/Project/fullscreen.php?tag=null&bilde=" + getURLParameter('bilde') + "&slettTaggnavn=" + $("#myTags").tagit('tagLabel', ui.tag) + "&leggTilTaggnavn=null");
+							}
+						}
+						);
+                    }
+					);
                 </script>
                
                
@@ -561,50 +593,6 @@
                    ?>
             </ul>
                    
-                   <?php
-                   
-                   echo '<form action="" method="post">
-                       <input type="text" name="tag" />
-                       <input type="submit" value="Tag!" />
-                    </form>'
-                    ;
-  
-				
-					
-			
-					if(!empty($_POST['tag'])){
-						$svaret = $_POST['tag'];
-                        $stringarray = explode(" ", $svaret);
-                        foreach ($stringarray as $str)
-                        {
-                            $query = "INSERT INTO tag(fileid, tags) VALUES ($result3 , '$str')";
-                            $result = $db->query($query);
-                            echo'<meta http-equiv="refresh" content="0" />';
-                        }
-					}
-                    
-                    $query2 = "SELECT tags FROM tag WHERE fileid=$result3";
-                    $result2 = $db->query($query2);
-                    if (!empty($result2))
-                    {
-						foreach($result2 as $rr)
-						{
-							echo '<form action="" method="post">
-                                <input type="submit" name="' .
-                                array_to_string($rr) . '" value="' .
-                                array_to_string($rr) . '" />
-                                </form>';
-                            
-                            if (isset($_POST[array_to_string($rr)]))
-                            {
-                                $tag = array_to_string($rr);
-                                $query = "DELETE FROM tag WHERE tags = '$tag' AND fileid=$result3;";
-                                $result = $db->query($query);
-                            }
-						}	
-					}
-			
-					?>  
                         
                     <p>
                    
