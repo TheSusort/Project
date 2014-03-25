@@ -33,28 +33,28 @@
             }
 			
              // IN PROGRESS
-            function leftArrowPressed() {
-                var list = imgList();
-                var imgLoc = getURLParameter('bilde');
-                var imgName = imgLoc.split("/");
-                var place = list.indexOf(imgName[1]);
-                if (place == 0)place = list.length;
-                var previous = list[place - 1];
+            // function leftArrowPressed() {
+                // var list = imgList();
+                // var imgLoc = getURLParameter('bilde');
+                // var imgName = imgLoc.split("/");
+                // var place = list.indexOf(imgName[1]);
+                // if (place == 0)place = list.length;
+                // var previous = list[place - 1];
                 
-               window.location.assign("fullscreen.php?tag=null&bilde=Bilder%2F" + previous);
+               // window.location.assign("fullscreen.php?tag=null&bilde=Bilder%2F" + previous);
                     
-            }
+            // }
             
-            function rightArrowPressed() {
-                var list = imgList();
-                var imgLoc = getURLParameter('bilde');
-                var imgName = imgLoc.split("/");
-                var place = list.indexOf(imgName[1]);
-                var next = list[place + 1];
-                if (place == list.length)place = 0;
+            // function rightArrowPressed() {
+                // var list = imgList();
+                // var imgLoc = getURLParameter('bilde');
+                // var imgName = imgLoc.split("/");
+                // var place = list.indexOf(imgName[1]);
+                // var next = list[place + 1];
+                // if (place == list.length)place = 0;
 
-               window.location.assign("fullscreen.php?tag=null&bilde=Bilder%2F" + next);
-            }
+               // window.location.assign("fullscreen.php?tag=null&bilde=Bilder%2F" + next);
+            // }
             
             function imgList() {
                 <?php
@@ -70,7 +70,30 @@
                 return imgList;
                     
             }
-            
+			
+			// var commentField = document.getElementById('itm1b');
+            function onKeyDown(element){
+				switch (event.keyCode) {
+                    case 13: //Enter
+						var xmlhttp = getXmlHttp();
+						var fileName = 'Bilder/'+fileNames[corImg];
+						xmlhttp.open('POST', 'rotation.php', false);
+						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+						xmlhttp.send("comment=" + encodeURIComponent(element.value) + "&name=" + encodeURIComponent(fileName));
+						if(xmlhttp.status == 200) {
+							if (xmlhttp.responseText!==""){
+								alert('Comment Error!!! '+ xmlhttp.responseText);
+							}else{
+								showComment()
+							};
+						}
+                        break;
+                    case 27: //Escape
+                       alert('AAAAAAAAAaaaaaaaaaaaaaaaa');
+                        break;
+                }
+			}
+			
             document.onkeydown = function(evt) {
                 evt = evt || window.event;
                 switch (evt.keyCode) {
@@ -223,23 +246,23 @@
 				echo '<form id="ratingForm" method="post">	
 					<span class="rating" id = "ratingstar"> 
 						<input type="radio" value="5" class="rating-input"
-							id="rating-input-1-5" name="ratinginput" '.$rating5.' onChange="rateFunction(5)">
+							id="rating-input-1-5" name="ratinginput" '.$rating5.' onChange="setRate(5)">
 						<label for="rating-input-1-5" class="rating-star"></label>
 						
 						<input type="radio" value="4" class="rating-input"
-							id="rating-input-1-4" name="ratinginput" '.$rating4.' onChange="rateFunction(4)">
+							id="rating-input-1-4" name="ratinginput" '.$rating4.' onChange="setRate(4)">
 						<label for="rating-input-1-4" class="rating-star"></label>
 						
 						<input type="radio" value="3" class="rating-input"
-							id="rating-input-1-3" name="ratinginput" '.$rating3.' onChange="rateFunction(3)">
+							id="rating-input-1-3" name="ratinginput" '.$rating3.' onChange="setRate(3)">
 						<label for="rating-input-1-3" class="rating-star"></label>
 						
 						<input type="radio" value="2" class="rating-input"
-							id="rating-input-1-2" name="ratinginput" '.$rating2.' onChange="rateFunction(2)">
+							id="rating-input-1-2" name="ratinginput" '.$rating2.' onChange="setRate(2)">
 						<label for="rating-input-1-2" class="rating-star"></label>
 						
 						<input type="radio" value="1" class="rating-input"
-							id="rating-input-1-1" name="ratinginput" '.$rating1.' onChange="rateFunction(1)">
+							id="rating-input-1-1" name="ratinginput" '.$rating1.' onChange="setRate(1)">
 						<label for="rating-input-1-1" class="rating-star"></label>
 					</span>';
 				?>
@@ -276,22 +299,7 @@
 					   } 
 					   return $_GET; 
 					} 
-					
-					function rateFunction(rate){
-						var xmlhttp = getXmlHttp();
-						var fileName = 'Bilder/'+fileNames[corImg];
-						xmlhttp.open('POST', 'imgData.php', false);
-						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-						xmlhttp.send("rate=" + encodeURIComponent(rate) + "&name=" + encodeURIComponent(fileName));
-						if(xmlhttp.status == 200) {
-							if (xmlhttp.responseText==""){
-								showRate(rate);
-							}else{
-								alert('Rating Error!!! \n'+ xmlhttp.responseText);
-							};
-						}
-					}
-					
+
 					function rotate(angle){
 						var xmlhttp = getXmlHttp();
 						var fileName = 'Bilder/'+fileNames[corImg];
@@ -338,7 +346,6 @@
 						corImg = next;
 						
 						showData();
-						
 					}
 		
 					function prevImg(){
@@ -427,7 +434,41 @@
 							return [' '];
 						}
 					}
+					
+					function setRate(rate){
+						var xmlhttp = getXmlHttp();
+						var fileName = 'Bilder/'+fileNames[corImg];
+						xmlhttp.open('POST', 'imgData.php', false);
+						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+						xmlhttp.send("rate=" + encodeURIComponent(rate) + "&name=" + encodeURIComponent(fileName));
+						if(xmlhttp.status == 200) {
+							if (xmlhttp.responseText==""){
+								showRate(rate);
+							}else{
+								alert('Rating Error!!! \n'+ xmlhttp.responseText);
+							};
+						}
+					}
+					
+					function setComment(comment){
+						var xmlhttp = getXmlHttp();
+						var fileName = 'Bilder/'+fileNames[corImg];
+						xmlhttp.open('POST', 'imgData.php', false);
+						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+						xmlhttp.send("comment=" + encodeURIComponent(comment) + "&name=" + encodeURIComponent(fileName));
+						if(xmlhttp.status == 200) {
+							if (xmlhttp.responseText==""){
+								showComment(comment);
+							}else{
+								alert('Rating Error!!! \n'+ xmlhttp.responseText);
+							};
+						}
+					}
+					
+					function setTags(str){
 						
+					}
+					
 					function showRate(rate){
 						var rateI = parseInt(rate, 10);
 						var span = document.getElementById('ratingStr');
@@ -491,27 +532,27 @@
 						}
 						star.innerHTML = ''+
 								'<input type="radio" value="5" class="rating-input"'+
-									'id="rating-input-1-5" name="ratinginput" '+rating5+' onChange="rateFunction(5)">'+
+									'id="rating-input-1-5" name="ratinginput" '+rating5+' onChange="setRate(5)">'+
 								'<label for="rating-input-1-5" class="rating-star"></label>'+
 								'<input type="radio" value="4" class="rating-input"'+
-									'id="rating-input-1-4" name="ratinginput" '+rating4+' onChange="rateFunction(4)">'+
+									'id="rating-input-1-4" name="ratinginput" '+rating4+' onChange="setRate(4)">'+
 								'<label for="rating-input-1-4" class="rating-star"></label>'+
 								'<input type="radio" value="3" class="rating-input"'+
-									'id="rating-input-1-3" name="ratinginput" '+rating3+' onChange="rateFunction(3)">'+
+									'id="rating-input-1-3" name="ratinginput" '+rating3+' onChange="setRate(3)">'+
 								'<label for="rating-input-1-3" class="rating-star"></label>'+
 								'<input type="radio" value="2" class="rating-input"'+
-									'id="rating-input-1-2" name="ratinginput" '+rating2+' onChange="rateFunction(2)">'+
+									'id="rating-input-1-2" name="ratinginput" '+rating2+' onChange="setRate(2)">'+
 								'<label for="rating-input-1-2" class="rating-star"></label>'+
 								'<input type="radio" value="1" class="rating-input"'+
-									'id="rating-input-1-1" name="ratinginput" '+rating1+' onChange="rateFunction(1)">'+
+									'id="rating-input-1-1" name="ratinginput" '+rating1+' onChange="setRate(1)">'+
 								'<label for="rating-input-1-1" class="rating-star"></label>';
 					}
-			// </script>	<script>			
+			
 					function showComment(str){
 						var span = document.getElementById('CommentStr');
 						span.innerHTML = str;
 					}
-		// </script>	<script>				
+				
 					function showTags(arr){
 						var span = document.getElementById('tagsStr');
 						span.innerHTML = arr.toString();
@@ -520,7 +561,7 @@
 				
                    <!kommentarfelt>
         
-                <form action="" method="post">
+                <form action="" method="post" id='commentForm'>
                     <span id="itm1" onclick="exchange(this);">
 						<?php 	
 							$query2 = "SELECT commentary FROM file_liste WHERE fileid=$result3";
@@ -535,7 +576,7 @@
 							}
 						?>
 					</span>
-                    <input ondblclick="exchange(this);" id="itm1b" class="replace" type="text" value=""  name="comment">
+                    <input ondblclick="exchange(this);" onkeydown="onKeyDown(this)" id="itm1b" class="replace" type="text" value=""  name="comment">
                     </form><?php
 					if(!empty($_POST['comment'])){
 						$svaret = $_POST['comment'];
@@ -576,22 +617,29 @@
                
                
 
-               <ul id="myTags">
+				<ul id="myTags">
             <!-- Existing list items will be pre-added to the tags -->
-         <?php
-
-            $query2 = "SELECT tags FROM tag WHERE fileid=$result3";
-                    $result2 = $db->query($query2);
-                    if (!empty($result2))
-                    {
-						foreach($result2 as $rr)
+					<?php
+						$query2 = "SELECT tags FROM tag WHERE fileid=$result3";
+						$result2 = $db->query($query2);
+						if (!empty($result2))
 						{
+<<<<<<< HEAD
 							echo '<li>'. array_to_string($rr).'</li>';
                             
 						}	
 					}
                    ?>
             </ul>
+=======
+							foreach($result2 as $rr)
+							{
+								echo '<li>'. array_to_string($rr).'</li>';
+							}	
+						}
+					?>
+				</ul>
+>>>>>>> 62f6dde974972a6236dbb212c9645e4556685950
                    
                         
                     <p>
@@ -659,9 +707,8 @@
                         $showFile = $files[$key + 1];
                     }
                     else { 
-						$showFile = substr($_GET['bilde'], 7);
-						// echo '<img id = "fullimg" src='.$big.$showFile.' height=85% onClick="getComment()"><br/>'; 
-						echo '<img id = "fullimg" src='.$big.$showFile.'?rand='.rand().' height=85% onClick="getComment()"><br/>'; 
+						$showFile = substr($_GET['bilde'], 7); 
+						echo '<img id = "fullimg" src='.$big.$showFile.'?rand='.rand().' height=85%><br/>'; 
 					}
                     // if ((isset($_GET['previous'])) or (isset($_GET['next']))) {
                         // echo '<img id = "fullimg" src='.$_GET['bilde'].' height=85% ><br/>'; 
@@ -689,7 +736,6 @@
                         window.close('fs'); 
                     }
                </script>
-</div>
-        <div id='test'></div>
+		</div>
     </body>
     </html>
