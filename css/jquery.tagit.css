@@ -3,6 +3,8 @@ ul.tagit {
     overflow: auto;
     margin-left: inherit; /* usually we don't want the regular ul margins. */
     margin-right: inherit;
+    background:#415050;
+    border:none;
 }
 ul.tagit li {
     display: block;
@@ -21,11 +23,11 @@ ul.tagit li.tagit-choice-read-only {
 } 
 
 ul.tagit li.tagit-choice-editable { 
-    padding: .2em 18px .2em .5em; 
+    padding: .1em 18px .1em .2em; 
 } 
 
 ul.tagit li.tagit-new {
-    padding: .25em 4px .25em 0;
+    padding: .10em 4px .10em 0;
 }
 
 ul.tagit li.tagit-choice a.tagit-label {
@@ -38,7 +40,7 @@ ul.tagit li.tagit-choice .tagit-close {
     right: .1em;
     top: 50%;
     margin-top: -8px;
-    line-height: 17px;
+    line-height: 10px;
 }
 
 /* used for some custom themes that don't need image icons */
