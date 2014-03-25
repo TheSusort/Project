@@ -113,6 +113,23 @@
 		}
 // PROGRESS
         </script>
+		
+		<script type="text/javascript">
+									
+			function musOverPilVenstre(musover)
+			{
+			musover.src = "PilVenstre.png";
+			}
+			function musOverPilHøyre(musover)
+			{
+			musover.src = "PilHøyre.png";
+			}
+			function musIkkeOver(musover)
+			{
+			musover.src = "Tom.png";
+			}
+			
+		</script>	
         
     </head>
         
@@ -710,6 +727,7 @@
                     // <img src= "Rbutton.png"width="40" height="40"></a>';
                
                 ?>
+				
 					<input type="image" src= "Lbutton.png" onClick="prevImg()" width="40" height="40">
 					<input type="image" src= "Rbutton.png" onClick="nextImg()" width="40" height="40">
     
@@ -728,5 +746,14 @@
                     }
                </script>
 		</div>
+		
+		<div id="venstreknapp">
+			<img border="0" src="Tom.png" width="256" height="77%" onmouseover="musOverPilVenstre(this)" onmouseout="musIkkeOver(this)" onclick="prevImg()">
+		</div>
+		<div id="høyreknapp">
+			<img border="0" src="Tom.png" width="256" height="77%" onmouseover="musOverPilHøyre(this)" onmouseout="musIkkeOver(this)" onclick="nextImg()">
+		</div>
+		
+			
     </body>
     </html>

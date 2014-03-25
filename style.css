@@ -77,6 +77,26 @@ h1 {
    
 }
 
+#venstreknapp
+{
+	position:absolute;
+	top: 8px;
+	bottom: 0px;
+	left: 30%;
+	right: 0px;
+	width: 128px;
+}
+
+#høyreknapp
+{
+	position:absolute;
+	top: 8px;
+	bottom: 0px;
+	left: 64%;
+	right: 0px;
+	width: 128px;
+}
+
 #buttoncontainer {
     height:50%;
     width:100%;
