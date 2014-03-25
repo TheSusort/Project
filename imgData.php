@@ -1,16 +1,36 @@
 <?php
-	// include_once('imgXMP.php');
+	include_once('imgEXIF.php');
 	include_once("mysql.php");
 	db_connnect();
 	
-	//---- set Rating-----
+	//---- set Rating----- IKKE VIRKE MED EXIF!!!
 	if(!empty($_POST['rate']) && !empty($_POST['name'])){
-		setRateDB($_POST['rate'], $_POST['name']);
+		$result = setRateDB($_POST['rate'], $_POST['name']);
+		// if ($result){
+			// setRateEXIF($_POST['rate'], $_POST['name']);
+		// }
+	}
+	
+	//---- set Comment-----
+	if(!empty($_POST['comment']) && !empty($_POST['name'])){
+		$result = setCommentDB($_POST['comment'], $_POST['name']);
+		if ($result){
+			setCommentEXIF($_POST['comment'], $_POST['name']);
+		}
+	}
+	
+	//---- set Tags-----
+	if(!empty($_POST['tags']) && !empty($_POST['name'])){
+		$result = setTagDB($_POST['tags'], $_POST['name']);
+		if ($result){
+			setTagEXIF($_POST['tags'], $_POST['name']);
+		}
 	}
 
 	//---- get Rating, Comment and Tags
 	if(!empty($_POST['name']) && (empty($_POST['rate']) && empty($_POST['comment']) && empty($_POST['tag']))){
 		//---- get Rating ----
+		$image 		= new img($_POST['name']);
 		$rate  		= 'rate: ' . getRateDB($_POST['name']);
 		$comment 	= 'comment: ' . getCommentDB($_POST['name']);
 		$tags		= getTagsDB($_POST['name']);
@@ -25,14 +45,6 @@
 		return $img[0];
 	}
 	
-	function getRateImg($url){
-		$image = new Imagick();
-		$image->readImage(__DIR__ . DIRECTORY_SEPARATOR .$url);
-		$rate = $image->getImageProperty('GF:rate');
-		$image->clear(); 
-		$image->destroy();
-		return $rate;
-	}
 	function getCommentDB($url){
 		$fileName = substr($url, 7);
 		$img = db_select('file_liste', 'commentary', 'WHERE filename = \''.$fileName.'\' ', 'commentary');
@@ -48,13 +60,13 @@
 		return $img;
 	}
 	
-	
-	function setTag($url){
-		
-	}
-	
-	function setComment($url){
-	
+	function getRateEXIF($url){
+		$image = new Imagick();
+		$image->readImage(__DIR__ . DIRECTORY_SEPARATOR .$url);
+		$rate = $image->getImageProperty('xmp:Rating');
+		$image->clear(); 
+		$image->destroy();
+		return $rate;
 	}
 	
 	function setRateDB($rate, $url){
@@ -62,19 +74,28 @@
 		$fileName = substr($url, 7);
 		$query = "UPDATE file_liste SET rating='$rate' WHERE filename='$fileName'";
 		$result = $db->query($query);
-		// if ($result){
-			// setRateImg($rate, $url);
-		// }
+		return $result;
 	}
 	
-	function setRateImg($rate, $url){
+	function setTagEXIF($tegs, $url){
+		$image = new img($_POST['name']);
+		$image->set_to_Marker('XP_KEYWORDS', $tegs);
+	}
+	
+	function setCommentEXIF($comment, $url){
+		$image = new img($_POST['name']);
+		$image->set_to_Marker('XP_COMMENT', $comment);
+	}
+	
+	function setRateEXIF($rate, $url){
 		$image = new Imagick();
 		$image->readImage(__DIR__ . DIRECTORY_SEPARATOR .$url);
-		$image->setImageProperty('arate', "$rate");
+		$image->setImageProperty('xmp:Rating', $rate);
 		// $image->commentImage("Hello World!");
 		
 		print_r($image->getImageProperties("*"));
-		
+		clearstatcache(dirname(__DIR__ . DIRECTORY_SEPARATOR .$url));
+		unlink(__DIR__ . DIRECTORY_SEPARATOR .$url);
 		$image->writeImage(__DIR__ . DIRECTORY_SEPARATOR .$url);
 		
 		$image->clear(); 
@@ -87,6 +108,7 @@
 		$image1->clear(); 
 		$image1->destroy();
 	}
+	// echo(getRateImg("Bilder/output.jpg"));
 	// setRateImg('5', "Bilder/output.jpg");
 	// echo('aaa'.getRateImg("Bilder/output.jpg"));
 ?>

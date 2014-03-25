@@ -15,21 +15,20 @@ class img{
 	private	$ifd0;
 	private $marker;
 	public 	$comment;
-	public	$tag;
+	public	$tags;
 	public	$rate;
-	public	$orientation;
 	
 	public function __construct($url){
-		$this->url 			= $url;
+		$this->url = $url;
 		$this->get_EXIF($url);
-		// $this->comment 		= $this->get_Marker('XP_COMMENT');
-		// $this->tag 			= $this->get_Marker('XP_KEYWORDS');
-		// $this->rate 		= $this->get_Marker('');
+		$this->comment 	= $this->get_Marker('XP_COMMENT');
+		$this->tags		= $this->get_Marker('XP_KEYWORDS');
+		// $this->rate 	= $this->get_Marker('');
 	}
 	
 	public function refrash(){
-		// $this->comment 		= $this->get_Marker('XP_COMMENT');
-		// $this->tag 			= $this->get_Marker('XP_KEYWORDS');
+		// $this->comment	= $this->get_Marker('XP_COMMENT');
+		// $this->tags		= $this->get_Marker('XP_KEYWORDS');
 		// $this->rate 		= $this->get_Marker('');
 	}
 	private function get_EXIF($url){
@@ -137,8 +136,8 @@ class img{
 			$this->ifd0->addEntry($marker);
 			return '';
 		}else {
-			echo($marker.': '.$marker->getValue().'<br/>');
-			return($marker_value = $marker->getValue());
+			// echo($marker.': '.$marker->getValue().'<br/>');
+			return($marker->getValue());
 		}
 	}
 	
@@ -151,54 +150,13 @@ class img{
 	public function add_to_Marker($mrkr, $value){
 		$old_value = $this->get_Marker($mrkr);
 		$marker = $this->ifd0->getEntry(constant('PelTag::'. $mrkr));
-		$marker->setValue($old_value.$value);
+		$marker->setValue($old_value.';'.$value);
 		$this->exif_objekt->saveFile($this->url);
 	}
-	
-	public function getRotation(){
-		$orientation = $this->get_Marker('ORIENTATION');
-		if (isset($orientation)){
-			$orientation = (int)$orientation ;
-		}else{
-			$orientation = 0;
-		}
-		
-		switch($orientation) {
-            case 1:
-            case 2:
-                return 0;
-            break;
-            case 3:
-            case 4:
-                return 180;
-            break;
-            case 5:
-            case 6:
-                return 90;
-            break;
-            case 7:
-            case 8:
-                return 270;
-            break;
-            default:
-                return 0;
-            break;
-        }
-	}
-	
-	public function turnOn($turnOn){
-		if(!isset($turnOn)){
-			$turnOn =  $this->getRotation();
-		}
-		echo('orientation: '.$turnOn.'<br>');
-		if ($turnOn > 0) {
-			$imagick = new Imagick();
-			$imagick->readImage(__DIR__ . DIRECTORY_SEPARATOR . $this->url); 
-			$imagick->rotateImage(new ImagickPixel('none'), $turnOn); 
-			$imagick->writeImage(__DIR__ . DIRECTORY_SEPARATOR . $this->url); 
-			$imagick->clear(); 
-			$imagick->destroy();
-		}
-	}
 }
+// $image = new img('Bilder/output.jpg');
+// var_dump($image);
+// echo($image->get_Marker('XP_COMMENT'));
+// $image->set_to_Marker('XP_COMMENT', 'new comment from Tihan ');
+// echo($image->get_Marker('XP_COMMENT'));
 ?>
