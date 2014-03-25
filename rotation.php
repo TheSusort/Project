@@ -26,10 +26,6 @@
 			$image->setImageOrientation(imagick::ORIENTATION_TOPLEFT); 
 			$image->writeImage($outUrl); //__DIR__ . DIRECTORY_SEPARATOR .
 
-//			if (!empty($copy)){
-//				$image->writeImage($copy);
-//			}
-
 			$image->clear(); 
 			$image->destroy();
 			return TRUE;

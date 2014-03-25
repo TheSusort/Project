@@ -624,14 +624,6 @@
 						$result2 = $db->query($query2);
 						if (!empty($result2))
 						{
-<<<<<<< HEAD
-							echo '<li>'. array_to_string($rr).'</li>';
-                            
-						}	
-					}
-                   ?>
-            </ul>
-=======
 							foreach($result2 as $rr)
 							{
 								echo '<li>'. array_to_string($rr).'</li>';
@@ -639,7 +631,6 @@
 						}
 					?>
 				</ul>
->>>>>>> 62f6dde974972a6236dbb212c9645e4556685950
                    
                         
                     <p>
