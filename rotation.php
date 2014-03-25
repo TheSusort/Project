@@ -25,7 +25,7 @@
 			// Now that it's manuel-rotated, make sure the EXIF data is correct in case the EXIF gets saved with the image! 
 			$image->setImageOrientation(imagick::ORIENTATION_TOPLEFT); 
 			$image->writeImage($outUrl); //__DIR__ . DIRECTORY_SEPARATOR .
-
+			
 			$image->clear(); 
 			$image->destroy();
 			return TRUE;
