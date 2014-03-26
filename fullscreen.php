@@ -18,14 +18,15 @@
 
         <!javascript kommentarboks>
         <script type="text/javascript">
-            function exchange(el){
+            function exchange(el)
+			{
                 var ie=document.all&&!document.getElementById? document.all : 0;
                 var toObjId=/b$/.test(el.id)? el.id.replace(/b$/,'') : el.id+'b';
                 var toObj=ie? ie[toObjId] : document.getElementById(toObjId);
                 if(/b$/.test(el.id))
                     toObj.innerHTML=el.value;
                 else{
-                    toObj.style.width=el.offsetWidth+7+'px';
+                    toObj.style.width=200+'px';
                     toObj.value=el.innerHTML;
                 }
                 el.style.display='none';
@@ -113,6 +114,23 @@
 		}
 // PROGRESS
         </script>
+		
+		<script type="text/javascript">
+									
+			function musOverPilVenstre(musover)
+			{
+			musover.src = "PilVenstre.png";
+			}
+			function musOverPilHøyre(musover)
+			{
+			musover.src = "PilHøyre.png";
+			}
+			function musIkkeOver(musover)
+			{
+			musover.src = "Tom.png";
+			}
+			
+		</script>	
         
     </head>
         
@@ -561,29 +579,37 @@
 				
                    <!kommentarfelt>
         
-                <form action="" method="post" id='commentForm'>
-                    <span id="itm1" onclick="exchange(this);">
-						<?php 	
-							$query2 = "SELECT commentary FROM file_liste WHERE fileid=$result3";
-							$result2 = $db->query($query2);
-							foreach($result2 as $rr)
-								
-							if (!empty($result2)){
-								foreach($result2 as $rr) {
-									print_r(array_to_string($rr));
-									if(null === (array_to_string($rr))) echo("click to comment");
-								}
-							}
-						?>
-					</span>
-                    <input ondblclick="exchange(this);" onkeydown="onKeyDown(this)" id="itm1b" class="replace" type="text" value=""  name="comment">
-                    </form><?php
-					if(!empty($_POST['comment'])){
-						$svaret = $_POST['comment'];
-						$query = "UPDATE file_liste SET commentary='$svaret' WHERE fileid=$result3";
-						$result = $db->query($query);
-						echo'<meta http-equiv="refresh" content="0" />';
-					}?>
+<form action="" method="post" id='commentForm'>
+<input type = "text" name = "comment" value="<?php	
+	$query2 = "SELECT commentary FROM file_liste WHERE fileid=$result3";
+	$result2 = $db->query($query2);
+	foreach($result2 as $rr)
+		
+	if (!empty($result2)){
+		foreach($result2 as $rr) {
+			print_r(array_to_string($rr));
+			if(null === (array_to_string($rr))) echo("click to comment");
+		}
+	}
+	if(!empty($_POST['comment'])){
+	$svaret = $_POST['comment'];
+	$query = "UPDATE file_liste SET commentary='$svaret' WHERE fileid=$result3";
+	$result = $db->query($query);
+	echo'<meta http-equiv="refresh" content="0" />';
+	
+	if(!empty($_POST['comment'])){
+	$svaret = $_POST['comment'];
+	$query = "UPDATE file_liste SET commentary='$svaret' WHERE fileid=$result3";
+	$result = $db->query($query);
+	echo'<meta http-equiv="refresh" content="0" />';
+}
+}
+?>" onFocus="javascript:this.select()" size="27";>
+<!--input ondblclick="exchange(this);" onkeydown="onKeyDown(this)" id="itm1b" class="replace" type="text" value="click to comment"  name="comment"-->
+<!--span id="itm1" onclick="exchange(this);"-->
+<!--/span-->
+
+</form>
 					
 					
                
@@ -710,6 +736,7 @@
                     // <img src= "Rbutton.png"width="40" height="40"></a>';
                
                 ?>
+				
 					<input type="image" src= "Lbutton.png" onClick="prevImg()" width="40" height="40">
 					<input type="image" src= "Rbutton.png" onClick="nextImg()" width="40" height="40">
     
@@ -728,5 +755,14 @@
                     }
                </script>
 		</div>
+		
+		<div id="venstreknapp">
+			<img border="0" src="Tom.png" width="256" height="77%" onmouseover="musOverPilVenstre(this)" onmouseout="musIkkeOver(this)" onclick="prevImg()">
+		</div>
+		<div id="høyreknapp">
+			<img border="0" src="Tom.png" width="256" height="77%" onmouseover="musOverPilHøyre(this)" onmouseout="musIkkeOver(this)" onclick="nextImg()">
+		</div>
+		
+			
     </body>
     </html>
