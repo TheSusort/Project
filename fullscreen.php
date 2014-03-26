@@ -130,6 +130,31 @@
 			musover.src = "Tom.png";
 			}
 			
+			function musOverKnapp(musover)
+			{
+			musover.src = "Rotasjonsmeny.png";
+			}
+			function musIkkeOverKnapp(musover)
+			{
+			musover.src = "TomRotasjonsmeny.png";
+			}
+			
+			function musOverRotasjonVenstre(musover)
+			{
+			musover.src = "RoterVenstre.png";
+			}
+			function musOverRotasjonHøyre(musover)
+			{
+			musover.src = "RoterHøyre.png";
+			}
+			function musOverAvslutt(musover)
+			{
+			musover.src = "LukkVindu.png";
+			}
+			function musIkkeOverRotasjonsknapp(musover)
+			{
+			musover.src = "";
+			}
 		</script>	
         
     </head>
@@ -692,13 +717,7 @@
            
            </div>
 
-			<FORM action="CloseFullscreen">
-			   <input type="image" src="closex.png" onClick="window.close('fs')" align="right" width="40" height="40">
-			</FORM>
 			
-			   <input type="image" src="RotateRightButton.png" onClick="rotate(90)" align="right" width="40" height="40">
-	
-			   <input type="image" src="RotateLeftButton.png" onClick="rotate(-90)" align="right" width="40" height="40">
 
           
            
@@ -736,9 +755,6 @@
                     // <img src= "Rbutton.png"width="40" height="40"></a>';
                
                 ?>
-				
-					<input type="image" src= "Lbutton.png" onClick="prevImg()" width="40" height="40">
-					<input type="image" src= "Rbutton.png" onClick="nextImg()" width="40" height="40">
     
                
                <script type="text/javascript">
@@ -757,12 +773,23 @@
 		</div>
 		
 		<div id="venstreknapp">
-			<img border="0" src="Tom.png" width="256" height="77%" onmouseover="musOverPilVenstre(this)" onmouseout="musIkkeOver(this)" onclick="prevImg()">
+			<img src="Tom.png" width="256" height="77%" onmouseover="musOverPilVenstre(this)" onmouseout="musIkkeOver(this)" onclick="prevImg()">
 		</div>
 		<div id="høyreknapp">
-			<img border="0" src="Tom.png" width="256" height="77%" onmouseover="musOverPilHøyre(this)" onmouseout="musIkkeOver(this)" onclick="nextImg()">
+			<img src="Tom.png" width="256" height="77%" onmouseover="musOverPilHøyre(this)" onmouseout="musIkkeOver(this)" onclick="nextImg()">
 		</div>
-		
+		<div id="rotasjonsmeny">
+			<img src="TomRotasjonsmeny.png" width="256" height="128" onmouseover="musOverKnapp(this)" onmouseout="musIkkeOverKnapp(this)">
+		</div>		
+		<div id="roterVenstre">
+			<img width="64" height="64" onmouseover="musOverRotasjonVenstre(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="rotate(-90)">
+		</div>
+		<div id="roterhøyre">
+			<img width="64" height="64" onmouseover="musOverRotasjonHøyre(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="rotate(90)">
+		</div>
+		<div id="lukkVindu">
+			<img width="64" height="64" onmouseover="musOverAvslutt(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="window.close('fs')">
+		</div>
 			
     </body>
     </html>
