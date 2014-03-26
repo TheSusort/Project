@@ -399,7 +399,7 @@ if(!empty($filelist)){
 				$what = 'filename';
 				$files = null;
 				
-				$sQuery0 = "WHERE rating = $value";
+				$sQuery0 = "WHERE rating >= $value";
 				
 				$files = db_select($where, $what, $sQuery0, $what);
 				
@@ -416,6 +416,22 @@ if(!empty($filelist)){
 				
 			}
 		}
+		
+		function giveBoth($search1, $value1){
+			
+			$search = $search1;
+			$value = $value1;
+		
+			$filestmp1 = giveSearch($search);
+			$filestmp2 = giveRating($value);
+			
+			$filestmp3 = array_intersect($filestmp1, $filestmp2);
+			
+			$files = array_unique($filestmp3);
+			
+			return $files;
+		}
+		
 		// testfunksjon for oppdatering av tagsliste etter søk / ikke i bruk
 		function findTags($filelist1){
 		

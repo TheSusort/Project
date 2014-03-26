@@ -33,16 +33,23 @@
 	
 	//test search function
 	
-		if (!empty($_POST['search'])){
+		if (!empty($_POST['ratinginput']) && !empty($_POST['search'])){
+			$files = giveBoth($_POST['search'],$_POST['ratinginput']);
+			$gallery = VisBilder($files);
+		}
+	
+		if (!empty($_POST['search']) && empty($_POST['ratinginput'])){
 			$files = giveSearch($_POST['search']);
 			$gallery = VisBilder($files);
 		}
 		
-		if (!empty($_POST['ratinginput'])){
+		if (!empty($_POST['ratinginput']) && empty($_POST['search'])){
 			$files = giveRating($_POST['ratinginput']);
 			$gallery = VisBilder($files);
 		}
 
+		
+		
 	//test
 	
 	
