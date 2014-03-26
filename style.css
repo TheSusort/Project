@@ -103,6 +103,34 @@ h1 {
 	width: 128px;
 }
 
+#roterVenstre
+{
+	position:absolute;
+	top: 8px;
+	right: 136px;
+}
+
+#roterhøyre
+{
+	position:absolute;
+	top: 8px;
+	right: 72px;
+}
+
+#rotasjonsmeny
+{
+	position:absolute;
+	top: 8px;
+	right: 8px;
+}
+
+#lukkVindu
+{
+	position:absolute;
+	top: 8px;
+	right: 8px;
+}
+
 #buttoncontainer {
     height:50%;
     width:100%;
