@@ -33,8 +33,6 @@
 	
 	//test search function
 	
-	
-		//if (!empty($_POST['search']) && !empty($_POST['searchw'])){
 		if (!empty($_POST['search'])){
 			$files = giveSearch($_POST['search']);
 			$gallery = VisBilder($files);
@@ -44,14 +42,13 @@
 			$files = giveRating($_POST['ratinginput']);
 			$gallery = VisBilder($files);
 		}
-	
-	
+
 	//test
 	
 	
 	$main = preg_replace('/#gallery#/', $gallery, $main);
 
-    $tags_str = gen_tags();
+    $tags_str = gen_tags($files);
     $main = preg_replace('/#tags#/', $tags_str, $main);
 
     echo($main);	//displays the contents of the file main.html

@@ -201,10 +201,10 @@ $files  = null;                     # List of the files from disk
     }
 
 // Generate HTML cod for tags list
-	function gen_tags()
+	function gen_tags($fileslist1)
 	{
 		$tags_str = "<ul class=\"nav\">\n\r";
-		$tags = get_tags();
+		$tags = get_tags($fileslist1);
 		$tags_str = $tags_str."<li><a href=\"index.php\"><span>All</span></a></li>\r\n";
 		if (!empty($tags)){
 			foreach($tags as $tag)
@@ -275,10 +275,36 @@ $files  = null;                     # List of the files from disk
 	}
 // Get tags list from db
 //	return: tags list [array]
-    function get_tags()
+    function get_tags($filelist1)
     {
-        $tag_list = db_select('tag', 'tags', 'GROUP BY tags', 'tags');
-        return $tag_list;
+			$filelist = $filelist1;
+			$finalTags = array();
+		
+if(!empty($filelist)){		
+			foreach($filelist as $rr){
+				$where = 'tag';
+				$what = 'tags';
+				$sQuery3 = "INNER JOIN file_liste ON tag.fileid = file_liste.fileid WHERE file_liste.filename = '$rr'";
+				$currentTags = db_select($where, $what, $sQuery3, $what);
+				
+				if(!empty($currentTags)){
+					$currentTags = array_filter($currentTags);
+					foreach($currentTags as $bb){
+						array_push($finalTags, $bb);
+					}
+				}
+			}	
+					
+			$sluttTags = array_filter($finalTags);
+			
+			// print_r($sluttTags);
+			
+			return $sluttTags;
+			}
+	
+    //   $tag_list = db_select('tag', 'tags', 'GROUP BY tags', 'tags');
+    //  return $tag_list;
+	
     }
 
 // Generate Thumbs
@@ -381,13 +407,35 @@ $files  = null;                     # List of the files from disk
 					$files = array_unique($files);
 					}
 				
-				if(!$files){
-					alert_message("Search yields no results");
-					return FALSE;
-				}
+				//if(!$files){
+				//	alert_message("Search yields no results");
+				//	return FALSE;
+				//}
 				
 				return $files;
 				
 			}
 		}
+		// testfunksjon for oppdatering av tagsliste etter søk / ikke i bruk
+		function findTags($filelist1){
+		
+		$filelist = $filelist1;
+		
+		$finalTags = array();
+		
+			foreach($filelist as $rr){
+				array_to_string($rr);
+				$where = 'tag';
+				$what = 'tags';
+				$sQuery3 = "INNER JOIN file_list ON tag.fileid = file_liste.fileid WHERE file_liste.filename LIKE '$rr%'";
+				$currentTags = db_select($where, $what, $sQuery3, $what);
+				$finalTags[] = $currentTags;
+			}	
+			
+			$finalTags = array_unique($finalTags);
+			$finalTagsStr = array_to_string($finalTags);
+			return $finalTagsStr;
+		
+		}
+		
 ?>
