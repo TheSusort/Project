@@ -345,7 +345,7 @@ if(!empty($filelist)){
 	// test search function
 	
 		//function giveSearch($search1, $searchw1){
-		function giveSearch($search1){
+		function giveSearch($search1, $rcat){
 		
 			if(isset($_POST['submission'])){
 				$search = $search1;
@@ -354,6 +354,8 @@ if(!empty($filelist)){
 				$where = 'file_liste';
 				$what = 'filename';
 				$files = null;
+				
+				$additional = '';
 				
 				//$sQuery0 = "WHERE $searchw = $search";
 				
@@ -385,6 +387,16 @@ if(!empty($filelist)){
 					return FALSE;
 				}
 				
+				if($rcat == 'unrated'){
+					$files = array_intersect($files, get_unrated());
+					return $files;
+				}
+				
+				if($rcat == 'rated'){
+					$files = array_intersect($files, get_rated());
+					return $files;
+				}
+				
 				return $files;
 				
 			}
@@ -398,7 +410,7 @@ if(!empty($filelist)){
 				$where = 'file_liste';
 				$what = 'filename';
 				$files = null;
-				
+								
 				$sQuery0 = "WHERE rating >= $value";
 				
 				$files = db_select($where, $what, $sQuery0, $what);
@@ -417,12 +429,12 @@ if(!empty($filelist)){
 			}
 		}
 		
-		function giveBoth($search1, $value1){
+		function giveBoth($search1, $value1, $rcat){
 			
 			$search = $search1;
 			$value = $value1;
 		
-			$filestmp1 = giveSearch($search);
+			$filestmp1 = giveSearch($search, $rcat);
 			$filestmp2 = giveRating($value);
 			
 			$filestmp3 = array_intersect($filestmp1, $filestmp2);
@@ -452,6 +464,18 @@ if(!empty($filelist)){
 			$finalTagsStr = array_to_string($finalTags);
 			return $finalTagsStr;
 		
+		}
+		
+		function get_unrated()
+		{
+			$files = db_select('file_liste', 'filename', 'WHERE rating IS NULL', 'filename');
+			return $files;
+		}
+		
+		function get_rated()
+		{
+			$files = db_select('file_liste', 'filename', 'WHERE rating IS NOT NULL', 'filename');
+			return $files;
 		}
 		
 ?>
