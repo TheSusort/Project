@@ -9,6 +9,14 @@
     $main = file_get_contents('main.html');
     $message = "";
 	
+	// new variables test
+	
+	$cpam = "";
+	global $failed;
+	$failed	= FALSE;
+	
+	//
+	
     if ($_FILES != null){
         $message = $message.save_file();
     }
@@ -44,28 +52,6 @@
 	
 	//test search function
 	
-//	if(!(empty($_POST['ratingcategory']) && empty($_POST['search']) && empty($_POST['ratinginput']))){
-//	  print_r('Current search parameters: ');
-//	
-//	if(!empty($_POST['ratingcategory'])){
-//	    print_r('Category: ');
-//		print_r($_POST['ratingcategory']);
-//		print_r(' - ');
-//	}	
-//	if(!empty($_POST['ratinginput'])){
-//		print_r('Rating: >= ');
-//		print_r($_POST['ratinginput']);
-//		print_r(' - ');
-//	  }
-//	  if(!empty($_POST['search'])){
-//	    print_r('Comment/tag match: ');
-//		print_r($_POST['search']);
-//		print_r(' - ');
-//	  }
-//	}
-	
-		
-	
 		if (!empty($_POST['ratinginput']) && !empty($_POST['search'])){
 			$files = giveBoth($_POST['search'],$_POST['ratinginput'],$_POST['ratingcategory']);
 			$gallery = VisBilder($files);
@@ -80,6 +66,44 @@
 			$files = giveRating($_POST['ratinginput']);
 			$gallery = VisBilder($files);
 		}	
+
+if(!$failed){		
+	if((!empty($_POST['submission'])) && !(empty($_POST['ratingcategory']) && empty($_POST['search']) && empty($_POST['ratinginput']))){
+		if(!($_POST['ratingcategory']=='all' && (empty($_POST['search']) && empty($_POST['ratinginput'])))){	
+	 
+		$cpam =	'<div id ="parameters"><h3> CURRENT SEARCH: <i>';
+	
+		if(!empty($_POST['ratingcategory'])){
+			$cpam .= '(CATEGORY: ';
+			if($_POST['ratingcategory']=='unrated' && !empty($_POST['ratinginput'])){
+				$cpam .= 'all")';
+			}
+			else{
+				$cpam .= $_POST['ratingcategory'].')';
+			}
+		}	
+		
+		if(!empty($_POST['ratinginput'])){
+			$cpam .=' & ';
+			$cpam .= '(RATING: >= ';
+			$cpam .= $_POST['ratinginput'].')';
+		}
+		
+		if(!empty($_POST['search'])){
+			$cpam .= ' & ';
+			$cpam .= '(COMMENT/TAG: "';
+			$cpam .= $_POST['search'].'")';
+		}
+		
+		$cpam .= '</i></h3></div>';
+		
+		}
+ 	}
+}
+
+	$failed = FALSE;
+		
+	$main = preg_replace('/#parameters#/', $cpam, $main);
 	
 	$main = preg_replace('/#gallery#/', $gallery, $main);
 

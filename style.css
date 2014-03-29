@@ -55,6 +55,17 @@ h1 {
     height:87vh;
 }
 
+#parameters{
+	height:50px;
+    margin-left:260px;
+	margin-top:8px;
+    border-radius:25px;
+    background-color:#415050;
+    border-style:solid;
+    border-width:2px;
+    border-color:#141818; 
+}
+
 #exif {
     width:100%;
     height:150px;

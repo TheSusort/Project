@@ -382,18 +382,17 @@ if(!empty($filelist)){
 					$files = array_unique($files);
 					}
 				
-				if(!$files){
-					alert_message("Search yields no results");
-					return;
-				}
+				error($files);
 				
 				if($rcat == 'unrated'){
 					$files = array_intersect($files, get_unrated());
+					error($files);
 					return $files;
 				}
 				
 				if($rcat == 'rated'){
 					$files = array_intersect($files, get_rated());
+					error($files);
 					return $files;
 				}
 				
@@ -420,10 +419,7 @@ if(!empty($filelist)){
 					$files = array_unique($files);
 					}
 				
-				if(!$files){
-					alert_message("Search yields no results");
-					return FALSE;
-				}
+				error($files);
 								
 				return $files;
 				
@@ -450,10 +446,8 @@ if(!empty($filelist)){
 			
 			$files = array_unique($filestmp3);
 			
-			if(!$files){
-					alert_message("Search yields no results");
-					return FALSE;
-			}	
+			error($files);
+			
 			return $files;
 		}
 		
@@ -467,6 +461,16 @@ if(!empty($filelist)){
 		{
 			$files = db_select('file_liste', 'filename', 'WHERE rating IS NOT NULL', 'filename');
 			return $files;
+		}
+
+		function error($files){
+		
+			if(!$files){
+				global $failed;
+				alert_message('Search yields no results!');
+				$failed = TRUE;
+				return FALSE;
+			}
 		}
 		
 		// testfunksjon for oppdatering av tagsliste etter søk / ikke i bruk
@@ -500,5 +504,7 @@ if(!empty($filelist)){
 		function set_search_error($value){
 			return $searcherror = $value;;
 		}
+		
+
 		
 ?>
