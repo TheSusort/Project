@@ -342,22 +342,22 @@ if(!empty($filelist)){
         imagejpeg($nm, $path_to_thumbs_directory . $filename);
 	}
 
-	// test search function
-	
-		//function giveSearch($search1, $searchw1){
+	// Search function
+		
 		function giveSearch($search1, $rcat){
 		
-			if(isset($_POST['submission'])){
+//			if(isset($_POST['submission'])){
+
 				$search = $search1;
-				//$searchw = $searchw1;
+				
+				if (strpos($search,"'") !== false) {
+					alert_message("Invalid character!");
+					return;
+				}
 				
 				$where = 'file_liste';
 				$what = 'filename';
 				$files = null;
-				
-				$additional = '';
-				
-				//$sQuery0 = "WHERE $searchw = $search";
 				
 				$sQuery1 = "WHERE commentary LIKE '%$search%'";
 				
@@ -384,7 +384,7 @@ if(!empty($filelist)){
 				
 				if(!$files){
 					alert_message("Search yields no results");
-					return FALSE;
+					return;
 				}
 				
 				if($rcat == 'unrated'){
@@ -399,12 +399,13 @@ if(!empty($filelist)){
 				
 				return $files;
 				
-			}
+	//		}
 			
 		}
 		
 		function giveRating($value1){
-			if(isset($_POST['submission'])){
+		
+			//if(isset($_POST['submission'])){
 				
 				$value = $value1;
 				$where = 'file_liste';
@@ -419,14 +420,14 @@ if(!empty($filelist)){
 					$files = array_unique($files);
 					}
 				
-				//if(!$files){
-				//	alert_message("Search yields no results");
-				//	return FALSE;
-				//}
-				
+				if(!$files){
+					alert_message("Search yields no results");
+					return FALSE;
+				}
+								
 				return $files;
 				
-			}
+			//}
 		}
 		
 		function giveBoth($search1, $value1, $rcat){
@@ -437,10 +438,34 @@ if(!empty($filelist)){
 			$filestmp1 = giveSearch($search, $rcat);
 			$filestmp2 = giveRating($value);
 			
+			if(empty($filestmp1) && !empty($filestmp2)){
+				return $filestmp2;
+			}
+			
+			if(!empty($filestmp1) && empty($filestmp2)){
+				return $filestmp2;
+			}
+			
 			$filestmp3 = array_intersect($filestmp1, $filestmp2);
 			
 			$files = array_unique($filestmp3);
 			
+			if(!$files){
+					alert_message("Search yields no results");
+					return FALSE;
+			}	
+			return $files;
+		}
+		
+		function get_unrated()
+		{
+			$files = db_select('file_liste', 'filename', 'WHERE rating IS NULL', 'filename');
+			return $files;
+		}
+		
+		function get_rated()
+		{
+			$files = db_select('file_liste', 'filename', 'WHERE rating IS NOT NULL', 'filename');
 			return $files;
 		}
 		
@@ -466,16 +491,14 @@ if(!empty($filelist)){
 		
 		}
 		
-		function get_unrated()
-		{
-			$files = db_select('file_liste', 'filename', 'WHERE rating IS NULL', 'filename');
-			return $files;
+		// Testfunksjoner / ikke i bruk
+		
+		function get_search_error(){
+			return $searcherror;
 		}
 		
-		function get_rated()
-		{
-			$files = db_select('file_liste', 'filename', 'WHERE rating IS NOT NULL', 'filename');
-			return $files;
+		function set_search_error($value){
+			return $searcherror = $value;;
 		}
 		
 ?>

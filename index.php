@@ -8,7 +8,7 @@
     db_connnect();
     $main = file_get_contents('main.html');
     $message = "";
-
+	
     if ($_FILES != null){
         $message = $message.save_file();
     }
@@ -44,6 +44,28 @@
 	
 	//test search function
 	
+//	if(!(empty($_POST['ratingcategory']) && empty($_POST['search']) && empty($_POST['ratinginput']))){
+//	  print_r('Current search parameters: ');
+//	
+//	if(!empty($_POST['ratingcategory'])){
+//	    print_r('Category: ');
+//		print_r($_POST['ratingcategory']);
+//		print_r(' - ');
+//	}	
+//	if(!empty($_POST['ratinginput'])){
+//		print_r('Rating: >= ');
+//		print_r($_POST['ratinginput']);
+//		print_r(' - ');
+//	  }
+//	  if(!empty($_POST['search'])){
+//	    print_r('Comment/tag match: ');
+//		print_r($_POST['search']);
+//		print_r(' - ');
+//	  }
+//	}
+	
+		
+	
 		if (!empty($_POST['ratinginput']) && !empty($_POST['search'])){
 			$files = giveBoth($_POST['search'],$_POST['ratinginput'],$_POST['ratingcategory']);
 			$gallery = VisBilder($files);
@@ -57,12 +79,7 @@
 		if (!empty($_POST['ratinginput']) && empty($_POST['search'])){
 			$files = giveRating($_POST['ratinginput']);
 			$gallery = VisBilder($files);
-		}
-
-		
-		
-	//test
-	
+		}	
 	
 	$main = preg_replace('/#gallery#/', $gallery, $main);
 
