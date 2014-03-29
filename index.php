@@ -76,7 +76,7 @@ if(!$failed){
 		if(!empty($_POST['ratingcategory'])){
 			$cpam .= '(CATEGORY: ';
 			if($_POST['ratingcategory']=='unrated' && !empty($_POST['ratinginput'])){
-				$cpam .= 'all")';
+				$cpam .= 'all)';
 			}
 			else{
 				$cpam .= $_POST['ratingcategory'].')';
