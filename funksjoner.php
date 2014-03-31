@@ -296,6 +296,7 @@ if(!empty($filelist)){
 			}	
 					
 			$sluttTags = array_filter($finalTags);
+			$sluttTags = array_unique($finalTags);
 			
 			// print_r($sluttTags);
 			
