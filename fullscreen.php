@@ -665,15 +665,19 @@
 																		
 						var sletteTagHendelse = $('#myTags');
 						
+						var ratinginput = getURLParameter('ratinginput');
+						var search = getURLParameter('search');
+						var ratingcategory = getURLParameter('ratingcategory');
+						
 						sletteTagHendelse.tagit(
 						{
 							afterTagAdded: function(evt, ui)
 							{
-								window.location.assign("http://localhost/Project/fullscreen.php?tag=null&bilde=" + getURLParameter('bilde') + "&leggTilTaggnavn=" + $("#myTags").tagit('tagLabel', ui.tag) + "&slettTaggnavn=null");
+								window.location.assign("http://localhost/Project/fullscreen.php?tag=null&bilde=" + getURLParameter('bilde') + "&leggTilTaggnavn=" + $("#myTags").tagit('tagLabel', ui.tag) + "&slettTaggnavn=null" + "&ratinginput=" + ratinginput + "&search=" + search + "&ratingcategory=" + ratingcategory);
 							},
 							afterTagRemoved: function(evt, ui)
 							{
-								window.location.assign("http://localhost/Project/fullscreen.php?tag=null&bilde=" + getURLParameter('bilde') + "&slettTaggnavn=" + $("#myTags").tagit('tagLabel', ui.tag) + "&leggTilTaggnavn=null");
+								window.location.assign("http://localhost/Project/fullscreen.php?tag=null&bilde=" + getURLParameter('bilde') + "&slettTaggnavn=" + $("#myTags").tagit('tagLabel', ui.tag) + "&leggTilTaggnavn=null" + "&ratinginput=" + ratinginput + "&search=" + search + "&ratingcategory=" + ratingcategory);
 							}
 						}
 						);

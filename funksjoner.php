@@ -491,9 +491,9 @@ if(!empty($filelist)){
 		}	
 				
 		if (empty($ratinginput) && empty($search) && !empty($ratingcategory)){			
+			if($ratingcategory=='all'){$files = db_select('file_liste', 'filename', '', 'filename');}
 			if($ratingcategory=='unrated'){$files = get_unrated();}
 			if($ratingcategory=='rated'){$files = get_rated();}
-
 		}	
 		
 		return $files;

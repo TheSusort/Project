@@ -66,7 +66,16 @@
 	}
 	
 	$cpam = get_search_parameter_display($failed, $ratingcategory, $search, $ratinginput, $submission);
-
+	
+	print_r($failed);
+	if($failed){
+	
+	 echo'<script type="text/javascript">
+            window.location.assign("http://localhost/Project/index.php?ratingcategory=all&search=&submission=Search");
+     </script>';
+	 
+	}
+	
 	$failed = FALSE;
 		
 	$main = preg_replace('/#parameters#/', $cpam, $main);	
