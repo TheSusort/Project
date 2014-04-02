@@ -171,7 +171,22 @@
 	
 		global $imgListStr;
 		if (empty($_GET['tag']) || $_GET['tag']=='null'){
-			$imgList = db_select('file_liste', 'filename', '', 'filename');
+		//	$imgList = db_select('file_liste', 'filename', '', 'filename');//test
+			
+		// ALERT TESTZONE FOR IMAGE-SCROLL BASED ON SEARCH RESULTS
+	
+		if(!empty($_GET['ratinginput'])){$ratinginput = $_GET['ratinginput'];}
+		if(!empty($_GET['search'])){$search = $_GET['search'];}
+		if(!empty($_GET['ratingcategory'])){$ratingcategory = $_GET['ratingcategory'];}
+	
+		if($ratinginput == 'null'){$ratinginput = "";}
+		if($search == 'null'){$search = "";}
+		if($ratingcategory == 'null'){$ratingcategory = "";}
+	
+		$imgList = get_search_list($ratinginput, $search, $ratingcategory);
+		
+		// TESTZONE END
+		
 		}else{
 			$group = "inner join tag on file_liste.fileid = tag.fileid where tag.tags = '".$_GET['tag']."'";
 			$imgList = db_select('file_liste', 'filename', $group, 'filename');
@@ -727,8 +742,7 @@
                         $files = get_img_list($big);
                     }else {
                         $files = get_img_by_tag($_GET['tag']);
-                    }
-                    
+                    }                
                     
                     $number = count($files);
                     $key = array_search(basename($_GET['bilde']), $files);

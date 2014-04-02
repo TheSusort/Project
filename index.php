@@ -15,8 +15,6 @@
 	global $failed;
 	$failed	= FALSE;
 	
-	//
-	
     if ($_FILES != null){
         $message = $message.save_file();
     }
@@ -29,18 +27,18 @@
 		}
     }
 	
-	if(isset($_POST['ratingcategory'])){
-		$rcat = $_POST['ratingcategory'];
-		if($rcat == 'unrated'){
-			$files = get_unrated();
-		}
-		if($rcat == 'rated'){
-			$files = get_rated();
-		}
-		if($rcat == 'all'){
-			$files = get_File_List($big, $images);
-		}
-	}
+//	if(isset($_POST['ratingcategory'])){
+//		$rcat = $_POST['ratingcategory'];
+//		if($rcat == 'unrated'){
+//			$files = get_unrated();
+//		}
+//		if($rcat == 'rated'){
+//			$files = get_rated();
+//		}
+//		if($rcat == 'all'){
+//			$files = get_File_List($big, $images);
+//		}
+//	}
 	
 	if (!empty($_GET['tag'])){
 		$files = get_img_by_tag($_GET['tag']);
@@ -52,61 +50,27 @@
 	
 	//test search function
 	
-		if (!empty($_POST['ratinginput']) && !empty($_POST['search'])){
-			$files = giveBoth($_POST['search'],$_POST['ratinginput'],$_POST['ratingcategory']);
-			$gallery = VisBilder($files);
-		}
+	$ratinginput = "";
+	$search = "";
+	$ratingcategory = "";
+	$submission = "";
 	
-		if (!empty($_POST['search']) && empty($_POST['ratinginput'])){
-			$files = giveSearch($_POST['search'],$_POST['ratingcategory']);
-			$gallery = VisBilder($files);
-		}
-		
-		if (!empty($_POST['ratinginput']) && empty($_POST['search'])){
-			$files = giveRating($_POST['ratinginput']);
-			$gallery = VisBilder($files);
-		}	
-
-if(!$failed){		
-	if((!empty($_POST['submission'])) && !(empty($_POST['ratingcategory']) && empty($_POST['search']) && empty($_POST['ratinginput']))){
-		if(!($_POST['ratingcategory']=='all' && (empty($_POST['search']) && empty($_POST['ratinginput'])))){	
-	 
-		$cpam =	'<div id ="parameters"><h3> CURRENT SEARCH: <i>';
+	if(!empty($_GET['ratinginput'])){$ratinginput = $_GET['ratinginput'];}
+	if(!empty($_GET['search'])){$search = $_GET['search'];}
+	if(!empty($_GET['ratingcategory'])){$ratingcategory = $_GET['ratingcategory'];}
+	if(!empty($_GET['submission'])){$submission = $_GET['submission'];}
 	
-		if(!empty($_POST['ratingcategory'])){
-			$cpam .= '(CATEGORY: ';
-			if($_POST['ratingcategory']=='unrated' && !empty($_POST['ratinginput'])){
-				$cpam .= 'all)';
-			}
-			else{
-				$cpam .= $_POST['ratingcategory'].')';
-			}
-		}	
-		
-		if(!empty($_POST['ratinginput'])){
-			$cpam .=' & ';
-			$cpam .= '(RATING: >= ';
-			$cpam .= $_POST['ratinginput'].')';
-		}
-		
-		if(!empty($_POST['search'])){
-			$cpam .= ' & ';
-			$cpam .= '(COMMENT/TAG: "';
-			$cpam .= $_POST['search'].'")';
-		}
-		
-		$cpam .= '</i></h3></div>';
-		
-		}
- 	}
-}
+	if(!empty($submission)){
+		$files = get_search_list($ratinginput, $search, $ratingcategory);
+		$gallery = VisBilder($files);
+	}
+	
+	$cpam = get_search_parameter_display($failed, $ratingcategory, $search, $ratinginput, $submission);
 
 	$failed = FALSE;
 		
-	$main = preg_replace('/#parameters#/', $cpam, $main);
-	
+	$main = preg_replace('/#parameters#/', $cpam, $main);	
 	$main = preg_replace('/#gallery#/', $gallery, $main);
-
     $tags_str = gen_tags($files);
     $main = preg_replace('/#tags#/', $tags_str, $main);
 

@@ -15,7 +15,10 @@
 		}
 		function openFulskr(file) {
             tag = getURLParameter('tag');
-			window.open("fullscreen.php?tag="+ tag +"&bilde="+file + "&leggTilTaggnavn=null&slettTaggnavn=null");
+			ratinginput = getURLParameter('ratinginput');
+			search = getURLParameter('search');
+			ratingcategory = getURLParameter('ratingcategory');
+			window.open("fullscreen.php?tag="+ tag +"&bilde="+file + "&leggTilTaggnavn=null&slettTaggnavn=null" + "&ratinginput=" + ratinginput + "&search=" + search + "&ratingcategory=" + ratingcategory);
 		}
         function getURLParameter(name) {
 		  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
@@ -53,7 +56,7 @@
                 if (strcmp($currentRating,"5") == 0) $rating5="checked";
 				
 			?>
-				<form id="ratingForm" method="post">	
+				<form id="ratingForm" method="get">	
 				
 					<span class="rating" id = "ratingstar"> 
 						<input type="radio" value="5" class="rating-input"

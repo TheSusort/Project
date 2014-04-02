@@ -288,17 +288,17 @@ if(!empty($filelist)){
 				$currentTags = db_select($where, $what, $sQuery3, $what);
 				
 				if(!empty($currentTags)){
-					$currentTags = array_filter($currentTags);
+					//$currentTags = array_filter($currentTags);
 					foreach($currentTags as $bb){
 						array_push($finalTags, $bb);
 					}
 				}
 			}	
 					
-			$sluttTags = array_filter($finalTags);
+			//$sluttTags = array_filter($finalTags);
 			$sluttTags = array_unique($finalTags);
 			
-			// print_r($sluttTags);
+			 //print_r($sluttTags);
 			
 			return $sluttTags;
 			}
@@ -396,7 +396,7 @@ if(!empty($filelist)){
 					error($files);
 					return $files;
 				}
-				
+
 				return $files;
 				
 	//		}
@@ -474,37 +474,104 @@ if(!empty($filelist)){
 			}
 		}
 		
-		// testfunksjon for oppdatering av tagsliste etter søk / ikke i bruk
-		function findTags($filelist1){
+		function get_search_list($ratinginput, $search, $ratingcategory){
 		
-		$filelist = $filelist1;
+		$files = null;
 		
-		$finalTags = array();
+		if (!empty($ratinginput) && !empty($search)){
+			$files = giveBoth($search,$ratinginput,$ratingcategory);
+		}
+	
+		if (!empty($search) && empty($ratinginput)){
+			$files = giveSearch($search,$ratingcategory);
+		}
 		
-			foreach($filelist as $rr){
-				array_to_string($rr);
-				$where = 'tag';
-				$what = 'tags';
-				$sQuery3 = "INNER JOIN file_list ON tag.fileid = file_liste.fileid WHERE file_liste.filename LIKE '$rr%'";
-				$currentTags = db_select($where, $what, $sQuery3, $what);
-				$finalTags[] = $currentTags;
-			}	
-			
-			$finalTags = array_unique($finalTags);
-			$finalTagsStr = array_to_string($finalTags);
-			return $finalTagsStr;
+		if (!empty($ratinginput) && empty($search)){			
+			$files = giveRating($ratinginput);
+		}	
+				
+		if (empty($ratinginput) && empty($search) && !empty($ratingcategory)){			
+			if($ratingcategory=='unrated'){$files = get_unrated();}
+			if($ratingcategory=='rated'){$files = get_rated();}
+
+		}	
+		
+		return $files;
 		
 		}
+		
+		function get_search_parameter_display($failed, $ratingcategory, $search, $ratinginput, $submission){
+		
+			
+		if(!$failed){		
+			if((!empty($submission)) && !(empty($ratingcategory) && empty($search) && empty($ratinginput))){
+				if(!($ratingcategory=='all' && (empty($search) && empty($ratinginput)))){	
+	 
+				$cpam =	'<div id ="parameters"><h3> CURRENT SEARCH: <i>';
+	
+				if(!empty($ratingcategory)){
+					$cpam .= '(CATEGORY: ';
+					if($ratingcategory=='unrated' && !empty($ratinginput)){
+						$cpam .= 'all)';
+					}
+					else{
+						$cpam .= $ratingcategory.')';
+					}
+				}	
+				
+				if(!empty($ratinginput)){
+					$cpam .=' & ';
+					$cpam .= '(RATING: >= ';
+					$cpam .= $ratinginput.')';
+				}
+				
+				if(!empty($search)){
+					$cpam .= ' & ';
+					$cpam .= '(COMMENT/TAG: "';
+					$cpam .= $search.'")';
+				}
+				
+				$cpam .= '</i></h3></div>';
+				
+				return $cpam;
+				
+				}
+			}
+		}
+
+		}
+		
+		// testfunksjon for oppdatering av tagsliste etter søk / ikke i bruk
+//		function findTags($filelist1){
+		
+//		$filelist = $filelist1;
+		
+//		$finalTags = array();
+		
+//			foreach($filelist as $rr){
+//				array_to_string($rr);
+//				$where = 'tag';
+//				$what = 'tags';
+//				$sQuery3 = "INNER JOIN file_list ON tag.fileid = file_liste.fileid WHERE file_liste.filename LIKE '$rr%'";
+//				$currentTags = db_select($where, $what, $sQuery3, $what);
+//				$finalTags[] = $currentTags;
+//			}	
+			
+//			$finalTags = array_unique($finalTags);
+//			$finalTagsStr = array_to_string($finalTags);
+//			return $finalTagsStr;
+		
+//		}
 		
 		// Testfunksjoner / ikke i bruk
 		
-		function get_search_error(){
-			return $searcherror;
-		}
+//		function get_search_error(){
+//			return $searcherror;
+//		}
 		
-		function set_search_error($value){
-			return $searcherror = $value;;
-		}
+//		function set_search_error($value){
+//			return $searcherror = $value;;
+//		}
 		
 
 		
