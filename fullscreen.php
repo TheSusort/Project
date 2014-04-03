@@ -174,7 +174,11 @@
 		//	$imgList = db_select('file_liste', 'filename', '', 'filename');//test
 			
 		// ALERT TESTZONE FOR IMAGE-SCROLL BASED ON SEARCH RESULTS
-	
+			
+		$ratinginput = 'null';
+		$search = 'null';
+		$ratingcategory = 'null';
+
 		if(!empty($_GET['ratinginput'])){$ratinginput = $_GET['ratinginput'];}
 		if(!empty($_GET['search'])){$search = $_GET['search'];}
 		if(!empty($_GET['ratingcategory'])){$ratingcategory = $_GET['ratingcategory'];}
@@ -183,7 +187,12 @@
 		if($search == 'null'){$search = "";}
 		if($ratingcategory == 'null'){$ratingcategory = "";}
 	
-		$imgList = get_search_list($ratinginput, $search, $ratingcategory);
+		if(!$ratingcategory==""){
+			$imgList = get_search_list($ratinginput, $search, $ratingcategory);
+		}
+		else{
+			$imgList = db_select('file_liste', 'filename', '', 'filename');
+		}
 		
 		// TESTZONE END
 		
@@ -668,16 +677,22 @@
 						var ratinginput = getURLParameter('ratinginput');
 						var search = getURLParameter('search');
 						var ratingcategory = getURLParameter('ratingcategory');
+						var tag = getURLParameter('tag');
+						var total = "&ratinginput=" + ratinginput + "&search=" + search + "&ratingcategory=" + ratingcategory;
 						
+						if(ratingcategory=='null'){
+							var total="";
+						}
+	
 						sletteTagHendelse.tagit(
 						{
 							afterTagAdded: function(evt, ui)
 							{
-								window.location.assign("http://localhost/Project/fullscreen.php?tag=null&bilde=" + getURLParameter('bilde') + "&leggTilTaggnavn=" + $("#myTags").tagit('tagLabel', ui.tag) + "&slettTaggnavn=null" + "&ratinginput=" + ratinginput + "&search=" + search + "&ratingcategory=" + ratingcategory);
+								window.location.assign("http://localhost/Project/fullscreen.php?tag=" + tag + "&bilde=" + getURLParameter('bilde') + "&leggTilTaggnavn=" + $("#myTags").tagit('tagLabel', ui.tag) + "&slettTaggnavn=null" + total);
 							},
 							afterTagRemoved: function(evt, ui)
 							{
-								window.location.assign("http://localhost/Project/fullscreen.php?tag=null&bilde=" + getURLParameter('bilde') + "&slettTaggnavn=" + $("#myTags").tagit('tagLabel', ui.tag) + "&leggTilTaggnavn=null" + "&ratinginput=" + ratinginput + "&search=" + search + "&ratingcategory=" + ratingcategory);
+								window.location.assign("http://localhost/Project/fullscreen.php?tag=" + tag + "&bilde=" + getURLParameter('bilde') + "&slettTaggnavn=" + $("#myTags").tagit('tagLabel', ui.tag) + "&leggTilTaggnavn=null" + total);
 							}
 						}
 						);
