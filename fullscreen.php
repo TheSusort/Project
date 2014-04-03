@@ -121,9 +121,9 @@
 			{
 			musover.src = "PilVenstre.png";
 			}
-			function musOverPilHøyre(musover)
+			function musOverPilHoyre(musover)
 			{
-			musover.src = "PilHøyre.png";
+			musover.src = "PilHoyre.png";
 			}
 			function musIkkeOver(musover)
 			{
@@ -143,9 +143,9 @@
 			{
 			musover.src = "RoterVenstre.png";
 			}
-			function musOverRotasjonHøyre(musover)
+			function musOverRotasjonHoyre(musover)
 			{
-			musover.src = "RoterHøyre.png";
+			musover.src = "RoterHoyre.png";
 			}
 			function musOverAvslutt(musover)
 			{
@@ -793,8 +793,8 @@
 		<div id="venstreknapp">
 			<img src="Tom.png" width="256" height="77%" onmouseover="musOverPilVenstre(this)" onmouseout="musIkkeOver(this)" onclick="prevImg()">
 		</div>
-		<div id="høyreknapp">
-			<img src="Tom.png" width="256" height="77%" onmouseover="musOverPilHøyre(this)" onmouseout="musIkkeOver(this)" onclick="nextImg()">
+		<div id="hoyreknapp">
+			<img src="Tom.png" width="256" height="77%" onmouseover="musOverPilHoyre(this)" onmouseout="musIkkeOver(this)" onclick="nextImg()">
 		</div>
 		<div id="rotasjonsmeny">
 			<img src="TomRotasjonsmeny.png" width="256" height="128" onmouseover="musOverKnapp(this)" onmouseout="musIkkeOverKnapp(this)">
@@ -802,8 +802,8 @@
 		<div id="roterVenstre">
 			<img width="64" height="64" onmouseover="musOverRotasjonVenstre(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="rotate(-90)">
 		</div>
-		<div id="roterhøyre">
-			<img width="64" height="64" onmouseover="musOverRotasjonHøyre(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="rotate(90)">
+		<div id="roterhoyre">
+			<img width="64" height="64" onmouseover="musOverRotasjonHoyre(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="rotate(90)">
 		</div>
 		<div id="lukkVindu">
 			<img width="64" height="64" onmouseover="musOverAvslutt(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="window.close('fs')">
