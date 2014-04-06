@@ -96,36 +96,35 @@ h1 {
 
 #venstreknapp
 {
-	position:absolute;
-	top: 8px;
-	bottom: 0px;
-	left: 30%;
-	right: 0px;
-	width: 128px;
+    position:absolute;
+    top:10px;
+    float:left;
+    margin-left:100px;
+	width: 300px;
+    height:90vh;
 }
 
 #hoyreknapp
 {
 	position:absolute;
-	top: 8px;
-	bottom: 0px;
-	left: 64%;
-	right: 0px;
-	width: 128px;
+	top: 10px;
+	height:90vh;
+    right:110px;
+	width: 300px;
 }
 
 #roterVenstre
 {
 	position:absolute;
-	top: 8px;
-	right: 136px;
+	top: 143px;
+	right: 15px;
 }
 
 #roterhoyre
 {
 	position:absolute;
-	top: 8px;
-	right: 72px;
+	top: 79px;
+	right: 15px;
 }
 
 #rotasjonsmeny
@@ -138,8 +137,8 @@ h1 {
 #lukkVindu
 {
 	position:absolute;
-	top: 8px;
-	right: 8px;
+	top: 15px;
+	right: 15px;
 }
 
 #buttoncontainer {
@@ -241,4 +240,8 @@ ul.nav li a:hover {
 
 .replace {
 display:none;
+}
+
+#picturecontainer {
+    height:90vh;
 }

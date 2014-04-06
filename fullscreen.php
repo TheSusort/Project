@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="style.css">
         <link rel="shortcut icon" href="img/favicon.ico">
         
-        <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
+        <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/smoothness/jquery-ui.css">
         <link href="css/jquery.tagit.css" rel="stylesheet" type="text/css">
         
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"   type="text/javascript" charset="utf-8"></script>
@@ -119,41 +119,31 @@
 									
 			function musOverPilVenstre(musover)
 			{
-			musover.src = "PilVenstre.png";
+			musover.src = "img/leftbutton.png";
 			}
 			function musOverPilHoyre(musover)
 			{
-			musover.src = "PilHoyre.png";
+			musover.src = "img/rightbutton.png";
 			}
 			function musIkkeOver(musover)
 			{
-			musover.src = "Tom.png";
+			musover.src = "img/Tom.png";
 			}
-			
-			function musOverKnapp(musover)
-			{
-			musover.src = "Rotasjonsmeny.png";
-			}
-			function musIkkeOverKnapp(musover)
-			{
-			musover.src = "TomRotasjonsmeny.png";
-			}
-			
 			function musOverRotasjonVenstre(musover)
 			{
-			musover.src = "RoterVenstre.png";
+			musover.src = "img/RoterVenstre.png";
 			}
 			function musOverRotasjonHoyre(musover)
 			{
-			musover.src = "RoterHoyre.png";
+			musover.src = "img/RoterHoyre.png";
 			}
 			function musOverAvslutt(musover)
 			{
-			musover.src = "LukkVindu.png";
+			musover.src = "img/LukkVindu.png";
 			}
 			function musIkkeOverRotasjonsknapp(musover)
 			{
-			musover.src = "";
+			musover.src = "img/TomKnapp.png";
 			}
 		</script>	
         
@@ -756,6 +746,7 @@
           
            
            <div id="fullscreenpic">
+               <div id="picturecontainer">
           <?php
                     if(($_GET['tag'] === "null")) {
                         $files = get_img_list($big);
@@ -788,7 +779,13 @@
                     // <img src= "Rbutton.png"width="40" height="40"></a>';
                
                 ?>
-    
+                   <div id="venstreknapp">
+			<img src="img/Tom.png" width="256" height="85%" onmouseover="musOverPilVenstre(this)" onmouseout="musIkkeOver(this)" onclick="prevImg()">
+		</div>
+                   <div id="hoyreknapp">
+			<img src="img/Tom.png" width="256" height="85%" onmouseover="musOverPilHoyre(this)" onmouseout="musIkkeOver(this)" onclick="nextImg()">
+		</div>
+    </div>
                
                <script type="text/javascript">
                     window.onload=function() {
@@ -805,23 +802,16 @@
                </script>
 		</div>
 		
-		<div id="venstreknapp">
-			<img src="Tom.png" width="256" height="77%" onmouseover="musOverPilVenstre(this)" onmouseout="musIkkeOver(this)" onclick="prevImg()">
-		</div>
-		<div id="hoyreknapp">
-			<img src="Tom.png" width="256" height="77%" onmouseover="musOverPilHoyre(this)" onmouseout="musIkkeOver(this)" onclick="nextImg()">
-		</div>
-		<div id="rotasjonsmeny">
-			<img src="TomRotasjonsmeny.png" width="256" height="128" onmouseover="musOverKnapp(this)" onmouseout="musIkkeOverKnapp(this)">
-		</div>		
+
+		
 		<div id="roterVenstre">
-			<img width="64" height="64" onmouseover="musOverRotasjonVenstre(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="rotate(-90)">
+			<img src="img/TomKnapp.png" width="64" height="64" onmouseover="musOverRotasjonVenstre(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="rotate(-90)">
 		</div>
 		<div id="roterhoyre">
-			<img width="64" height="64" onmouseover="musOverRotasjonHoyre(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="rotate(90)">
+			<img src="img/TomKnapp.png" width="64" height="64" onmouseover="musOverRotasjonHoyre(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="rotate(90)">
 		</div>
 		<div id="lukkVindu">
-			<img width="64" height="64" onmouseover="musOverAvslutt(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="window.close('fs')">
+			<img src="img/TomKnapp.png" width="64" height="64" onmouseover="musOverAvslutt(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="window.close('fs')">
 		</div>
 			
     </body>
