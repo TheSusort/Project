@@ -15,6 +15,10 @@
 		
 		<script type="text/javascript" src="exif-js-master/binaryajax.js"></script>
 		<script type="text/javascript" src="exif-js-master/exif.js"></script>
+		
+		<?php
+			ob_start();
+		?>
 
         <!javascript kommentarboks>
         <script type="text/javascript">
@@ -617,33 +621,31 @@
 				</script>
 				
                    <!kommentarfelt>
+				   
         
-<form action="" method="post" id='commentForm'>
-<input type = "text" name = "comment" value="<?php	
+<form action="" method="post" id="commentForm">
+<input type = "text" name = "comment" value="<?php
 	$query2 = "SELECT commentary FROM file_liste WHERE fileid=$result3";
 	$result2 = $db->query($query2);
 	foreach($result2 as $rr)
 		
-	if (!empty($result2)){
-		foreach($result2 as $rr) {
+	if (!empty($result2))
+	{
+		foreach($result2 as $rr)
+		{
 			print_r(array_to_string($rr));
 			if(null === (array_to_string($rr))) echo("click to comment");
 		}
 	}
-	if(!empty($_POST['comment'])){
-	$svaret = $_POST['comment'];
-	$query = "UPDATE file_liste SET commentary='$svaret' WHERE fileid=$result3";
-	$result = $db->query($query);
-	echo'<meta http-equiv="refresh" content="0" />';
-	
-	if(!empty($_POST['comment'])){
-	$svaret = $_POST['comment'];
-	$query = "UPDATE file_liste SET commentary='$svaret' WHERE fileid=$result3";
-	$result = $db->query($query);
-	echo'<meta http-equiv="refresh" content="0" />';
-}
-}
-?>" onFocus="javascript:this.select()" size="27";>
+	if(!empty($_POST['comment']))
+	{
+		$svaret = $_POST['comment'];
+		$query = "UPDATE file_liste SET commentary='$svaret' WHERE fileid=$result3";
+		$result = $db->query($query);
+		//echo '<meta http-equiv="refresh" content="0">';
+		header("Refresh:0");
+	}	
+?>" onFocus="javascript:this.select()" size="27"/>
 <!--input ondblclick="exchange(this);" onkeydown="onKeyDown(this)" id="itm1b" class="replace" type="text" value="click to comment"  name="comment"-->
 <!--span id="itm1" onclick="exchange(this);"-->
 <!--/span-->
@@ -660,7 +662,10 @@
                <script type="text/javascript">
                     $(document).ready(function()
 					{
-                        $("#myTags").tagit();
+                        $("#myTags").tagit(
+						{
+							
+						});
 																		
 						var sletteTagHendelse = $('#myTags');
 						
