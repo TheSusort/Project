@@ -14,17 +14,17 @@
 	//---- set Comment-----
 	if(!empty($_POST['comment']) && !empty($_POST['name'])){
 		$result = setCommentDB($_POST['comment'], $_POST['name']);
-		if ($result){
-			setCommentEXIF($_POST['comment'], $_POST['name']);
-		}
+		// if ($result){
+			// setCommentEXIF($_POST['comment'], $_POST['name']);
+		// }
 	}
 	
 	//---- set Tags-----
 	if(!empty($_POST['tags']) && !empty($_POST['name'])){
 		$result = setTagDB($_POST['tags'], $_POST['name']);
-		if ($result){
-			setTagEXIF($_POST['tags'], $_POST['name']);
-		}
+		// if ($result){
+			// setTagEXIF($_POST['tags'], $_POST['name']);
+		// }
 	}
 
 	//---- get Rating, Comment and Tags
