@@ -400,10 +400,21 @@
 					}
 			
 					function nextImg(){
+						var ratinginput = getURLParameter('ratinginput');
+						var search = getURLParameter('search');
+						var ratingcategory = getURLParameter('ratingcategory');
+						var tag = getURLParameter('tag');
+						var total = "&ratinginput=" + ratinginput + "&search=" + search + "&ratingcategory=" + ratingcategory;
+						
+						if(ratingcategory=='null'){
+							var total="";
+						}
+
+					
 						var length = fileNames.length;
 						var next = (corImg+1)%length;
 						var newpic = fileNames[next];
-						window.location.assign("http://localhost/Project/fullscreen.php?tag=null" + "&bilde=Bilder/" + newpic + "&leggTilTaggnavn=null" + "&slettTaggnavn=null");
+						window.location.assign("http://localhost/Project/fullscreen.php?tag=" + tag + "&bilde=Bilder/" + newpic + "&leggTilTaggnavn=null" + "&slettTaggnavn=null" + total);
 						var hiddenNextImg = new Image();
 						hiddenNextImg.src = 'Bilder/'+fileNames[next]+'?rand='+Math.random();
 						var fullimg = document.getElementById('fullimg');
@@ -414,10 +425,20 @@
 					}
 		
 					function prevImg(){
+						var ratinginput = getURLParameter('ratinginput');
+						var search = getURLParameter('search');
+						var ratingcategory = getURLParameter('ratingcategory');
+						var tag = getURLParameter('tag');
+						var total = "&ratinginput=" + ratinginput + "&search=" + search + "&ratingcategory=" + ratingcategory;
+						
+						if(ratingcategory=='null'){
+							var total="";
+						}
+					
 						var length = fileNames.length;
 						var prev = (corImg-1)%length;
 						var newpic = fileNames[prev];
-						window.location.assign("http://localhost/Project/fullscreen.php?tag=null" + "&bilde=Bilder/" + newpic + "&leggTilTaggnavn=null" + "&slettTaggnavn=null");
+						window.location.assign("http://localhost/Project/fullscreen.php?tag=" + tag + "&bilde=Bilder/" + newpic + "&leggTilTaggnavn=null" + "&slettTaggnavn=null" + total);
 						if (prev < 0){
 							prev = length-1;
 						}
