@@ -13,7 +13,7 @@ include_once $Toolkit_Dir . 'Photoshop_IRB.php';
 include_once $Toolkit_Dir . 'EXIF.php';
 
 
-function get_Rating(){
+function get_Rating($url){
 	$header_data = get_jpeg_header_data( $url );
 	$xmpText = get_XMP_text( $header_data );
 	$xmpArr = read_XMP_array_from_text( $xmpText );
@@ -26,7 +26,6 @@ function get_Rating(){
 }
 
 function set_Rating($value, $url){
-	// $exif_data = get_EXIF_JPEG( $url );
 	$header_data = get_jpeg_header_data( $url );
 	$xmpText = get_XMP_text( $header_data );
 	$xmpArr = read_XMP_array_from_text( $xmpText );
@@ -169,24 +168,26 @@ function search_tag(&$arr, $tag){
 	}
 }
 
-$value = '4';
-$url = 'Bilder/output.jpg';
+// $value = '3';
+// $url = 'Bilder/output.jpg';
 
 // set_Rating($value, $url);
-del_KeyWord($value, $url);
+// del_KeyWord('q', $url);
+ // add_KeyWord('q', $url);
+
 	// $exif_data = get_EXIF_JPEG( $url );
 	
-	$header_data = get_jpeg_header_data( $url );
-	$xmpText = get_XMP_text( $header_data );
-	$xmpArr = read_XMP_array_from_text( $xmpText );
+	// $header_data = get_jpeg_header_data( $url );
+	// $xmpText = get_XMP_text( $header_data );
+	// $xmpArr = read_XMP_array_from_text( $xmpText );
 	// del_key($xmpArr, $value);
 	// $r = set_key($xmpArr, 'dc:subject', $value);
 	// $r['value']='3';
 	
 	// print_r(search_tag($xmpArr, 'xmp:Rating'));
 	// print_r($r);
-	$header_data = get_jpeg_header_data( $url );
-	$xmpText = get_XMP_text( $header_data );
-	$xmpArr = read_XMP_array_from_text( $xmpText );
-	print_r($xmpArr);
+	// $header_data = get_jpeg_header_data( $url );
+	// $xmpText = get_XMP_text( $header_data );
+	// $xmpArr = read_XMP_array_from_text( $xmpText );
+	// print_r($xmpArr);
 ?>

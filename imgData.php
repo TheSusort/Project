@@ -6,9 +6,9 @@
 	//---- set Rating----- IKKE VIRKE MED EXIF!!!
 	if(!empty($_POST['rate']) && !empty($_POST['name'])){
 		$result = setRateDB($_POST['rate'], $_POST['name']);
-		// if ($result){
-			// setRateEXIF($_POST['rate'], $_POST['name']);
-		// }
+		if ($result){
+			setRateEXIF($_POST['rate'], $_POST['name']);
+		}
 	}
 	
 	//---- set Comment-----
@@ -30,7 +30,6 @@
 	//---- get Rating, Comment and Tags
 	if(!empty($_POST['name']) && (empty($_POST['rate']) && empty($_POST['comment']) && empty($_POST['tag']))){
 		//---- get Rating ----
-		$image 		= new img($_POST['name']);
 		$rate  		= 'rate: ' . getRateDB($_POST['name']);
 		$comment 	= 'comment: ' . getCommentDB($_POST['name']);
 		$tags		= getTagsDB($_POST['name']);
@@ -61,11 +60,7 @@
 	}
 	
 	function getRateEXIF($url){
-		$image = new Imagick();
-		$image->readImage(__DIR__ . DIRECTORY_SEPARATOR .$url);
-		$rate = $image->getImageProperty('xmp:Rating');
-		$image->clear(); 
-		$image->destroy();
+		$rate = get_Rating($url);
 		return $rate;
 	}
 	
@@ -78,37 +73,15 @@
 	}
 	
 	function setTagEXIF($tegs, $url){
-		$image = new img($_POST['name']);
-		$image->set_to_Marker('XP_KEYWORDS', $tegs);
+		
 	}
 	
 	function setCommentEXIF($comment, $url){
-		$image = new img($_POST['name']);
-		$image->set_to_Marker('XP_COMMENT', $comment);
+		
 	}
 	
 	function setRateEXIF($rate, $url){
-		$image = new Imagick();
-		$image->readImage(__DIR__ . DIRECTORY_SEPARATOR .$url);
-		$image->setImageProperty('xmp:Rating', $rate);
-		// $image->commentImage("Hello World!");
-		
-		print_r($image->getImageProperties("*"));
-		clearstatcache(dirname(__DIR__ . DIRECTORY_SEPARATOR .$url));
-		unlink(__DIR__ . DIRECTORY_SEPARATOR .$url);
-		$image->writeImage(__DIR__ . DIRECTORY_SEPARATOR .$url);
-		
-		$image->clear(); 
-		$image->destroy();
-		
-		$image1 = new Imagick();
-		$image1->readImage(__DIR__ . DIRECTORY_SEPARATOR .$url);
-		
-		print_r($image1->getImageProperties());
-		$image1->clear(); 
-		$image1->destroy();
+		set_Rating($rate, $url);
 	}
-	// echo(getRateImg("Bilder/output.jpg"));
-	// setRateImg('5', "Bilder/output.jpg");
-	// echo('aaa'.getRateImg("Bilder/output.jpg"));
+	
 ?>

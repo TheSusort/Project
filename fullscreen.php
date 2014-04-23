@@ -450,13 +450,13 @@
 						xmlhttp.send("&name=" + encodeURIComponent(fileName));
 						if(xmlhttp.status == 200) {
 							if (xmlhttp.responseText!=""){
+								
 								var respText = xmlhttp.responseText;
 								if (checkImgData(respText)){
-									var imgStrData 	= respText.split("#");
-
-									var rate = getRating(imgStrData[0]);
-									var comment	= getComment(imgStrData[1]);
-									var tags = getTags(imgStrData[2]);
+									
+									var rate = getRating(respText);
+									var comment	= getComment(respText);
+									var tags = getTags(respText);
 									
 									var imgData	= [rate,comment,tags];
 									return imgData;
@@ -464,36 +464,44 @@
 									return ['0','',['']];
 								}
 							}else{
-								return [0,'',['']];
+								return ['0','',['']];
 							};
 						}
 					}
 		
-					function getRating(str){
-						if(str.length==7){
-							return str.substr(6,1);
-						}else{
-							return '0';
+					function getRating(imgStrData){
+						var imgData = imgStrData.split("#");
+						for(var i=0; i<imgData.length; i++){
+							var data = imgData[i].split(':');
+							if (data[0] == 'rate'){
+								return data[1];
+							}
 						}
+						return '0';
 					}
 		
-					function getComment(str){
-						if(str.length>9){
-							return str.substr(9);
-						}else{
-							return ' ';
+					function getComment(imgStrData){
+						var imgData = imgStrData.split("#");
+						for(var i=0; i<imgData.length; i++){
+							var data = imgData[i].split(':');
+							if (data[0] == 'comment'){
+								return data[1];
+							}
 						}
+						return ' ';
 					}
 		
-					function getTags(str){
-						if(str.length>7){
-							str = str.substr(6);
-							str = str.slice(0,-1);
-							
-							return str.split(",");
-						}else{
-							return [' '];
+					function getTags(imgStrData){
+						var imgData = imgStrData.split("#");
+						for(var i=0; i<imgData.length; i++){
+							var data = imgData[i].split(':');
+							if (data[0] == 'tags'){
+								data[1] = data[1].slice(0,-1);
+								if (data[1].length != 0)
+									return data[1].split(",");
+							}
 						}
+						return [' '];
 					}
 					
 					function setRate(rate){
@@ -617,6 +625,57 @@
 					function showTags(arr){
 						var span = document.getElementById('tagsStr');
 						span.innerHTML = arr.toString();
+						
+						changeTags(arr);
+						
+					}
+					
+					function changeTags(value){
+					
+						var myNode = document.getElementById("myTags");
+						while (myNode.firstChild) {
+							myNode.removeChild(myNode.firstChild);
+						}
+						if (value[0]!=' '){
+							for (var i=0; i<value.length; i++){
+								var ListElem = document.createElement('LI');
+									ListElem.className = "tagit-choice ui-widget-content ui-state-default ui-corner-all tagit-choice-editable";
+							
+								var SpanElem0 = document.createElement('SPAN');
+									SpanElem0.innerHTML = value[i];
+									SpanElem0.className = "tagit-label";
+								
+								var AElem = document.createElement('A');
+									AElem.className = "tagit-close";
+								
+								var SpanElem1 = document.createElement('SPAN');
+									SpanElem1.innerHTML = '×';
+									SpanElem1.className = "text-icon";
+									
+								var SpanElem2 = document.createElement('SPAN');
+									SpanElem2.className = "ui-icon ui-icon-close";
+									
+								var InputElem = document.createElement('INPUT');
+									InputElem.className = "tagit-hidden-field";
+									InputElem.name = 'tags';
+									InputElem.value = value[i];
+									InputElem.type = 'hidden';
+								
+								AElem.appendChild(SpanElem1);
+								AElem.appendChild(SpanElem2);
+								
+								ListElem.appendChild(SpanElem0);
+								ListElem.appendChild(AElem);
+								ListElem.appendChild(InputElem);
+								
+								myNode.appendChild(ListElem);
+							}
+						}
+						var ListElem = document.createElement('LI');
+							ListElem.className = "tagit-new";
+							ListElem.innerHTML = '<input type="text" class="ui-widget-content ui-autocomplete-input" placeholder="click to tag" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">';
+							
+						myNode.appendChild(ListElem);
 					}
 				</script>
 				
