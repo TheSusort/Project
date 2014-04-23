@@ -631,7 +631,6 @@
 					}
 					
 					function changeTags(value){
-					
 						var myNode = document.getElementById("myTags");
 						while (myNode.firstChild) {
 							myNode.removeChild(myNode.firstChild);

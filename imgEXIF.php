@@ -29,8 +29,11 @@ function set_Rating($value, $url){
 	$header_data = get_jpeg_header_data( $url );
 	$xmpText = get_XMP_text( $header_data );
 	$xmpArr = read_XMP_array_from_text( $xmpText );
+		$xmpArr = checkXMP($xmpArr);
+		
 	$i=0;
 	$value_prsnt = strval(((int)$value - 1) * 24 + 1);
+	
 	if (!set_tag($xmpArr, 'xmp:Rating', $value) & !set_tag($xmpArr, 'MicrosoftPhoto:Rating', $value_prsnt)){
 		$xmpArr[0]['children'][0]['children'][0]['children'][0]['tag'] = 'xmp:Rating';
 		$xmpArr[0]['children'][0]['children'][0]['children'][0]['value'] = $value;
@@ -168,9 +171,34 @@ function search_tag(&$arr, $tag){
 	}
 }
 
-// $value = '3';
-// $url = 'Bilder/output.jpg';
+function checkXMP($xmp){
+	if(empty($xmp)){
+		$xmp = array();
+		$xmp[0]=array(	'tag'=>'x:xmpmeta', 
+						'attributes'=>array('xmlns:x'=>'adobe:ns:meta/'), 
+						'children'=>array());
+						
+		$xmp[0]['children'][0] = array('tag'=>'rdf:RDF', 
+									'attributes'=>array('xmlns:rdf'=>'http://www.w3.org/1999/02/22-rdf-syntax-ns#'), 
+									'children'=>array());
+									
+		$xmp[0]['children'][0]['children'][0] = array(	'tag'=>'rdf:Description', 
+														'attributes'=>array('rdf:about'=>'uuid:faf5bdd5-ba3d-11da-ad31-d33d75182f1b',
+																			'xmlns:xmp'=>'http://ns.adobe.com/xap/1.0/'	)
+														);
+														
+		$xmp[0]['children'][0]['children'][1] = array(	'tag'=>'rdf:Description', 
+														'attributes'=>array('rdf:about'=>'uuid:faf5bdd5-ba3d-11da-ad31-d33d75182f1b',
+																			'xmlns:MicrosoftPhoto'=>'http://ns.microsoft.com/photo/1.0/')
+														);
+		
+	}
+	return $xmp;
+}
 
+// $value = '3';
+// $url = 'Bilder/Masada.jpg';
+// $url = 'Bilder/output.jpg';
 // set_Rating($value, $url);
 // del_KeyWord('q', $url);
  // add_KeyWord('q', $url);
@@ -189,5 +217,8 @@ function search_tag(&$arr, $tag){
 	// $header_data = get_jpeg_header_data( $url );
 	// $xmpText = get_XMP_text( $header_data );
 	// $xmpArr = read_XMP_array_from_text( $xmpText );
-	// print_r($xmpArr);
+	// print_r($xmpText);
+	
+	// checkXMP('');
+	
 ?>

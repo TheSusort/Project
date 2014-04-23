@@ -22,9 +22,9 @@
 	//---- set Tags-----
 	if(!empty($_POST['tags']) && !empty($_POST['name'])){
 		$result = setTagDB($_POST['tags'], $_POST['name']);
-		// if ($result){
-			// setTagEXIF($_POST['tags'], $_POST['name']);
-		// }
+		if ($result){
+			setTagEXIF($_POST['tags'], $_POST['name']);
+		}
 	}
 
 	//---- get Rating, Comment and Tags
@@ -73,7 +73,7 @@
 	}
 	
 	function setTagEXIF($tegs, $url){
-		
+		add_KeyWord($tegs, $url);
 	}
 	
 	function setCommentEXIF($comment, $url){
