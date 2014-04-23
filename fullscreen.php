@@ -185,15 +185,19 @@
 	global $result3;
 	$currentImage = substr($_GET['bilde'],7);
 	
-	$query1 = "SELECT fileid FROM file_liste WHERE filename='$currentImage'";
+	//$result3 = getImgDetails($currentImage);
+	
+			$query1 = "SELECT fileid FROM file_liste WHERE filename='$currentImage'";
 					$result1 = $db->query($query1);
          	
 					if (!empty($result1)){
 						foreach($result1 as $rr)
 						{
-							$result3 = (array_to_string($rr));
+						$result3 = array_to_string($rr);
+						$result4 = $rr;
 						}	
 					}
+	
     ?>
 	<?php	
 		$leggTilTaggnavn = $_GET["leggTilTaggnavn"];
@@ -381,20 +385,22 @@
 					function nextImg(){
 						var length = fileNames.length;
 						var next = (corImg+1)%length;
-						
+						var newpic = fileNames[next];
+						window.location.assign("http://localhost/Project/fullscreen.php?tag=null" + "&bilde=Bilder/" + newpic + "&leggTilTaggnavn=null" + "&slettTaggnavn=null");
 						var hiddenNextImg = new Image();
 						hiddenNextImg.src = 'Bilder/'+fileNames[next]+'?rand='+Math.random();
 						var fullimg = document.getElementById('fullimg');
 						fullimg.src = hiddenNextImg.src;
 						
 						corImg = next;
-						
 						showData();
 					}
 		
 					function prevImg(){
 						var length = fileNames.length;
 						var prev = (corImg-1)%length;
+						var newpic = fileNames[prev];
+						window.location.assign("http://localhost/Project/fullscreen.php?tag=null" + "&bilde=Bilder/" + newpic + "&leggTilTaggnavn=null" + "&slettTaggnavn=null");
 						if (prev < 0){
 							prev = length-1;
 						}
@@ -415,6 +421,7 @@
 						showComment(imgData[1]);
 						showTags(imgData[2]);
 						document.getElementById('nameStr').innerHTML = fileNames[corImg];
+						//location.reload(true);
 					}
 				
 					//---- checks the string by template(rate: [1-5]#comment: STRING#tags: STRING,STRING,STRING;)
