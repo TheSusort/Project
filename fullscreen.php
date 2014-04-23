@@ -531,11 +531,11 @@
 						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 						xmlhttp.send("rate=" + encodeURIComponent(rate) + "&name=" + encodeURIComponent(fileName));
 						if(xmlhttp.status == 200) {
-							if (xmlhttp.responseText==""){
+	//hva er feil her?	//	if (xmlhttp.responseText==""){
 								showRate(rate);
-							}else{
-								alert('Rating Error!!! \n'+ xmlhttp.responseText);
-							};
+	//hva er feil her?	//	}else{
+	//hva er feil her?	//		alert('Rating Error!!! \n'+ xmlhttp.responseText);
+	//hva er feil her?	//	};
 						}
 					}
 					
