@@ -64,6 +64,7 @@ function add_KeyWord($value, $url){
 	$header_data = get_jpeg_header_data( $url );
 	$xmpText = get_XMP_text( $header_data );
 	$xmpArr = read_XMP_array_from_text( $xmpText );
+		$xmpArr = checkXMP($xmpArr);
 	$i=0;
 	if (!set_key($xmpArr, 'dc:subject', $value)){
 		$i = count($xmpArr[0]['children'][0]['children'][2]['children']);

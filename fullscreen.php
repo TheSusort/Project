@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-    <html>
+<html>
     <head>
         <title>fullscreen</title>
         <meta http-equiv="content-type" content="=text/html; charset=utf-8 without BOM"/>
@@ -17,7 +17,11 @@
 		<script type="text/javascript" src="exif-js-master/exif.js"></script>
 		
 		<?php
-			ob_start();
+			include_once("mysql.php");
+			include_once("funksjoner.php");
+			db_connnect();
+			
+			ob_start();//???????????????????????????
 		?>
 
         <!javascript kommentarboks>
@@ -63,7 +67,7 @@
             
             function imgList() {
                 <?php
-                    include_once("funksjoner.php");
+                    // include_once("funksjoner.php");
                     $files = get_img_list($big);
                     
                     $number = count($files);
@@ -157,10 +161,7 @@
 
     
     <?php
-    include_once("mysql.php");
-    include_once("funksjoner.php");
-    db_connnect();
-	
+    
 	// alert_message("POST allert: ".print_r($_POST));
 	
 		global $imgListStr;
@@ -230,8 +231,6 @@
            
            <div id="leftcontainer">
            
-
-                      
 			   <div id="details">
 					<h3>Picture details</h3>
 					<b>Current file: </b>
@@ -709,11 +708,6 @@
 <!--/span-->
 
 </form>
-					
-					
-               
-           
-                 
                    
                 <!tagfelt>
                
@@ -753,8 +747,6 @@
 					);
                 </script>
                
-               
-
 				<ul id="myTags">
             <!-- Existing list items will be pre-added to the tags -->
 					<?php
@@ -769,7 +761,6 @@
 						}
 					?>
 				</ul>
-                   
                         
                     <p>
                    
@@ -804,10 +795,6 @@
            
            </div>
 
-			
-
-          
-           
            <div id="fullscreenpic">
                <div id="picturecontainer">
           <?php
@@ -865,8 +852,6 @@
                </script>
 		</div>
 		
-
-		
 		<div id="roterVenstre">
 			<img src="img/TomKnapp.png" width="64" height="64" onmouseover="musOverRotasjonVenstre(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="rotate(-90)">
 		</div>
@@ -878,4 +863,4 @@
 		</div>
 			
     </body>
-    </html>
+</html>

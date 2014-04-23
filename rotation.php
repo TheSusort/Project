@@ -1,5 +1,5 @@
 <?php
-
+// Rotation image with url $_POST['name'] on angel $_POST['angle']
 	if(!empty($_POST['angle'])&!empty($_POST['name'])){
 		$angle = $_POST['angle'];
 		$fileName = substr($_POST['name'], 7);

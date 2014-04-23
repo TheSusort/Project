@@ -73,7 +73,9 @@
 	}
 	
 	function setTagEXIF($tegs, $url){
-		add_KeyWord($tegs, $url);
+		if (checkImg($url)){
+			add_KeyWord($tegs, $url);
+		}
 	}
 	
 	function setCommentEXIF($comment, $url){
@@ -81,7 +83,16 @@
 	}
 	
 	function setRateEXIF($rate, $url){
-		set_Rating($rate, $url);
+		if (checkImg($url)){
+			set_Rating($rate, $url);
+		}
 	}
 	
+	function checkImg($imgName){
+		if(preg_match("/\.jp.?g$|\.ti.?f$/i", $imgName))
+		{
+			return TRUE;
+        }
+		return FALSE;
+	}
 ?>
