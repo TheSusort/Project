@@ -193,7 +193,6 @@
 			/* In this case we simply create a new PelEntryAscii object to hold
 			* the description.  The constructor for PelEntryAscii needs to know
 			* the tag and contents of the new entry. */
-			// $desc = new PelEntryAscii(PelTag::IMAGE_DESCRIPTION, $value);	//-------------------------------------
 			$desc = new PelEntryAscii($tag, $value);	//-------------------------------------
 
 			/* This will insert the newly created entry with the description

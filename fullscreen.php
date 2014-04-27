@@ -420,11 +420,12 @@
 					
 						var length = fileNames.length;
 						var prev = (corImg-1)%length;
-						var newpic = fileNames[prev];
-						window.location.assign("http://localhost/Project/fullscreen.php?tag=" + tag + "&bilde=Bilder/" + newpic + "&leggTilTaggnavn=null" + "&slettTaggnavn=null" + total);
 						if (prev < 0){
 							prev = length-1;
 						}
+						var newpic = fileNames[prev];
+						window.location.assign("http://localhost/Project/fullscreen.php?tag=" + tag + "&bilde=Bilder/" + newpic + "&leggTilTaggnavn=null" + "&slettTaggnavn=null" + total);
+						
 						var hiddenNextImg = new Image();
 						hiddenNextImg.src = 'Bilder/'+fileNames[prev]+'?rand='+Math.random();
 						
@@ -522,11 +523,11 @@
 						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 						xmlhttp.send("rate=" + encodeURIComponent(rate) + "&name=" + encodeURIComponent(fileName));
 						if(xmlhttp.status == 200) {
-	//hva er feil her?	//	if (xmlhttp.responseText==""){
+						if (xmlhttp.responseText==""){
 								showRate(rate);
-	//hva er feil her?	//	}else{
-	//hva er feil her?	//		alert('Rating Error!!! \n'+ xmlhttp.responseText);
-	//hva er feil her?	//	};
+						}else{
+							alert('Rating Error!!! \n'+ xmlhttp.responseText);
+						};
 						}
 					}
 					
