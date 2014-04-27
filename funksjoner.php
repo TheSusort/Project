@@ -158,45 +158,118 @@ $files  = null;                     # List of the files from disk
         global $images, $big, $cols, $files;
         $colCtr = 0;
         $gallery = "";
-        if (empty($files)){
+        if (empty($files))
+		{
 			$files = get_img_list($big);
 		}
-		if (!empty($files))
-        {
-            $gallery =  '
-                <table width="100%" cellspacing="3">
-                    <tr>';
-
-            foreach($files as $file)
-            {
-                //lager thumbs hvis det ikke er laget thumbs avbildet tidligere.
-                $thumb = $images.$file;
-                if(!file_exists($thumb))
-                {
-                    createThumbs($file, "Bilder/", "Bilder/thumbs/", 200);
-                }
-                if($colCtr %$cols == 0)
-                    $gallery = $gallery. '
-                        </tr>
-                        <tr>
-                            <td colspan="'.$cols.'">
-                                <hr />
-                            </td>
-                        </tr>
-                        <tr>';
-                $gallery = $gallery. '
-                            <td id="bilde" align="center" 
+		$gallery =  '
+			<table width="100%" cellspacing="3">
+				<tr>';
+		
+		if (!empty($_POST['SortingCategory']))
+		{
+			$sortCategory = $_POST['SortingCategory'];
+		}
+		else
+		{
+			$sortCategory = 0;
+		}
+		
+		$ratingArray;
+		$filenameArray;
+		foreach ($files as $fil)
+		{
+			if (empty($filenameArray))
+			{
+				$filenameArray[] = null;
+				$ratingArray[] = null;
+			}
+			array_push($filenameArray, db_select('file_liste', 'filename', "WHERE filename='$fil'", 'filename'));
+			array_push($ratingArray, db_select('file_liste', 'rating', "WHERE filename='$fil'", 'rating'));			
+		}
+		
+		$sortedFiles[] = null;
+		$index[] = 0;
+		
+		switch ($sortCategory)
+		{
+		case 0:
+		case 1:
+			$filenameArray = db_select('file_liste', 'filename', "", 'filename');
+			foreach ($filenameArray as $fnm)
+			{
+				$keep = false;
+				foreach ($files as $fil)
+				{
+					if ($fnm == $fil)
+					{
+						$keep = true;
+						break;
+					}
+				}
+				if ($keep)
+				{
+					array_push($sortedFiles, $fnm);
+				}
+			}
+		case 2:		
+			for ($i = 0; count($files) > $i; $i++)
+			{
+				$counter = 0;
+				foreach ($index as $ind)
+				{
+					if ($ratingArray[$i] >= $ratingArray[$ind])
+					{					
+						array_splice($sortedFiles, $counter, 0, $filenameArray[$i]);
+						array_splice($index, $counter, 0, $i);
+						break;
+					}
+					$counter++;
+					if (count($index) == $counter)
+					{
+						array_push($sortedFiles, $filenameArray[$i]);
+						array_push($index, $i);
+						break;
+					}
+				}
+			}
+		}
+		
+		foreach($sortedFiles as $file)
+		{
+			if (null != $file)
+			{
+				//lager thumbs hvis det ikke er laget thumbs avbildet tidligere.
+				$thumb = $images.$file;
+				if(!file_exists($thumb))
+				{
+					createThumbs($file, "Bilder/", "Bilder/thumbs/", 200);
+				}
+				if($colCtr %$cols == 0)
+				{
+					$gallery = $gallery. '
+						</tr>
+						<tr>
+							<td colspan="'.$cols.'">
+								<hr />
+							</td>
+						</tr>
+						<tr>';
+				}
+				$gallery = $gallery. '
+							<td id="bilde" align="center" 
 									onClick = viuwEXIF("'.get_EXIF($big.$file).'") 
 									onDblClick = openFulskr("'.$big.$file.'")>
 								<img src="' . $images . $file . '" />
-                            </td>';
+							</td>';
 							// viuwEXIF("'.get_EXIF($big.$file).'") 
 							// viuwEXIF("'.$big.$file.'")
-                $colCtr++;
-            }
+				$colCtr++;
+			}
+		}
 
-            $gallery = $gallery. '</table>' . "\r\n";
-        }
+		$gallery = $gallery. '</table>' . "\r\n";
+		
         return $gallery;
     }
 
@@ -474,30 +547,42 @@ if(!empty($filelist)){
 			}
 		}
 		
-		function get_search_list($ratinginput, $search, $ratingcategory){
+		function get_search_list($ratinginput, $search, $ratingcategory)
+		{
+			$files = null;
+			
+			if (!empty($ratinginput) && !empty($search))
+			{
+				$files = giveBoth($search,$ratinginput,$ratingcategory);
+			}
+			
+			if (!empty($search) && empty($ratinginput))
+			{
+				$files = giveSearch($search,$ratingcategory);
+			}
 		
-		$files = null;
+			if (!empty($ratinginput) && empty($search))
+			{
+				$files = giveRating($ratinginput);
+			}
+			
+			if (empty($ratinginput) && empty($search) && !empty($ratingcategory))
+			{
+				if($ratingcategory=='all')
+				{
+					$files = db_select('file_liste', 'filename', '', 'filename');
+				}			
+				elseif($ratingcategory=='unrated')
+				{
+					$files = get_unrated();
+				}				
+				elseif($ratingcategory=='rated')
+				{
+					$files = get_rated();
+				}
+			}	
 		
-		if (!empty($ratinginput) && !empty($search)){
-			$files = giveBoth($search,$ratinginput,$ratingcategory);
-		}
-	
-		if (!empty($search) && empty($ratinginput)){
-			$files = giveSearch($search,$ratingcategory);
-		}
-		
-		if (!empty($ratinginput) && empty($search)){			
-			$files = giveRating($ratinginput);
-		}	
-				
-		if (empty($ratinginput) && empty($search) && !empty($ratingcategory)){			
-			if($ratingcategory=='all'){$files = db_select('file_liste', 'filename', '', 'filename');}
-			if($ratingcategory=='unrated'){$files = get_unrated();}
-			if($ratingcategory=='rated'){$files = get_rated();}
-		}	
-		
-		return $files;
-		
+			return $files;
 		}
 		
 		function get_search_parameter_display($failed, $ratingcategory, $search, $ratinginput, $submission){
