@@ -5,6 +5,7 @@
     <meta http-equiv="content-type" content="=text/html; charset=utf-8 without BOM"/>
 	<link rel="shortcut icon" href="img/favicon.ico">
 	<link rel="stylesheet" href="style.css">
+	
 </head>
 <!-------------------------------------------------------------------------------------->
 <body>
@@ -108,14 +109,17 @@
         </div>
                     
 		<div id="title">
-			<h1>Web Photo Gallery 
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                	<select name="SortingCategory" id="SortingCategory">
-					<option selected value="all"> All</option>
-					<option value="Sort by date"> Sort by date </option>
-					<option value="Sort by rating"> Sort by rating</option>
-				</select>
-                <h1>
+			<form action = "" method="post">
+				<h1>Web Photo Gallery 
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<select name="SortingCategory" id="SortingCategory">
+						<option selected value="0"> Sorter etter</option>
+						<option value="1"> Sort by name </option>
+						<option value="2"> Sort by rating</option>
+					</select>
+					<input type="submit" name="sortSubmit" value="Sort">
+				<h1>
+			</form>
         </div>
        
 		#parameters#
