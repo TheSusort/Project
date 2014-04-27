@@ -137,22 +137,6 @@
 			{
 			musover.src = "img/Tom.png";
 			}
-			function musOverRotasjonVenstre(musover)
-			{
-			musover.src = "img/RoterVenstre.png";
-			}
-			function musOverRotasjonHoyre(musover)
-			{
-			musover.src = "img/RoterHoyre.png";
-			}
-			function musOverAvslutt(musover)
-			{
-			musover.src = "img/LukkVindu.png";
-			}
-			function musIkkeOverRotasjonsknapp(musover)
-			{
-			musover.src = "img/TomKnapp.png";
-			}
 		</script>	
         
     </head>
@@ -853,13 +837,13 @@
 		</div>
 		
 		<div id="roterVenstre">
-			<img src="img/TomKnapp.png" width="64" height="64" onmouseover="musOverRotasjonVenstre(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="rotate(90)">
+			<img src="img/RoterVenstre.png" width="48" height="48" onclick="rotate(90)">
 		</div>
 		<div id="roterhoyre">
-			<img src="img/TomKnapp.png" width="64" height="64" onmouseover="musOverRotasjonHoyre(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="rotate(-90)">
+			<img src="img/RoterHoyre.png" width="48" height="48" onclick="rotate(-90)">
 		</div>
 		<div id="lukkVindu">
-			<img src="img/TomKnapp.png" width="64" height="64" onmouseover="musOverAvslutt(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="window.close('fs')">
+			<img src="img/LukkVindu.png" width="48" height="48" onclick="window.close('fs')">
 		</div>
 			
     </body>
