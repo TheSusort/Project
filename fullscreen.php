@@ -869,7 +869,7 @@
 			<img src="img/RoterVenstre.png" width="48" height="48" onclick="rotate(90)">
 		</div>
 		<div id="roterhoyre">
-			<img src="img/RoterHoyre.png" width="48" height="48" onclick="rotate(-90)">
+			<img src="img/RoterHoyre.png" width="48" height="48" onclick="rotate(270)">
 		</div>
 		<div id="lukkVindu">
 			<img src="img/LukkVindu.png" width="48" height="48" onclick="window.close('fs')">

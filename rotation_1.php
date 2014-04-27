@@ -1,6 +1,6 @@
 <?php
 // include_once 'imgEXIF.php';
-require_once('PEL/src/PelJpeg.php');
+
 include_once 'image.php';
 // Rotation image with path $_POST['name'] on angle $_POST['angle']
 	if(!empty($_POST['angle'])&!empty($_POST['name'])){

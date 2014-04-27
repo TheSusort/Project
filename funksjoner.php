@@ -1,9 +1,9 @@
 <?php
-include_once('rotation_1.php');
+include_once('image.php');
 
 include_once("mysql.php");
 
-$images = "Bilder/thumbs/";         # Location of small versions
+$thumbs = "Bilder/thumbs/";         # Location of small versions
 $big    = "Bilder/";                # Location of big versions (assumed to be a subdir of above)
 $cols   = 4;                        # Number of columns to display
 $files  = null;                     # List of the files from disk
@@ -50,7 +50,7 @@ $files  = null;                     # List of the files from disk
 // check images which are not registered in database and add them to the db
     function check_for_new_img($files_on_disc, $files_in_db)
     {
-        global $files, $big, $images;
+        global $files, $big, $thumbs;
         $result = null;
         $files_new_str = 'Downloaded manually:';
         if ($files_on_disc <> null & $files_in_db == null){
@@ -65,7 +65,7 @@ $files  = null;                     # List of the files from disk
             if (db_insert('file_liste', 'filename', $rslt))
             {
                 $files_new_str = $files_new_str.'\n\t'.$rslt;
-                createThumbs($rslt, $big, $images, 200);
+                createThumbs($rslt, $big, $thumbs, 200);
             }
         }
         if (!empty($result)){
@@ -77,7 +77,7 @@ $files  = null;                     # List of the files from disk
 // check images which are deleted from disc and delete them from the db.
     function check_for_del_img($files_on_disc, $files_in_db)
     {
-        global $files, $images;
+        global $files, $thumbs;
         $result = null;
         $files_del_str = 'Was deleted manually:';
         if ($files_on_disc == null & $files_in_db <> null){
@@ -91,9 +91,9 @@ $files  = null;                     # List of the files from disk
         {
             if(db_delete('file_liste', 'filename', $rslt)){
                 $files_del_str = $files_del_str.'\n\t'.$rslt;
-				if (file_exists($images.$rslt))
+				if (file_exists($thumbs.$rslt))
 				{
-					unlink($images.$rslt);
+					unlink($thumbs.$rslt);
 				}
             }
         }
@@ -106,7 +106,7 @@ $files  = null;                     # List of the files from disk
 // Upload files
     function save_file()
 	{
-		global $images, $big;
+		global $thumbs, $big;
 		$i=0;
 		// $add = FALSE;
 		$not_add = FALSE;
@@ -131,7 +131,7 @@ $files  = null;                     # List of the files from disk
 					
 					}elseif (check_img($file_name[$i])){
 						autoRotateImage($big . $file_name[$i]);
-						// createThumbs($file_name[$i], $big, $images, 200);	//lager thumbnail av bilde
+						// createThumbs($file_name[$i], $big, $thumbs, 200);	//lager thumbnail av bilde
 					
 						if ($GLOBALS['db_is_connected']){
 							if (!db_insert('file_liste', 'filename', $file_name[$i])){
@@ -155,7 +155,7 @@ $files  = null;                     # List of the files from disk
 // Generate HTML cod for gallery. Return sting.
     function VisBilder($files)
     {
-        global $images, $big, $cols, $files;
+        global $thumbs, $big, $cols, $files;
         $colCtr = 0;
         $gallery = "";
         if (empty($files))
@@ -240,7 +240,7 @@ $files  = null;                     # List of the files from disk
 			if (null != $file)
 			{
 				//lager thumbs hvis det ikke er laget thumbs avbildet tidligere.
-				$thumb = $images.$file;
+				$thumb = $thumbs.$file;
 				if(!file_exists($thumb))
 				{
 					createThumbs($file, "Bilder/", "Bilder/thumbs/", 200);
@@ -260,7 +260,7 @@ $files  = null;                     # List of the files from disk
 							<td id="bilde" align="center" 
 									onClick = viuwEXIF("'.get_EXIF($big.$file).'") 
 									onDblClick = openFulskr("'.$big.$file.'")>
-								<img src="' . $images . $file . '" />
+								<img src="' . $thumbs . $file . '" />
 							</td>';
 							// viuwEXIF("'.get_EXIF($big.$file).'") 
 							// viuwEXIF("'.$big.$file.'")
@@ -311,9 +311,9 @@ $files  = null;                     # List of the files from disk
 	}
 	
 // return array of files names from dir.
-    function get_File_List($big, $images)
+    function get_File_List($big, $thumbs)
     {
-        if ($handle = opendir($images)) {
+        if ($handle = opendir($thumbs)) {
             while (false !== ($file = readdir($handle))) {
                 if ($file != "." && $file != ".." && $file != rtrim($big,"/")) {
                     $files[] = $file;
@@ -392,7 +392,8 @@ if(!empty($filelist)){
         } else if (preg_match('/[.](png)$/i', $filename)) {
             $im = imagecreatefrompng($path_to_image_directory . $filename);
         } elseif (preg_match('/[.](ti.?f)$/i', $filename)) {
-			$im = imagecreatefromstring(file_get_contents($path_to_image_directory . $filename));
+			$fileContent = file_get_contents($path_to_image_directory . $filename);
+			$im = imagecreatefromstring($fileContent);
 		} else return FALSE;
 
         //finner dimensjoner

@@ -1,30 +1,46 @@
 <?php
+require_once('PEL/src/PelJpeg.php');
+require_once('PEL/src/PelJpeg.php');
+
 	function rotateImage($url, $angle){
-		$exif = read_exif($url);
-	
 		$size = getimagesize($url);
 		$format = strtolower(substr($size['mime'], strpos($size['mime'], '/')+1));
+		switch ($format){
+			case 'jpeg':
+				$quality = 100;
+			break;
+			case 'png':
+				$quality = 0;
+			break;
+			case 'gif':
+				$quality = 100;
+			break;
+			default:
+				$quality = 100;
+			break;
+		}
+		if($format == 'jpeg') 
+			$data = read_exif($url);
+	
 		$icfunc = "imagecreatefrom" . $format;
 		if (!function_exists($icfunc)) return false;
 		$source = $icfunc($url);
-		$rotate = imagerotate($source, $angle, '0x415050');
+		$rotate = imagerotate($source, $angle, 0);
 		$func = 'image'.$format;	//save image function name
-		$func($rotate, $url, 100);	//save image to url
-		imagedestroy($rotate);
+		$func($rotate, $url, $quality);	//save image to url
+		// imagedestroy($rotate);
 		
-		write_exif_data($url, $exif);
+		if ($format == 'jpeg') write_exif_data($url, $data);
 		
-		$oldWwidth = $size[0];
-		$oldHeight = $size[1];
-		$newHeight = 200; //thumbth
-        $newWidth = floor($oldWwidth * ($newHeight / $oldHeight));
+		$oldWidth = $size[1];
+		$oldHeight = $size[0];
+		$newHeight = 150; //thumb
+        $newWidth = floor($oldWidth * ($newHeight / $oldHeight));
 		
 		$thumb = imagecreatetruecolor($newWidth, $newHeight);
 		//	Resize
-		imagecopyresized($thumb, $source, 0, 0, 0, 0, $newWidth, $newHeight, $oldWwidth, $oldHeight);
-		$rotate = imagerotate($thumb, $angle, '0x415050');
-		$func = 'image'.$format;	//save image function name
-		
+		imagecopyresized($thumb, $rotate, 0, 0, 0, 0, $newWidth, $newHeight, $oldWidth, $oldHeight);
+		// $rotate = imagerotate($thumb, $angle, '0x415050');
 		$thumbPath='';
 		$urlArr = split('[/\\]', $url);
 		$length = count($urlArr);
@@ -33,43 +49,98 @@
 		}
 		$thumbPath .= 'thumbs/'.$urlArr[$length-1];
 		
-		$func($rotate, $thumbPath, 100);	//save image to url
+		$func = 'image'.$format;	//save image function name
+		$func($thumb, $thumbPath, $quality);	//save image to url
 		imagedestroy($thumb);
 		imagedestroy($rotate);
-
+		imagedestroy($source);
 	}
 	
+	function createThumbs($inn, $out, $maxH=150, $content=FALSE){
+		$size = getimagesize($inn);
+		$format = strtolower(substr($size['mime'], strpos($size['mime'], '/')+1));
+		switch ($format){
+			case 'jpeg':
+				$quality = 100;
+			break;
+			case 'png':
+				$quality = 0;
+			break;
+			case 'gif':
+				$quality = 100;
+			break;
+			default:
+				$quality = 100;
+			break;
+		}
+		$oldWidth = $size[0];
+		$oldHeight = $size[1];
+		$newWidth = $maxH;
+        $newHeight = floor($oldHeight * ($newWidth / $oldWidth));
+		if(!$content){
+			$icfunc = "imagecreatefrom" . $format;
+			if (!function_exists($icfunc)) return false;
+			$content = $icfunc($url);
+		}
+		$thumb = imagecreatetruecolor($newWidth, $newHeight);
+		imagecopyresized($thumb, $content, 0, 0, 0, 0, $newWidth, $newHeight, $oldWidth, $oldHeight);
+		$func = 'image'.$format;	//save image function name
+		$func($thumb, $path, 100);	//save image to url
+		imagedestroy($thumb);
+		imagedestroy($content);
+	}
+	
+	/* Rotate image automatic.  
+	*	return FALSE if no ORIENTATION in the image
+	*		or if ORIENTATION is 0
+	*	return TRUE if image was rotated.
+	*/
 	function autoRotateImage($url) { 
 		$angle = getImageOrientation($url);
 		// echo($url.'----'.$angle);
-		if ($angle != 0)
+		if ($angle != 0){
 			rotateImage($url, $angle);
-		setMetaTag_PEL($url, PelTag::ORIENTATION , '0');
-	}
-	
-	function getImageOrientation($path){
-		$exif = read_exif_data_quick($path);
-		// print_r($exif);
-		$angle = 0;
-		if (isset($exif['Orientation'])){
-			$orientation = $exif['Orientation'];
-			switch($orientation) { 
-				case 3: 
-					$angle=180; // rotate 180 degrees 
-				break; 
-
-				case 6: 
-					$angle=-90; // rotate 90 degrees CW 
-				break; 
-
-				case 8: 
-					$angle=90; // rotate 90 degrees CCW 
-				break; 
-			} 
+			setMetaTag_PEL($url, PelTag::ORIENTATION , '0');
+			return true;
 		}
-		return($angle);
+		return false;
 	}
 	
+	/* Return image orientation.  
+	*	return angle in degrees
+	*/
+	function getImageOrientation($path){
+		$size = getimagesize($path);
+		$format = strtolower(substr($size['mime'], strpos($size['mime'], '/')+1));
+		if($format == 'jpeg'){
+			$exif = read_exif_data_quick($path);
+			// print_r($exif);
+			$angle = 0;
+			if (isset($exif['Orientation'])){
+				$orientation = $exif['Orientation'];
+				switch($orientation) { 
+					case 3: 
+						$angle=180; // rotate 180 degrees 
+					break; 
+
+					case 6: 
+						$angle=270; // rotate 90 degrees CW 
+					break; 
+
+					case 8: 
+						$angle=90; // rotate 90 degrees CCW 
+					break; 
+				} 
+			}
+			return($angle);
+		}else{
+			return(0);
+		}
+	}
+	
+	/* Create a temp file .  
+	*	return path to temp file
+	*/
 	function getImgPiece($path){
 		$tmpfile = "Bilder/temp/read_exif_data_quick.tmp_file";
 		$in = fopen($path, "r");
@@ -86,21 +157,69 @@
 	}
 	
 	function read_exif($path) {
-		$jpeg = new PelJpeg($path);
-		$exif = &$jpeg->getExif();
-		return $exif;
-	}
-	
-	function write_exif_data($path, $exif) {
-		$NewJpeg = new PelJpeg($path);
-		$NewJpeg->setExif($exif);
-		$NewJpeg->saveFile($path);
-	}
-	
-	function getMetaTag_quick($tag, $path){
+		$resalt = array('data'=>'', 'type'=>'');
 		
+		ini_set('memory_limit', '124M');
+
+		$data = new PelDataWindow(file_get_contents($path));
+
+		if (PelJpeg::isValid($data)) {
+			$resalt['type']='PelJpeg';
+			$jpeg = $file = new PelJpeg();
+
+			$jpeg->load($data);
+
+			$exif = $jpeg->getExif();
+
+			if ($exif == null) {
+				$exif = new PelExif();
+				$jpeg->setExif($exif);
+				
+				$tiff = new PelTiff();
+				$exif->setTiff($tiff);
+			} else {
+				$tiff = $exif->getTiff();
+			}
+			$resalt['data']=$exif;
+		} elseif (PelTiff::isValid($data)) {
+			$resalt['type']='PelTiff';
+			
+			$tiff = $file = new PelTiff();
+			$tiff->load($data);
+			
+			$resalt['data']=$tiff;
+		} else {
+			PelConvert::bytesToDump($data->getBytes(0, 16));
+			exit(1);
+		}
+		return $resalt;
+		// $jpeg = new PelJpeg($path);
+		// $exif = &$jpeg->getExif();
+		// return $exif;
+	}
+	
+	function write_exif_data($path, $data) {
+		switch($data['type']) { 
+			case 'PelJpeg': 
+				$NewJpeg = new PelJpeg($path);
+				$NewJpeg->setExif($data['data']);
+				$NewJpeg->saveFile($path);
+			break; 
+			case 'PelTiff': 
+				$tiff = new PelTiff();
+				$tiff->setTiff($tiff);
+				$tiff->saveFile($path);
+			break;
+		}
+		// $NewJpeg = new PelJpeg($path);
+		// $NewJpeg->setExif($exif);
+		// $NewJpeg->saveFile($path);
 	}
 
+	function getXMP(){
+	
+	}
+	
 	function setMetaTag_PEL($input, $tag, $value){
 		/* We typically need lots of RAM to parse TIFF images since they tend
 		 * to be big and uncompressed. */
@@ -183,7 +302,7 @@
 		/* Each entry in an IFD is identified with a tag.  This will load the
 		 * ImageDescription entry if it is present.  If the IFD does not
 		 * contain such an entry, null will be returned. */
-		// $desc = $ifd0->getEntry(PelTag::IMAGE_DESCRIPTION);
+		// $desc = $ifd0->getEntry(PelTag::IMAGE_DESCRIPTION);//----------------------------------
 		$desc = $ifd0->getEntry($tag);
 
 		/* We need to check if the image already had a description stored. */
@@ -212,4 +331,13 @@
 		 * completes the script. */
 		$file->saveFile($input);
 	}
+
+	// $path = 'Bilder/pieversuscake.png';
+	// rotateImage($path,90);
+	// print_r(read_exif_data($path));
+	// $data = read_exif($path);
+	// print_r($exif);
+	// write_exif_data($path, $data);
+	// print_r(read_exif_data($path));
+	
 ?>
