@@ -1,5 +1,5 @@
 <?php
-include_once('rotation.php');
+include_once('rotation_1.php');
 
 include_once("mysql.php");
 
@@ -130,8 +130,8 @@ $files  = null;                     # List of the files from disk
 						$not_add = TRUE;
 					
 					}elseif (check_img($file_name[$i])){
-						autoRotateImage(__DIR__ . DIRECTORY_SEPARATOR . $big . $file_name[$i],'');
-						createThumbs($file_name[$i], $big, $images, 200);	//lager thumbnail av bilde
+						autoRotateImage($big . $file_name[$i]);
+						// createThumbs($file_name[$i], $big, $images, 200);	//lager thumbnail av bilde
 					
 						if ($GLOBALS['db_is_connected']){
 							if (!db_insert('file_liste', 'filename', $file_name[$i])){

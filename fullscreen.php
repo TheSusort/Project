@@ -81,27 +81,27 @@
             }
 			
 			// var commentField = document.getElementById('itm1b');
-            function onKeyDown(element){
-				switch (event.keyCode) {
-                    case 13: //Enter
-						var xmlhttp = getXmlHttp();
-						var fileName = 'Bilder/'+fileNames[corImg];
-						xmlhttp.open('POST', 'rotation.php', false);
-						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-						xmlhttp.send("comment=" + encodeURIComponent(element.value) + "&name=" + encodeURIComponent(fileName));
-						if(xmlhttp.status == 200) {
-							if (xmlhttp.responseText!==""){
-								alert('Comment Error!!! '+ xmlhttp.responseText);
-							}else{
-								showComment()
-							};
-						}
-                        break;
-                    case 27: //Escape
-                       alert('AAAAAAAAAaaaaaaaaaaaaaaaa');
-                        break;
-                }
-			}
+            // function onKeyDown(element){
+				// switch (event.keyCode) {
+                    // case 13: //Enter
+						// var xmlhttp = getXmlHttp();
+						// var fileName = 'Bilder/'+fileNames[corImg];
+						// xmlhttp.open('POST', 'rotation_1.php', false);
+						// xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+						// xmlhttp.send("comment=" + encodeURIComponent(element.value) + "&name=" + encodeURIComponent(fileName));
+						// if(xmlhttp.status == 200) {
+							// if (xmlhttp.responseText!==""){
+								// alert('Comment Error!!! '+ xmlhttp.responseText);
+							// }else{
+								// showComment()
+							// };
+						// }
+                        // break;
+                    // case 27: //Escape
+                       // alert('AAAAAAAAAaaaaaaaaaaaaaaaa');
+                        // break;
+                // }
+			// }
 			
             document.onkeydown = function(evt) {
                 evt = evt || window.event;
@@ -363,7 +363,7 @@
 					function rotate(angle){
 						var xmlhttp = getXmlHttp();
 						var fileName = 'Bilder/'+fileNames[corImg];
-						xmlhttp.open('POST', 'rotation.php', false);
+						xmlhttp.open('POST', 'rotation_1.php', false);
 						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 						xmlhttp.send("angle=" + encodeURIComponent(angle) + "&name=" + encodeURIComponent(fileName));
 						if(xmlhttp.status == 200) {
@@ -853,10 +853,10 @@
 		</div>
 		
 		<div id="roterVenstre">
-			<img src="img/TomKnapp.png" width="64" height="64" onmouseover="musOverRotasjonVenstre(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="rotate(-90)">
+			<img src="img/TomKnapp.png" width="64" height="64" onmouseover="musOverRotasjonVenstre(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="rotate(90)">
 		</div>
 		<div id="roterhoyre">
-			<img src="img/TomKnapp.png" width="64" height="64" onmouseover="musOverRotasjonHoyre(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="rotate(90)">
+			<img src="img/TomKnapp.png" width="64" height="64" onmouseover="musOverRotasjonHoyre(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="rotate(-90)">
 		</div>
 		<div id="lukkVindu">
 			<img src="img/TomKnapp.png" width="64" height="64" onmouseover="musOverAvslutt(this)" onmouseout="musIkkeOverRotasjonsknapp(this)" onclick="window.close('fs')">
