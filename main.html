@@ -107,23 +107,17 @@
     <div id="containermain">
         <div id="containerleft">
 			
-			
-        
-        <div id="upload">
-           <p>
-            <form action="index.php" method="post" enctype="multipart/form-data">
+			<div id="upload">
+			   <p>
+				<form action="index.php" method="post" enctype="multipart/form-data">
 					<input name="bildefil[]" id="bildefil" type="file" multiple=""><br>
 					<input type="submit" name="submit" value="Import">
 				</form>
-
 			</div>
 			
 			
-        <div id="search">
-			
-			
+			<div id="search">
 				<form id="ratingForm" method="get">	
-				
 					<span class="rating" id = "ratingstar"> 
 						<input type="radio" value="5" class="rating-input"
 							id="rating-input-1-5" name="ratinginput" >
@@ -144,33 +138,26 @@
 						<input type="radio" value="1" class="rating-input"
 							id="rating-input-1-1" name="ratinginput" >
 						<label for="rating-input-1-1" class="rating-star"></label>
-				</span>
+					</span>
 				
-				<select name="ratingcategory" id="ratingcategory">
-					<option selected value="all"> All</option>
-					<option value="rated"> Rated</option>
-					<option value="unrated"> Unrated</option>
-				</select>
+					<select name="ratingcategory" id="ratingcategory">
+						<option selected value="all"> All</option>
+						<option value="rated"> Rated</option>
+						<option value="unrated"> Unrated</option>
+					</select>
+					<br>
 				
-				<br>
-				
-			
-			<form action="" method="post">
-                <input type="text" name="search" size="20"/>
-				<input type="submit" name="submission" value="Search" /><br>
-            </form>
+					<input type="text" name="search" size="20"/>
+					<input type="submit" name="submission" value="Search" /><br>
+				</form>
 		
-			
-			
-        </div>
+			</div>
 		
-        <div id="navbox">
+			<div id="navbox">
 				<p>#tags#</p>
 			</div>
-		</p>
-            
-            
-            
+			</p>
+        
         </div>
                     
 		<div id="title">

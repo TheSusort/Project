@@ -92,8 +92,8 @@ require_once('PEL/src/PelJpeg.php');
 		}
 		$oldWidth = $size[0];
 		$oldHeight = $size[1];
-		$newWidth = $maxH;
-        $newHeight = floor($oldHeight * ($newWidth / $oldWidth));
+		$newHeight = $maxH;
+        $newWidth = floor($oldWidth * ($newHeight / $oldHeight));
 		if(!$content){
 			$icfunc = "imagecreatefrom" . $format;
 			if (!function_exists($icfunc)) return false;
@@ -102,7 +102,7 @@ require_once('PEL/src/PelJpeg.php');
 		$thumb = imagecreatetruecolor($newWidth, $newHeight);
 		imagecopyresized($thumb, $content, 0, 0, 0, 0, $newWidth, $newHeight, $oldWidth, $oldHeight);
 		$func = 'image'.$format;	//save image function name
-		$func($thumb, $out, 100);	//save image to path
+		$func($thumb, $out, $quality);	//save image to path
 		imagedestroy($thumb);
 		imagedestroy($content);
 	}
