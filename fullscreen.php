@@ -365,7 +365,22 @@
 							};
 						}
 					}
-				
+					
+					function deleteImage(path){
+						var xmlhttp = getXmlHttp();
+						var fileName = 'Bilder/'+fileNames[corImg];
+						xmlhttp.open('POST', 'rotation_1.php', false);
+						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+						xmlhttp.send("delete=true" + "&name=" + encodeURIComponent(fileName));
+						if(xmlhttp.status == 200) {
+							if (xmlhttp.responseText!==""){
+								alert('Rotation '+angle+' Error!!! '+ xmlhttp.responseText);
+							}else{
+								nextImg();
+							};
+						}
+					}
+					
 					function getImgList(){
 						var str = "<?php   echo($imgListStr) ?>";
 						var imgList = str.split(', ')
@@ -872,7 +887,7 @@
 			<img src="img/RoterHoyre.png" width="48" height="48" onclick="rotate(270)">
 		</div>
 		<div id="lukkVindu">
-			<img src="img/LukkVindu.png" width="48" height="48" onclick="window.close('fs')">
+			<img src="img/LukkVindu.png" width="48" height="48" onclick="deleteImage()">
 		</div>
 			
     </body>

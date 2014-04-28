@@ -1,4 +1,5 @@
 <?php
+include_once("mysql.php");
 require_once('PEL/src/PelJpeg.php');
 require_once('PEL/src/PelJpeg.php');
 
@@ -56,6 +57,22 @@ require_once('PEL/src/PelJpeg.php');
 		imagedestroy($source);
 	}
 	
+	/* Rotate image automatic.  
+	*	return FALSE if no ORIENTATION in the image
+	*		or if ORIENTATION is 0
+	*	return TRUE if image was rotated.
+	*/
+	function autoRotateImage($url) { 
+		$angle = getImageOrientation($url);
+		// echo($url.'----'.$angle);
+		if ($angle != 0){
+			rotateImage($url, $angle);
+			setMetaTag_PEL($url, PelTag::ORIENTATION , '0');
+			return true;
+		}
+		return false;
+	}
+	
 	function createThumbs($inn, $out, $maxH=150, $content=FALSE){
 		$size = getimagesize($inn);
 		$format = strtolower(substr($size['mime'], strpos($size['mime'], '/')+1));
@@ -80,30 +97,32 @@ require_once('PEL/src/PelJpeg.php');
 		if(!$content){
 			$icfunc = "imagecreatefrom" . $format;
 			if (!function_exists($icfunc)) return false;
-			$content = $icfunc($url);
+			$content = $icfunc($inn);
 		}
 		$thumb = imagecreatetruecolor($newWidth, $newHeight);
 		imagecopyresized($thumb, $content, 0, 0, 0, 0, $newWidth, $newHeight, $oldWidth, $oldHeight);
 		$func = 'image'.$format;	//save image function name
-		$func($thumb, $path, 100);	//save image to url
+		$func($thumb, $out, 100);	//save image to path
 		imagedestroy($thumb);
 		imagedestroy($content);
 	}
 	
-	/* Rotate image automatic.  
-	*	return FALSE if no ORIENTATION in the image
-	*		or if ORIENTATION is 0
-	*	return TRUE if image was rotated.
-	*/
-	function autoRotateImage($url) { 
-		$angle = getImageOrientation($url);
-		// echo($url.'----'.$angle);
-		if ($angle != 0){
-			rotateImage($url, $angle);
-			setMetaTag_PEL($url, PelTag::ORIENTATION , '0');
-			return true;
+	function delImage($path){
+		if (@fopen($path, "r")) {
+			unlink($path);
+		} 
+		$arr = split('[/\]',$path);
+		$length = count($arr);
+		$name = $arr[($length-1)];
+		$thumbPath = '';
+		for ($i=0; $i<$length-1; $i++){
+			$thumbPath .= $arr[$i].'/';
 		}
-		return false;
+		$thumbPath .= 'thumbs/'.$name;
+		if (@fopen($thumbPath, "r")) {
+			unlink($thumbPath);
+		}
+		db_delete('file_liste', 'filename', $name);
 	}
 	
 	/* Return image orientation.  
@@ -145,7 +164,7 @@ require_once('PEL/src/PelJpeg.php');
 		$tmpfile = "Bilder/temp/read_exif_data_quick.tmp_file";
 		$in = fopen($path, "r");
 		$out = fopen($tmpfile,"w");
-		fwrite( $out, fread( $in, 50000 ) );
+		fwrite( $out, fread( $in, 100000 ) );
 		fclose($in);
 		fclose($out);
 		return $tmpfile;
@@ -331,13 +350,5 @@ require_once('PEL/src/PelJpeg.php');
 		 * completes the script. */
 		$file->saveFile($input);
 	}
-
-	// $path = 'Bilder/pieversuscake.png';
-	// rotateImage($path,90);
-	// print_r(read_exif_data($path));
-	// $data = read_exif($path);
-	// print_r($exif);
-	// write_exif_data($path, $data);
-	// print_r(read_exif_data($path));
 	
 ?>

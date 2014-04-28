@@ -54,29 +54,26 @@ include_once('funksjoner.php');
     }
 
 // Delete data from database
-    function db_delete($table, $column, $value)
-{
-    global $db_is_connected, $db;
-    if (!$db_is_connected)
-    {
-        alert_message("Error: Could not connect to database.");
-        return FALSE;
-//        exit(alert_message("Error: Could not connect to database."));
-    }elseif(count($column) <> count($value))
-    {
-        alert_message("SQL delete query is incorrect");
-        return FALSE;
-    }else
-    {
-        $query = "DELETE FROM $table WHERE $column = '$value';";
-        $result = $db->query($query);
-        if ($result)
-        {
-            return TRUE;
-        }
-    }
-    return FALSE;
-}
+    function db_delete($table, $column, $value){
+		global $db_is_connected, $db;
+		if (!$db_is_connected)
+		{
+			db_connnect();
+		}
+		if (!$db_is_connected)
+		{
+			alert_message("Error: Could not connect to database.");
+			return FALSE;
+		}else{
+			$query = "DELETE FROM $table WHERE $column = '$value';";
+			$result = $db->query($query);
+			if ($result)
+			{
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
 
 // Select data from database
     function db_select($table, $column, $group, $ret)
@@ -84,7 +81,7 @@ include_once('funksjoner.php');
         $result = null;
         global $db_is_connected, $db;
         if (!$db_is_connected)
-        {
+        {	
             alert_message("Error: Could not connect ot database.");
             return FALSE;
 //            exit(alert_message("Error: Could not connect ot database."));

@@ -65,7 +65,7 @@ $files  = null;                     # List of the files from disk
             if (db_insert('file_liste', 'filename', $rslt))
             {
                 $files_new_str = $files_new_str.'\n\t'.$rslt;
-                createThumbs($rslt, $big, $thumbs, 200);
+                createThumbs($big.$rslt, $thumbs.$rslt, 150);
             }
         }
         if (!empty($result)){
@@ -243,7 +243,7 @@ $files  = null;                     # List of the files from disk
 				$thumb = $thumbs.$file;
 				if(!file_exists($thumb))
 				{
-					createThumbs($file, "Bilder/", "Bilder/thumbs/", 200);
+					createThumbs($big.$file, $thumbs.$file, 150);
 				}
 				if($colCtr %$cols == 0)
 				{
@@ -380,42 +380,6 @@ if(!empty($filelist)){
     //  return $tag_list;
 	
     }
-
-// Generate Thumbs
-    function createThumbs($filename, $path_to_image_directory, $path_to_thumbs_directory, $final_width_of_image) {
-
-        //sjekker hva slags bilde det er snakk om, og loader det.
-        if(preg_match('/[.](jp.?g)$/i', $filename)){
-            $im = imagecreatefromjpeg($path_to_image_directory . $filename);
-        } else if (preg_match('/[.](gif)$/i', $filename)) {
-            $im = imagecreatefromgif($path_to_image_directory . $filename);
-        } else if (preg_match('/[.](png)$/i', $filename)) {
-            $im = imagecreatefrompng($path_to_image_directory . $filename);
-        } elseif (preg_match('/[.](ti.?f)$/i', $filename)) {
-			$fileContent = file_get_contents($path_to_image_directory . $filename);
-			$im = imagecreatefromstring($fileContent);
-		} else return FALSE;
-
-        //finner dimensjoner
-        $ox = imagesx($im);
-        $oy = imagesy($im);
-
-        //regner ut thumbnaildimensjoner
-        $nx = $final_width_of_image;
-        $ny = floor($oy * ($final_width_of_image / $ox));
-
-        //Lager nytt bilde i thumbnailstørrelse, kopierer og resizer bilde til thumbnailfilen.
-        $nm = imagecreatetruecolor($nx, $ny);
-        imagecopyresized($nm, $im, 0,0,0,0,$nx,$ny,$ox,$oy);
-
-        if(!file_exists($path_to_thumbs_directory)) {
-            if(!mkdir($path_to_thumbs_directory)) {
-                die("There was a problem with creating the thumbnail. Please try again!");
-            }
-        }
-        //lagrer thumbnailen til mappe.
-        imagejpeg($nm, $path_to_thumbs_directory . $filename);
-	}
 
 	// Search function
 		
