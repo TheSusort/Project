@@ -165,7 +165,7 @@ $files  = null;                     # List of the files from disk
 		$gallery =  '
 			<table width="100%" cellspacing="3">
 				<tr>';
-		
+/*		
 		if (!empty($_POST['SortingCategory']))
 		{
 			$sortCategory = $_POST['SortingCategory'];
@@ -234,8 +234,8 @@ $files  = null;                     # List of the files from disk
 				}
 			}
 		}
-		
-		foreach($sortedFiles as $file)
+		*/
+		foreach($files as $file)
 		{
 			if (null != $file)
 			{
@@ -274,10 +274,10 @@ $files  = null;                     # List of the files from disk
     }
 
 // Generate HTML cod for tags list
-	function gen_tags($fileslist1)
+	function gen_tags($filesList)
 	{
 		$tags_str = "<ul class=\"nav\">\n\r";
-		$tags = get_tags($fileslist1);
+		$tags = get_tags($filesList);
 		$tags_str = $tags_str."<li><a href=\"index.php\"><span>All</span></a></li>\r\n";
 		if (!empty($tags)){
 			foreach($tags as $tag)
@@ -288,18 +288,62 @@ $files  = null;                     # List of the files from disk
 		$tags_str = $tags_str."</ul>";
 		return $tags_str;
 	}
-
+	
+// Get tags list from db
+//	return: tags list [array]
+    function get_tags($filelist)
+    {
+		$finalTags = array();
+		
+		if(!empty($filelist)){
+			foreach($filelist as $file){
+				$where = 'tag';
+				$what = 'tags';
+				$query = "SELECT tags FROM tag 
+							INNER JOIN file_liste ON tag.fileid = file_liste.fileid 
+							WHERE file_liste.filename = '$file'";
+				$currentTags = db_select_query('tags', $query);
+				// $currentTags = db_select($where, $what, $sQuery3, $what);
+				
+				if(!empty($currentTags)){
+					//$currentTags = array_filter($currentTags);
+					foreach($currentTags as $bb){
+						array_push($finalTags, $bb);
+					}
+				}
+			}	
+					
+			//$sluttTags = array_filter($finalTags);
+			$sluttTags = array_unique($finalTags);
+			
+			 //print_r($sluttTags);
+			
+			return $sluttTags;
+		}else{
+		
+		}
+	
+    //   $tag_list = db_select('tag', 'tags', 'GROUP BY tags', 'tags');
+    //  return $tag_list;
+	
+    }
 // get images list by tag
 	function get_img_by_tag($tag)
 	{
-		$files = db_select('file_liste', 'filename', 'INNER JOIN tag ON file_liste.fileid = tag.fileid WHERE tag.tags = \''.$tag.'\'', 'filename');
+		// $files = db_select('file_liste', 'filename', 'INNER JOIN tag ON file_liste.fileid = tag.fileid WHERE tag.tags = \''.$tag.'\'', 'filename');
+		
+		$files = db_select_query('filename',"SELECT filename FROM file_liste
+								INNER JOIN tag ON file_liste.fileid = tag.fileid 
+									WHERE tag.tags = '$tag' 
+									ORDER BY file_liste.filename");
 		return $files;
 	}
 
 // eksperiment get images list by rating
-	function get_img_by_rating($ratinglist)
-	{
-		$files = $ratinglist;
+	function get_img_by_rating($rating){
+		$files = db_select_query('filename',"SELECT filename FROM file_liste
+									WHERE file_liste.rating = '$rating' 
+									ORDER BY file_liste.filename");
 		return $files;
 	}
 	
@@ -346,40 +390,8 @@ $files  = null;                     # List of the files from disk
         }
 		return FALSE;
 	}
-// Get tags list from db
-//	return: tags list [array]
-    function get_tags($filelist1)
-    {
-			$filelist = $filelist1;
-			$finalTags = array();
-		
-if(!empty($filelist)){		
-			foreach($filelist as $rr){
-				$where = 'tag';
-				$what = 'tags';
-				$sQuery3 = "INNER JOIN file_liste ON tag.fileid = file_liste.fileid WHERE file_liste.filename = '$rr'";
-				$currentTags = db_select($where, $what, $sQuery3, $what);
-				
-				if(!empty($currentTags)){
-					//$currentTags = array_filter($currentTags);
-					foreach($currentTags as $bb){
-						array_push($finalTags, $bb);
-					}
-				}
-			}	
-					
-			//$sluttTags = array_filter($finalTags);
-			$sluttTags = array_unique($finalTags);
-			
-			 //print_r($sluttTags);
-			
-			return $sluttTags;
-			}
 	
-    //   $tag_list = db_select('tag', 'tags', 'GROUP BY tags', 'tags');
-    //  return $tag_list;
-	
-    }
+
 
 	// Search function
 		

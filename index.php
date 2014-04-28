@@ -39,40 +39,52 @@
 //			$files = get_File_List($big, $images);
 //		}
 //	}
+	if(!empty($_GET['ratinginput'])){
+		$rating = $_GET['ratinginput'];
+		$files = get_img_by_rating($rating);
+	}else{
+		if (!empty($_GET['tag'])){
+			$files = get_img_by_tag($_GET['tag']);
+			// $gallery = VisBilder($files);
+		}else{
+			$files = get_img_list('Bilder');
+			// $gallery = VisBilder("");
+		}
+	}
+	$gallery = VisBilder($files);
 	
-	if (!empty($_GET['tag'])){
-		$files = get_img_by_tag($_GET['tag']);
-		$gallery = VisBilder($files);
-	}
-	else{
-		$gallery = VisBilder("");
-	}
+	// if(!empty($_GET['ratinginput'])){
+		// $rating = $_GET['ratinginput'];
+		// $files = get_img_by_tag($rating);
+	// }
+	// if(!empty($_GET['search'])){
+		// $search = $_GET['search'];
+	// }
+	// if(!empty($_GET['ratingcategory'])){$ratingcategory = $_GET['ratingcategory'];}
+	// if(!empty($_GET['submission'])){	$submission = $_GET['submission'];}
 	
 	//test search function
 	
-	$ratinginput = "";
-	$search = "";
-	$ratingcategory = "";
-	$submission = "";
+	// $ratinginput = "";
+	// $search = "";
+	// $ratingcategory = "";
+	// $submission = "";
 	
-	if(!empty($_GET['ratinginput'])){$ratinginput = $_GET['ratinginput'];}
-	if(!empty($_GET['search'])){$search = $_GET['search'];}
-	if(!empty($_GET['ratingcategory'])){$ratingcategory = $_GET['ratingcategory'];}
-	if(!empty($_GET['submission'])){$submission = $_GET['submission'];}
 	
-	if(!empty($submission)){
-		$files = get_search_list($ratinginput, $search, $ratingcategory);
-		$gallery = VisBilder($files);
-	}
 	
-	$cpam = get_search_parameter_display($failed, $ratingcategory, $search, $ratinginput, $submission);
+	// if(!empty($submission)){
+		// $files = get_search_list($ratinginput, $search, $ratingcategory);
+		// $gallery = VisBilder($files);
+	// }
 	
-	print_r($failed);
+	// $cpam = get_search_parameter_display($failed, $ratingcategory, $search, $ratinginput, $submission);
+	
+	// print_r($failed);
 	if($failed){
 	
-	 echo'<script type="text/javascript">
-            window.location.assign("http://localhost/Project/index.php?ratingcategory=all&search=&submission=Search");
-     </script>';
+		 echo'<script type="text/javascript">
+				window.location.assign("http://localhost/Project/index.php?ratingcategory=all&search=&submission=Search");
+		 </script>';
 	 
 	}
 	

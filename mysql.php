@@ -76,10 +76,14 @@ include_once('funksjoner.php');
 	}
 
 // Select data from database
-    function db_select($table, $column, $group, $ret)
+	function db_select($table, $column, $group, $ret)
     {
         $result = null;
         global $db_is_connected, $db;
+		if (!$db_is_connected)
+		{
+			db_connnect();
+		}
         if (!$db_is_connected)
         {	
             alert_message("Error: Could not connect ot database.");
@@ -88,6 +92,7 @@ include_once('funksjoner.php');
         }else
         {
             $query = "SELECT $column FROM $table $group;";
+			// echo('<br><hr>db_select<br>'.$query);//-----------------------------------------------------
             $rslt = $db->query($query);
             if (!$rslt)
             {
@@ -102,5 +107,23 @@ include_once('funksjoner.php');
         }
         return FALSE;
     }
-		
+	
+	function db_select_query($ret, $query){
+		global $db_is_connected, $db;
+		$result=array();
+		if (!$db_is_connected){
+			db_connnect();
+		}
+		$rslt = $db->query($query);
+		if (!$rslt){
+			alert_message($query." isn't correct .");
+			return FALSE;
+		}else{
+			// echo('<br><hr>db_select_query<br>'.$query);//---------------------------------------------
+			while ($row = $rslt->fetch_assoc()) {
+				$result[] = $row["$ret"];
+			}
+			return $result;
+		}
+	}
 ?>
