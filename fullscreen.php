@@ -127,15 +127,15 @@
 									
 			function musOverPilVenstre(musover)
 			{
-			musover.src = "img/leftbutton.png";
+				musover.src = "img/leftbutton.png";
 			}
 			function musOverPilHoyre(musover)
 			{
-			musover.src = "img/rightbutton.png";
+				musover.src = "img/rightbutton.png";
 			}
 			function musIkkeOver(musover)
 			{
-			musover.src = "img/Tom.png";
+				musover.src = "img/Tom.png";
 			}
 		</script>	
         
@@ -145,9 +145,7 @@
 
     
     <?php
-    
-	// alert_message("POST allert: ".print_r($_POST));
-	
+    	
 		global $imgListStr;
 		if (empty($_GET['tag']) || $_GET['tag']=='null'){
 		//	$imgList = db_select('file_liste', 'filename', '', 'filename');//test
@@ -367,17 +365,21 @@
 					}
 					
 					function deleteImage(path){
-						var xmlhttp = getXmlHttp();
-						var fileName = 'Bilder/'+fileNames[corImg];
-						xmlhttp.open('POST', 'rotation_1.php', false);
-						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-						xmlhttp.send("delete=true" + "&name=" + encodeURIComponent(fileName));
-						if(xmlhttp.status == 200) {
-							if (xmlhttp.responseText!==""){
-								alert('Rotation '+angle+' Error!!! '+ xmlhttp.responseText);
-							}else{
-								nextImg();
-							};
+						var r=confirm("you sure that you want to delete the file "+path+" ?");
+						if (r==true)
+						{
+							var xmlhttp = getXmlHttp();
+							var fileName = 'Bilder/'+fileNames[corImg];
+							xmlhttp.open('POST', 'rotation_1.php', false);
+							xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+							xmlhttp.send("delete=true" + "&name=" + encodeURIComponent(fileName));
+							if(xmlhttp.status == 200) {
+								if (xmlhttp.responseText!==""){
+									alert('Rotation '+angle+' Error!!! '+ xmlhttp.responseText);
+								}else{
+									nextImg();
+								};
+							}
 						}
 					}
 					
