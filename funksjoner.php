@@ -165,7 +165,7 @@ $files  = null;                     # List of the files from disk
 		$gallery =  '
 			<table width="100%" cellspacing="3">
 				<tr>';
-/*		
+		
 		if (!empty($_POST['SortingCategory']))
 		{
 			$sortCategory = $_POST['SortingCategory'];
@@ -212,6 +212,7 @@ $files  = null;                     # List of the files from disk
 					array_push($sortedFiles, $fnm);
 				}
 			}
+            break;
 		case 2:		
 			for ($i = 0; count($files) > $i; $i++)
 			{
@@ -233,9 +234,10 @@ $files  = null;                     # List of the files from disk
 					}
 				}
 			}
+            break;
 		}
-		*/
-		foreach($files as $file)
+		
+		foreach($sortedFiles as $file)
 		{
 			if (null != $file)
 			{
