@@ -1,7 +1,7 @@
 <?php
     Echo "<link rel='shortcut icon' href='img/favicon.ico'>";
     // include_once("index.php");//test
-	include_once("Metadata.php");
+	// include_once("Metadata.php");
     include_once("mysql.php");
     include_once("funksjoner.php");
 	
@@ -28,7 +28,6 @@
     }
 	
 	if(!empty($_GET['search']) & isset($_GET['ratinginput'])){ // if you file the search fild
-		alert_message($_GET['ratinginput']);
 		$search = $_GET['search'];
 		$rate = $_GET['ratinginput'];
 		$tag = '';

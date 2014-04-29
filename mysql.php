@@ -18,9 +18,9 @@ include_once('funksjoner.php');
         if (mysqli_connect_errno())
         {
             $db_is_connected = false;
-            alert_message("Error: Could not connect ot database. Please try again later.");
+            alert_message("Error: Could not connect to database. Please try again later.");
             return;
-//            exit(alert_message("Error: Could not connect ot database. Please try again later."));
+//            exit(alert_message("Error: Could not connect to database. Please try again later."));
         }else{
             $db_is_connected = true;
             $db->query("SET CHARACTER SET utf8");
@@ -86,11 +86,10 @@ include_once('funksjoner.php');
 		}
         if (!$db_is_connected)
         {	
-            alert_message("Error: Could not connect ot database.");
+            alert_message("Error: Could not connect to database.");
             return FALSE;
-//            exit(alert_message("Error: Could not connect ot database."));
-        }else
-        {
+//            exit(alert_message("Error: Could not connect to database."));
+        }else{
             $query = "SELECT $column FROM $table $group;";
 			// echo('<br><hr>db_select<br>'.$query);//-----------------------------------------------------
             $rslt = $db->query($query);
@@ -125,5 +124,25 @@ include_once('funksjoner.php');
 			}
 			return $result;
 		}
+	}
+	
+	function db_do_query($query){
+		$result = null;
+        global $db_is_connected, $db;
+		if (!$db_is_connected){
+			db_connnect();
+		}
+        if (!$db_is_connected){	
+            alert_message("Error: Could not connect to database.");
+            return FALSE;
+//            exit(alert_message("Error: Could not connect ot database."));
+        }else{
+			$result = $db->query($query);
+			if ($result)
+			{
+				return TRUE;
+			}
+		}
+		return FALSE;
 	}
 ?>

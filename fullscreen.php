@@ -80,29 +80,6 @@
                     
             }
 			
-			// var commentField = document.getElementById('itm1b');
-            // function onKeyDown(element){
-				// switch (event.keyCode) {
-                    // case 13: //Enter
-						// var xmlhttp = getXmlHttp();
-						// var fileName = 'Bilder/'+fileNames[corImg];
-						// xmlhttp.open('POST', 'rotation_1.php', false);
-						// xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-						// xmlhttp.send("comment=" + encodeURIComponent(element.value) + "&name=" + encodeURIComponent(fileName));
-						// if(xmlhttp.status == 200) {
-							// if (xmlhttp.responseText!==""){
-								// alert('Comment Error!!! '+ xmlhttp.responseText);
-							// }else{
-								// showComment()
-							// };
-						// }
-                        // break;
-                    // case 27: //Escape
-                       // alert('AAAAAAAAAaaaaaaaaaaaaaaaa');
-                        // break;
-                // }
-			// }
-			
             document.onkeydown = function(evt) {
                 evt = evt || window.event;
                 switch (evt.keyCode) {
@@ -347,21 +324,27 @@
 					} 
 
 					function rotate(angle){
+						document.getElementById('progress').style.visibility="visible";
 						var xmlhttp = getXmlHttp();
 						var fileName = 'Bilder/'+fileNames[corImg];
-						xmlhttp.open('POST', 'rotation_1.php', false);
-						xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-						xmlhttp.send("angle=" + encodeURIComponent(angle) + "&name=" + encodeURIComponent(fileName));
-						if(xmlhttp.status == 200) {
-							if (xmlhttp.responseText!==""){
-								alert('Rotation '+angle+' Error!!! '+ xmlhttp.responseText);
-							}else{
-								hiddenImg 		= new Image();
-								hiddenImg.src 	= fileName+'?trash='+Math.random();
-								var fullimg 	= document.getElementById('fullimg');
-								fullimg.src 	= hiddenImg.src;
-							};
-						}
+						
+						setTimeout(function(){
+							xmlhttp.open('POST', 'rotation_1.php', false);
+							xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+							xmlhttp.send("angle=" + encodeURIComponent(angle) + "&name=" + encodeURIComponent(fileName));
+							
+							if(xmlhttp.status == 200) {
+								if (xmlhttp.responseText!==""){
+									alert('Rotation '+angle+' Error!!! '+ xmlhttp.responseText);
+								}else{
+									hiddenImg 		= new Image();
+									hiddenImg.src 	= fileName+'?trash='+Math.random();
+									var fullimg = document.getElementById('fullimg');
+									fullimg.src 	= hiddenImg.src;
+								};
+							}
+							document.getElementById('progress').style.visibility="hidden";
+						},1000);
 					}
 					
 					function deleteImage(path){
@@ -409,19 +392,18 @@
 						if(ratingcategory=='null'){
 							var total="";
 						}
-
 					
 						var length = fileNames.length;
 						var next = (corImg+1)%length;
 						var newpic = fileNames[next];
-						window.location.assign("http://localhost/Project/fullscreen.php?tag=" + tag + "&bilde=Bilder/" + newpic + "&leggTilTaggnavn=null" + "&slettTaggnavn=null" + total);
-						var hiddenNextImg = new Image();
-						hiddenNextImg.src = 'Bilder/'+fileNames[next]+'?rand='+Math.random();
-						var fullimg = document.getElementById('fullimg');
-						fullimg.src = hiddenNextImg.src;
+						window.location.assign("?tag=" + tag + "&bilde=Bilder/" + newpic + "&leggTilTaggnavn=null" + "&slettTaggnavn=null" + total);
+						// var hiddenNextImg = new Image();
+						// hiddenNextImg.src = 'Bilder/'+fileNames[next]+'?rand='+Math.random();
+						// var fullimg = document.getElementById('fullimg');
+						// fullimg.src = hiddenNextImg.src;
 						
-						corImg = next;
-						showData();
+						// corImg = next;
+						// showData();
 					}
 		
 					function prevImg(){
@@ -441,17 +423,17 @@
 							prev = length-1;
 						}
 						var newpic = fileNames[prev];
-						window.location.assign("http://localhost/Project/fullscreen.php?tag=" + tag + "&bilde=Bilder/" + newpic + "&leggTilTaggnavn=null" + "&slettTaggnavn=null" + total);
+						window.location.assign("?tag=" + tag + "&bilde=Bilder/" + newpic + "&leggTilTaggnavn=null" + "&slettTaggnavn=null" + total);
 						
-						var hiddenNextImg = new Image();
-						hiddenNextImg.src = 'Bilder/'+fileNames[prev]+'?rand='+Math.random();
+						// var hiddenNextImg = new Image();
+						// hiddenNextImg.src = 'Bilder/'+fileNames[prev]+'?rand='+Math.random();
 						
-						var fullimg = document.getElementById('fullimg');
-						fullimg.src = hiddenNextImg.src;
+						// var fullimg = document.getElementById('fullimg');
+						// fullimg.src = hiddenNextImg.src;
 						
-						corImg = prev;
+						// corImg = prev;
 						
-						showData();
+						// showData();
 					}
 			
 					function showData(){
@@ -705,39 +687,53 @@
 							
 						myNode.appendChild(ListElem);
 					}
+					
+					function commentFocus(element){
+						if (element.value == 'click to comment'){
+							element.value = ''
+						}
+					}
+					
+					function commentBlur(element){
+						if (element.value == ''){
+							element.value = 'click to comment'
+						}
+					}
+					
+					function commentEnter(element){
+						if(event.keyCode==13){
+							setComment(element.value);
+						}
+					}
+
 				</script>
 				
                    <!kommentarfelt>
 				   
         
-<form action="" method="post" id="commentForm">
-<input type = "text" name = "comment" value="<?php
+<!--form action="" method="post" id="commentForm"-->
+<input type = "text" name = "comment" id="commentFeild" value="<?php
 	$query2 = "SELECT commentary FROM file_liste WHERE fileid=$result3";
 	$result2 = $db->query($query2);
-	foreach($result2 as $rr)
-		
-	if (!empty($result2))
-	{
-		foreach($result2 as $rr)
-		{
-			print_r(array_to_string($rr));
-			if(null === (array_to_string($rr))) echo("click to comment");
+	foreach($result2 as $rr){
+		if (!empty($result2)){
+			foreach($result2 as $rr)
+			{
+				print_r(array_to_string($rr));
+				if(null === (array_to_string($rr))) echo("click to comment");
+			}
 		}
 	}
-	if(!empty($_POST['comment']))
-	{
+	if(!empty($_POST['comment'])){
 		$svaret = $_POST['comment'];
 		$query = "UPDATE file_liste SET commentary='$svaret' WHERE fileid=$result3";
 		$result = $db->query($query);
 		//echo '<meta http-equiv="refresh" content="0">';
 		header("Refresh:0");
-	}	
-?>" onFocus="javascript:this.select()" size="27"/>
-<!--input ondblclick="exchange(this);" onkeydown="onKeyDown(this)" id="itm1b" class="replace" type="text" value="click to comment"  name="comment"-->
-<!--span id="itm1" onclick="exchange(this);"-->
-<!--/span-->
+	}
+?>" onFocus="commentFocus(this)" onBlur="commentBlur(this)" onkeydown="commentEnter(this)" size="27"/>
 
-</form>
+<!--/form-->
                    
                 <!tagfelt>
                
@@ -859,10 +855,13 @@
                     // <img src= "Rbutton.png"width="40" height="40"></a>';
                
                 ?>
-                   <div id="venstreknapp">
+		<div id="venstreknapp">
 			<img src="img/Tom.png" width="256" height="85%" onmouseover="musOverPilVenstre(this)" onmouseout="musIkkeOver(this)" onclick="prevImg()">
 		</div>
-                   <div id="hoyreknapp">
+		<div id="progress" style="visibility:hidden">
+			<!--img src="img/progress.gif" width="" height="" style="display:initial"-->
+		</div>
+		<div id="hoyreknapp">
 			<img src="img/Tom.png" width="256" height="85%" onmouseover="musOverPilHoyre(this)" onmouseout="musIkkeOver(this)" onclick="nextImg()">
 		</div>
     </div>

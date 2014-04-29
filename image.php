@@ -2,8 +2,114 @@
 include_once("mysql.php");
 require_once('PEL/src/PelJpeg.php');
 require_once('PEL/src/PelJpeg.php');
+$Toolkit_Dir = "./PHP_JPEG_Metadata_Toolkit_1.12/";
+include_once $Toolkit_Dir . 'Toolkit_Version.php';          // Change: added as of version 1.11
+include_once $Toolkit_Dir . 'JPEG.php';                     // Change: Allow this example file to be easily relocatable - as of version 1.11
+include_once $Toolkit_Dir . 'JFIF.php';
+include_once $Toolkit_Dir . 'PictureInfo.php';
+include_once $Toolkit_Dir . 'XMP.php';
+include_once $Toolkit_Dir . 'Photoshop_IRB.php';
+include_once $Toolkit_Dir . 'EXIF.php';
 
+	function get_Rating_exif($url){
+		$header_data = get_jpeg_header_data( $url );
+		$xmpText = get_XMP_text( $header_data );
+		$xmpArr = read_XMP_array_from_text( $xmpText );
+		$r = search_tag($xmpArr, 'xmp:Rating');
+		if (isset($r['value'])){
+			return $r['value'];
+		}else{
+			return false;
+		}
+	}
+	
+	function get_Rating_DB($url){
+		$fileName = substr($url, 7);
+		$img = db_select('file_liste', 'rating', 'WHERE filename = \''.$fileName.'\' ', 'rating');
+		return $img[0];
+	}
+	
+	function set_Rating_exif($path, $value){
+		$header_data = get_jpeg_header_data( $path );
+		$xmpText = get_XMP_text( $header_data );
+		$xmpArr = read_XMP_array_from_text( $xmpText );
+			$xmpArr = checkXMP($xmpArr);
+			
+		$i=0;
+		$value_prsnt = strval(((int)$value - 1) * 24 + 1);
+		
+		if (!set_XMP_tag($xmpArr, 'xmp:Rating', $value) & !set_XMP_tag($xmpArr, 'MicrosoftPhoto:Rating', $value_prsnt)){
+			$xmpArr[0]['children'][0]['children'][0]['children'][0]['tag'] = 'xmp:Rating';
+			$xmpArr[0]['children'][0]['children'][0]['children'][0]['value'] = $value;
+			
+			$xmpArr[0]['children'][0]['children'][1]['children'][0]['tag'] = 'MicrosoftPhoto:Rating';
+			$xmpArr[0]['children'][0]['children'][1]['children'][0]['value'] = $value_prsnt;
+		}
+		$newXMP = write_XMP_array_to_text( $xmpArr );
+		$header_data = put_XMP_text( $header_data, $newXMP );
+		put_jpeg_header_data( $path, $path, $header_data );
+	}
+
+	function set_Rating_DB($path, $value){
+		global $db;
+		$fileName = substr($path, 7);
+		$query = "UPDATE file_liste SET rating='$value' WHERE filename='$fileName'";
+		$result = $db->query($query);
+		return $result;
+	}
+	
+	function get_Comment_exif($path){
+		$size = getimagesize($path);
+		$format = strtolower(substr($size['mime'], strpos($size['mime'], '/')+1));
+		if($format == 'jpeg'){
+			$exif = read_exif_data_quick($path);
+			if (isset($exif['Comments'])){
+				print_r($exif['Comments']);
+				return $exif['Comments'];
+			}
+		}
+		return FALSE;
+	}
+	
+	function get_Comment_DB($url){
+		$fileName = substr($url, 7);
+		$img = db_select('file_liste', 'commentary', 'WHERE filename = \''.$fileName.'\' ', 'commentary');
+		return $img[0];
+	}
+	
+	function set_Comment_exif($path, $value){
+		setMetaTag_PEL($path, PelTag::XP_COMMENT , $value);
+	}
+	
+	function set_Comment_DB($path, $value){
+		$fileName = getFileName($path);
+		$query = "UPDATE file_liste SET commentary = '$value' WHERE filename = '$fileName'";
+		return db_do_query($query);
+	}
+	
+	function get_Tag_exif(){
+	
+	}
+	
+	function get_Tags_DB($url){
+		$fileName = substr($url, 7);
+		$img = db_select('tag', 'tags', 'INNER JOIN file_liste ON tag.fileid = file_liste.fileid WHERE file_liste.filename=\''.$fileName.'\' ORDER BY tags', 'tags');
+		if (empty($img)){
+			return array("");
+		}
+		return $img;
+	}
+	
+	function set_Tag_exif(){
+	
+	}
+	
+	function set_Tags_DB($url){
+		
+	}
+	
 	function rotateImage($url, $angle){
+
 		$size = getimagesize($url);
 		$format = strtolower(substr($size['mime'], strpos($size['mime'], '/')+1));
 		switch ($format){
@@ -26,6 +132,7 @@ require_once('PEL/src/PelJpeg.php');
 		$icfunc = "imagecreatefrom" . $format;
 		if (!function_exists($icfunc)) return false;
 		$source = $icfunc($url);
+		ini_set('memory_limit', '-1');
 		$rotate = imagerotate($source, $angle, 0);
 		$func = 'image'.$format;	//save image function name
 		$func($rotate, $url, $quality);	//save image to url
@@ -173,6 +280,7 @@ require_once('PEL/src/PelJpeg.php');
 	function read_exif_data_quick($path) {
 		$tmpfile = getImgPiece($path);
 		return read_exif_data($tmpfile);
+		
 	}
 	
 	function read_exif($path) {
@@ -233,10 +341,6 @@ require_once('PEL/src/PelJpeg.php');
 		// $NewJpeg = new PelJpeg($path);
 		// $NewJpeg->setExif($exif);
 		// $NewJpeg->saveFile($path);
-	}
-
-	function getXMP(){
-	
 	}
 	
 	function setMetaTag_PEL($input, $tag, $value){
@@ -349,6 +453,65 @@ require_once('PEL/src/PelJpeg.php');
 		 * bytes with the getBytes method, and saving this in the output file
 		 * completes the script. */
 		$file->saveFile($input);
+	}
+	
+	
+	
+	function set_XMP_tag(&$arr, $tag, $value){
+		for ($i=0; $i<count($arr); $i++){
+			if(isset($arr[$i]['tag'])){
+				if ($arr[$i]['tag'] == $tag){
+					$arr[$i]['value']=$value;
+					return $arr[$i];
+				}else{
+					if (isset($arr[$i]['children'])){
+						$resalt = set_XMP_tag($arr[$i]['children'], $tag, $value);
+						if ($resalt){
+							return $resalt;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	function checkXMP($xmp){
+		if(empty($xmp)){
+			$xmp = array();
+			$xmp[0]=array(	'tag'=>'x:xmpmeta', 
+							'attributes'=>array('xmlns:x'=>'adobe:ns:meta/'), 
+							'children'=>array());
+							
+			$xmp[0]['children'][0] = array('tag'=>'rdf:RDF', 
+										'attributes'=>array('xmlns:rdf'=>'http://www.w3.org/1999/02/22-rdf-syntax-ns#'), 
+										'children'=>array());
+										
+			$xmp[0]['children'][0]['children'][0] = array(	'tag'=>'rdf:Description', 
+															'attributes'=>array('rdf:about'=>'uuid:faf5bdd5-ba3d-11da-ad31-d33d75182f1b',
+																				'xmlns:xmp'=>'http://ns.adobe.com/xap/1.0/'	)
+															);
+															
+			$xmp[0]['children'][0]['children'][1] = array(	'tag'=>'rdf:Description', 
+															'attributes'=>array('rdf:about'=>'uuid:faf5bdd5-ba3d-11da-ad31-d33d75182f1b',
+																				'xmlns:MicrosoftPhoto'=>'http://ns.microsoft.com/photo/1.0/')
+															);
+			
+		}
+		return $xmp;
+	}
+
+	function checkImg($imgName){
+		if(preg_match("/\.jp.?g$|\.ti.?f$/i", $imgName))
+		{
+			return TRUE;
+        }
+		return FALSE;
+	}
+	
+	function getFileName($path){
+		$pathArr = split('[/\]', $path);
+		$lenght = count($pathArr);
+		return $pathArr[$lenght-1];
 	}
 	
 ?>
