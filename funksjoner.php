@@ -221,13 +221,25 @@ $files  = null;                     # List of the files from disk
 // Generate HTML cod for tags list
 	function gen_tags($filesList)
 	{
+		$tagChoosed ='';
+		if(isset($_GET['tag'])){
+			$tagChoosed = $_GET['tag'];
+		}
+		
 		$tags_str = "<ul class=\"nav\">\n\r";
 		$tags = get_tags($filesList);
 		$tags_str = $tags_str."<li><a href=\"index.php\"><span>All</span></a></li>\r\n";
 		if (!empty($tags)){
 			foreach($tags as $tag)
 			{
-				$tags_str = $tags_str."<li><a href=\"?tag=$tag\"><span>".$tag."</span></a></li>\r\n";
+				if ($tag == $tagChoosed){
+					$tags_str = $tags_str."<li><a href=\"?tag=$tag\"style='background: #D9DCDC no-repeat;
+														color: #141818;
+														padding: 7px 15px 7px 30px;'>
+														<span>".$tag."</span></a></li>\r\n";
+				}else{
+					$tags_str = $tags_str."<li><a href=\"?tag=$tag\"><span>".$tag."</span></a></li>\r\n";
+				}
 			}
 		}
 		$tags_str = $tags_str."</ul>";

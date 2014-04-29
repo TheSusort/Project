@@ -27,7 +27,7 @@
 		}
     }
 	
-	if(!empty($_GET['search']) & isset($_GET['ratinginput'])){
+	if(!empty($_GET['search']) & isset($_GET['ratinginput'])){ // if you file the search fild
 		alert_message($_GET['ratinginput']);
 		$search = $_GET['search'];
 		$rate = $_GET['ratinginput'];
@@ -36,47 +36,20 @@
 			$tag = $_GET['tag'];
 		}
 		$files = getSerchList($search, $tag, $rate);
-	}elseif(isset($_GET['ratinginput']) & empty($_GET['search'])){
+	}elseif(isset($_GET['ratinginput']) & empty($_GET['search'])){ // if you want to get images only by rating
 		$rating = $_GET['ratinginput'];
 		$tag = '';
 		if(isset($_GET['tag'])) $tag = $_GET['tag'];
 		$files = get_img_by_rating($rating, $tag);
-	}else{
+	}else{												// if you choose tag
 		if (!empty($_GET['tag'])){
 			$files = get_img_by_tag($_GET['tag']);
-		}else{
+		}else{											// get all images without mask
 			$files = get_img_list('Bilder');
 		}
 	}
 	$gallery = VisBilder($files);
-	
-	// if(!empty($_GET['ratinginput'])){
-		// $rating = $_GET['ratinginput'];
-		// $files = get_img_by_tag($rating);
-	// }
-	// if(!empty($_GET['search'])){
-		// $search = $_GET['search'];
-	// }
-	// if(!empty($_GET['ratingcategory'])){$ratingcategory = $_GET['ratingcategory'];}
-	// if(!empty($_GET['submission'])){	$submission = $_GET['submission'];}
-	
-	//test search function
-	
-	// $ratinginput = "";
-	// $search = "";
-	// $ratingcategory = "";
-	// $submission = "";
-	
-	
-	
-	// if(!empty($submission)){
-		// $files = get_search_list($ratinginput, $search, $ratingcategory);
-		// $gallery = VisBilder($files);
-	// }
-	
-	// $cpam = get_search_parameter_display($failed, $ratingcategory, $search, $ratinginput, $submission);
-	
-	// print_r($failed);
+
 	if($failed){
 	
 		 echo'<script type="text/javascript">
