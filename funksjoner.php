@@ -228,12 +228,20 @@ $files  = null;                     # List of the files from disk
 		
 		$tags_str = "<ul class=\"nav\">\n\r";
 		$tags = get_tags($filesList);
-		$tags_str = $tags_str."<li><a href=\"index.php\"><span>All</span></a></li>\r\n";
+		asort($tags);
+		
+		if(empty($tagChoosed)){
+			$tags_str = $tags_str."<li><a href=\"index.php\"style='background: #D9DCDC no-repeat;
+														color: #141818;
+														padding: 7px 15px 7px 30px;'><span>All</span></a></li>\r\n";
+		}else{
+			$tags_str = $tags_str."<li><a href=\"index.php\"><span>All</span></a></li>\r\n";
+		}
 		if (!empty($tags)){
 			foreach($tags as $tag)
 			{
 				if ($tag == $tagChoosed){
-					$tags_str = $tags_str."<li><a href=\"?tag=$tag\"style='background: #D9DCDC no-repeat;
+					$tags_str = $tags_str."<li><a href=\"?tag=$tag\" style='background: #D9DCDC no-repeat;
 														color: #141818;
 														padding: 7px 15px 7px 30px;'>
 														<span>".$tag."</span></a></li>\r\n";
@@ -258,7 +266,8 @@ $files  = null;                     # List of the files from disk
 				$what = 'tags';
 				$query = "SELECT tags FROM tag 
 							INNER JOIN file_liste ON tag.fileid = file_liste.fileid 
-							WHERE file_liste.filename = '$file'";
+							WHERE file_liste.filename = '$file'
+							ORDER BY tag.tags" ;
 				$currentTags = db_select_query('tags', $query);
 				// $currentTags = db_select($where, $what, $sQuery3, $what);
 				

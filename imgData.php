@@ -39,18 +39,7 @@
 		echo($imgData);
 	}
 	
-	/* function getRateDB($url){
-		// $fileName = substr($url, 7);
-		// $img = db_select('file_liste', 'rating', 'WHERE filename = \''.$fileName.'\' ', 'rating');
-		// return $img[0];
-	// }
-	
-	// function getCommentDB($url){
-		// $fileName = substr($url, 7);
-		// $img = db_select('file_liste', 'commentary', 'WHERE filename = \''.$fileName.'\' ', 'commentary');
-		// return $img[0];
-	// }
-	
+	/* 
 	// function getTagsDB($url){
 		// $fileName = substr($url, 7);
 		// $img = db_select('tag', 'tags', 'INNER JOIN file_liste ON tag.fileid = file_liste.fileid WHERE file_liste.filename=\''.$fileName.'\' ORDER BY tags', 'tags');
@@ -60,43 +49,11 @@
 		// return $img;
 	// }
 	
-	// function getRateEXIF($url){
-		// $rate = get_Rating($url);
-		// return $rate;
-	// }
-	
-	// function setRateDB($rate, $url){
-		// global $db;
-		// $fileName = substr($url, 7);
-		// $query = "UPDATE file_liste SET rating='$rate' WHERE filename='$fileName'";
-		// $result = $db->query($query);
-		// return $result;
-	// }
-	
 	// function setTagEXIF($tegs, $url){
 		// if (checkImg($url)){
 			// add_KeyWord($tegs, $url);
 		// }
 	// }
 	
-	// function setCommentEXIF($comment, $url){
-		
-	// }
-	
-	// function setRateEXIF($rate, $url){
-		// if (checkImg($url)){
-			// set_Rating($rate, $url);
-		// }
-	// }
-	
-	// function checkImg($imgName){
-		// if(preg_match("/\.jp.?g$|\.ti.?f$/i", $imgName))
-		// {
-			// return TRUE;
-        // }
-		// return FALSE;
-	// }*/
-	
-	// set_Comment_exif('Bilder/svard.jpg', 'Fjord svard');
-	// get_Comment_exif('Bilder/20120617_170700.jpg');
+	*/
 ?>
