@@ -109,7 +109,7 @@ include_once $Toolkit_Dir . 'EXIF.php';
 	}
 	
 	function rotateImage($url, $angle){
-
+		
 		$size = getimagesize($url);
 		$format = strtolower(substr($size['mime'], strpos($size['mime'], '/')+1));
 		switch ($format){
@@ -126,9 +126,11 @@ include_once $Toolkit_Dir . 'EXIF.php';
 				$quality = 100;
 			break;
 		}
+		
 		if($format == 'jpeg') 
 			$data = read_exif($url);
-	
+		$rate = get_Rating_exif($url);
+		
 		$icfunc = "imagecreatefrom" . $format;
 		if (!function_exists($icfunc)) return false;
 		$source = $icfunc($url);
@@ -138,7 +140,9 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		$func($rotate, $url, $quality);	//save image to url
 		// imagedestroy($rotate);
 		
-		if ($format == 'jpeg') write_exif_data($url, $data);
+		if ($format == 'jpeg') 
+			write_exif_data($url, $data);
+		set_Rating_exif($url, $rate);
 		
 		$oldWidth = $size[1];
 		$oldHeight = $size[0];
@@ -455,7 +459,22 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		$file->saveFile($input);
 	}
 	
-	
+	function search_tag(&$arr, $tag){
+	for ($i=0; $i<count($arr); $i++){
+		if(isset($arr[$i]['tag'])){
+			if ($arr[$i]['tag'] == $tag){
+				return $arr[$i];
+			}else{
+				if (isset($arr[$i]['children'])){
+					$resalt = &search_tag($arr[$i]['children'], $tag);
+					if ($resalt){
+						return $resalt;
+					}
+				}
+			}
+		}
+	}
+}
 	
 	function set_XMP_tag(&$arr, $tag, $value){
 		for ($i=0; $i<count($arr); $i++){
@@ -513,5 +532,4 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		$lenght = count($pathArr);
 		return $pathArr[$lenght-1];
 	}
-	
 ?>
