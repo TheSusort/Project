@@ -365,7 +365,7 @@
 					}
 					
 					function deleteImage(path){
-						var r=confirm("you sure that you want to delete the file "+path+" ?");
+						var r=confirm("you sure that you want to delete the file "+fileNames[corImg]+" ?");
 						if (r==true)
 						{
 							var xmlhttp = getXmlHttp();

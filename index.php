@@ -1,6 +1,6 @@
 <?php
     Echo "<link rel='shortcut icon' href='img/favicon.ico'>";
-    include_once("index.php");//test
+    // include_once("index.php");//test
 	include_once("Metadata.php");
     include_once("mysql.php");
     include_once("funksjoner.php");
@@ -27,28 +27,25 @@
 		}
     }
 	
-//	if(isset($_POST['ratingcategory'])){
-//		$rcat = $_POST['ratingcategory'];
-//		if($rcat == 'unrated'){
-//			$files = get_unrated();
-//		}
-//		if($rcat == 'rated'){
-//			$files = get_rated();
-//		}
-//		if($rcat == 'all'){
-//			$files = get_File_List($big, $images);
-//		}
-//	}
-	if(!empty($_GET['ratinginput'])){
+	if(!empty($_GET['search']) & isset($_GET['ratinginput'])){
+		alert_message($_GET['ratinginput']);
+		$search = $_GET['search'];
+		$rate = $_GET['ratinginput'];
+		$tag = '';
+		if (isset($_GET['tag'])){
+			$tag = $_GET['tag'];
+		}
+		$files = getSerchList($search, $tag, $rate);
+	}elseif(isset($_GET['ratinginput']) & empty($_GET['search'])){
 		$rating = $_GET['ratinginput'];
-		$files = get_img_by_rating($rating);
+		$tag = '';
+		if(isset($_GET['tag'])) $tag = $_GET['tag'];
+		$files = get_img_by_rating($rating, $tag);
 	}else{
 		if (!empty($_GET['tag'])){
 			$files = get_img_by_tag($_GET['tag']);
-			// $gallery = VisBilder($files);
 		}else{
 			$files = get_img_list('Bilder');
-			// $gallery = VisBilder("");
 		}
 	}
 	$gallery = VisBilder($files);

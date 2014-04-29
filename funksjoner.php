@@ -159,14 +159,15 @@ $files  = null;                     # List of the files from disk
         $colCtr = 0;
         $gallery = "";
         if (empty($files))
-		{
-			$files = get_img_list($big);
+		{	
+			// alert_message("get list from disc");
+			// $files = get_img_list($big);
 		}
 		$gallery =  '
 			<table width="100%" cellspacing="3">
 				<tr>';
-/*		
-		if (!empty($_POST['SortingCategory']))
+		
+/*		if (!empty($_POST['SortingCategory']))
 		{
 			$sortCategory = $_POST['SortingCategory'];
 		}
@@ -212,6 +213,7 @@ $files  = null;                     # List of the files from disk
 					array_push($sortedFiles, $fnm);
 				}
 			}
+            break;
 		case 2:		
 			for ($i = 0; count($files) > $i; $i++)
 			{
@@ -233,41 +235,56 @@ $files  = null;                     # List of the files from disk
 					}
 				}
 			}
-		}
-		*/
-		foreach($files as $file)
-		{
-			if (null != $file)
-			{
-				//lager thumbs hvis det ikke er laget thumbs avbildet tidligere.
-				$thumb = $thumbs.$file;
-				if(!file_exists($thumb))
-				{
-					createThumbs($big.$file, $thumbs.$file, 150);
-				}
-				if($colCtr %$cols == 0)
-				{
-					$gallery = $gallery. '
-						</tr>
-						<tr>
-							<td colspan="'.$cols.'">
-								<hr />
-							</td>
-						</tr>
-						<tr>';
-				}
-				$gallery = $gallery. '
-							<td id="bilde" align="center" 
-									onClick = viuwEXIF("'.get_EXIF($big.$file).'") 
-									onDblClick = openFulskr("'.$big.$file.'")>
-								<img src="' . $thumbs . $file . '" />
-							</td>';
-							// viuwEXIF("'.get_EXIF($big.$file).'") 
-							// viuwEXIF("'.$big.$file.'")
-				$colCtr++;
-			}
+            break;
 		}
 
+		*/
+		if(!empty($files)){
+			foreach($files as $file)
+			{
+				if (null != $file)
+				{
+					//lager thumbs hvis det ikke er laget thumbs avbildet tidligere.
+					$thumb = $thumbs.$file;
+					if(!file_exists($thumb))
+					{
+						createThumbs($big.$file, $thumbs.$file, 150);
+					}
+					if($colCtr %$cols == 0)
+					{
+						$gallery = $gallery. '
+							</tr>
+							<tr>
+								<td colspan="'.$cols.'">
+									<hr />
+								</td>
+							</tr>
+							<tr>';
+					}
+					$gallery = $gallery. '
+								<td id="bilde" align="center" 
+										onClick = viuwEXIF("'.get_EXIF($big.$file).'") 
+										onDblClick = openFulskr("'.$big.$file.'")>
+									<img src="' . $thumbs . $file . '" />
+								</td>';
+								// viuwEXIF("'.get_EXIF($big.$file).'") 
+								// viuwEXIF("'.$big.$file.'")
+					$colCtr++;
+				}
+			}
+		}else{
+			$gallery = $gallery. '
+							</tr>
+							<tr>
+								<td colspan="'.$cols.'">
+									<hr />
+								</td>
+							</tr>
+							<tr>
+							<td align="center" >
+								<img src="img/empty.jpg" />
+							</td>';
+		}
 		$gallery = $gallery. '</table>' . "\r\n";
 		
         return $gallery;
@@ -340,10 +357,47 @@ $files  = null;                     # List of the files from disk
 	}
 
 // eksperiment get images list by rating
-	function get_img_by_rating($rating){
-		$files = db_select_query('filename',"SELECT filename FROM file_liste
-									WHERE file_liste.rating = '$rating' 
-									ORDER BY file_liste.filename");
+	function get_img_by_rating($rating, $tag = false){
+		$query_1 = '';
+		$query_2 = '';
+		if ($tag){
+			$query_1 = 'INNER JOIN tag ON file_liste.fileid = tag.fileid';
+			$query_2 = "and (tag.tags = '$tag')";
+		}
+		
+		if ($rating == '0'){
+			$query = "SELECT filename FROM file_liste
+						$query_1
+						WHERE file_liste.rating IS NULL
+						$query_2
+						ORDER BY file_liste.filename";
+			$files = db_select_query('filename',$query);
+		}elseif ($rating == '6'){
+			$query = "SELECT filename FROM file_liste
+						$query_1
+						WHERE file_liste.rating IS NOT NULL 
+						$query_2
+						ORDER BY file_liste.filename";
+			$files = db_select_query('filename', $query);
+		}elseif ($rating == '-1'){
+			if(!empty($query_2)){
+				$query = "SELECT filename FROM file_liste
+							$query_1
+							WHERE $query_2
+							ORDER BY file_liste.filename";
+			}else{
+				$query = "SELECT filename FROM file_liste
+							ORDER BY file_liste.filename";
+			}
+			$files = db_select_query('filename', $query );
+		}else{
+			$query = "SELECT filename FROM file_liste
+						$query_1
+						WHERE file_liste.rating = '$rating'
+						$query_2
+						ORDER BY file_liste.filename";
+			$files = db_select_query('filename', $query);
+		}
 		return $files;
 	}
 	
@@ -565,42 +619,67 @@ $files  = null;                     # List of the files from disk
 		function get_search_parameter_display($failed, $ratingcategory, $search, $ratinginput, $submission){
 		
 			
-		if(!$failed){		
-			if((!empty($submission)) && !(empty($ratingcategory) && empty($search) && empty($ratinginput))){
-				if(!($ratingcategory=='all' && (empty($search) && empty($ratinginput)))){	
-	 
-				$cpam =	'<div id ="parameters"><h3> CURRENT SEARCH: <i>';
-	
-				if(!empty($ratingcategory)){
-					$cpam .= '(CATEGORY: ';
-					if($ratingcategory=='unrated' && !empty($ratinginput)){
-						$cpam .= 'all)';
+			if(!$failed){		
+				if((!empty($submission)) && !(empty($ratingcategory) && empty($search) && empty($ratinginput))){
+					if(!($ratingcategory=='all' && (empty($search) && empty($ratinginput)))){	
+		 
+					$cpam =	'<div id ="parameters"><h3> CURRENT SEARCH: <i>';
+		
+					if(!empty($ratingcategory)){
+						$cpam .= '(CATEGORY: ';
+						if($ratingcategory=='unrated' && !empty($ratinginput)){
+							$cpam .= 'all)';
+						}
+						else{
+							$cpam .= $ratingcategory.')';
+						}
+					}	
+					
+					if(!empty($ratinginput)){
+						$cpam .=' & ';
+						$cpam .= '(RATING: >= ';
+						$cpam .= $ratinginput.')';
 					}
-					else{
-						$cpam .= $ratingcategory.')';
+					
+					if(!empty($search)){
+						$cpam .= ' & ';
+						$cpam .= '(COMMENT/TAG: "';
+						$cpam .= $search.'")';
 					}
-				}	
-				
-				if(!empty($ratinginput)){
-					$cpam .=' & ';
-					$cpam .= '(RATING: >= ';
-					$cpam .= $ratinginput.')';
-				}
-				
-				if(!empty($search)){
-					$cpam .= ' & ';
-					$cpam .= '(COMMENT/TAG: "';
-					$cpam .= $search.'")';
-				}
-				
-				$cpam .= '</i></h3></div>';
-				
-				return $cpam;
-				
+					
+					$cpam .= '</i></h3></div>';
+					
+					return $cpam;
+					
+					}
 				}
 			}
-		}
 
+		}
+		
+		function getSerchList($serch, $tag, $rate){
+			$queryTag = '';
+			$queryRate = '';
+			if (!empty($tag)){$queryTag .= "and (tag.tags = '$tag')";}
+			if ($rate !== null){
+				if ($rate == 0){
+					$queryRate .= "and (file_liste.rating IS NULL)";
+				}elseif ($rate == 6){
+					$queryRate .= "and (file_liste.rating IS NOT NULL)";
+				}elseif ($rate == -1){
+					$queryRate .= "";
+				}else{
+					$queryRate .= "and (file_liste.rating = $rate)";
+				}
+			}
+			$query = "SELECT * FROM file_liste 
+						LEFT JOIN tag ON file_liste.fileid = tag.fileid
+						WHERE (INSTR(file_liste.commentary, '$serch') > 0 or INSTR(tag.tags, '$serch') > 0)
+							$queryTag
+							$queryRate
+						ORDER BY file_liste.filename";
+			$files = db_select_query('filename', $query);
+			return($files);
 		}
 		
 		// testfunksjon for oppdatering av tagsliste etter søk / ikke i bruk
