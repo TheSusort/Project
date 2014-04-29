@@ -167,7 +167,11 @@ $files  = null;                     # List of the files from disk
 			<table width="100%" cellspacing="3">
 				<tr>';
 		
+
 /*		if (!empty($_POST['SortingCategory']))
+=======
+		if (!empty($_POST['SortingCategory']))
+>>>>>>> 29cf4ed18f0734ba64986f35a3117a100ef7070a
 		{
 			$sortCategory = $_POST['SortingCategory'];
 		}
@@ -237,6 +241,7 @@ $files  = null;                     # List of the files from disk
 			}
             break;
 		}
+<<<<<<< HEAD
 
 		*/
 		if(!empty($files)){
