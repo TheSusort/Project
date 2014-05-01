@@ -247,6 +247,7 @@ include_once $Toolkit_Dir . 'EXIF.php';
 				$quality = 100;
 			break;
 		}
+		ini_set('memory_limit', '-1');
 		$oldWidth = $size[0];
 		$oldHeight = $size[1];
 		$newHeight = $maxH;
@@ -361,7 +362,7 @@ include_once $Toolkit_Dir . 'EXIF.php';
 	function read_exif($path) {
 		$resalt = array('data'=>'', 'type'=>'');
 		
-		ini_set('memory_limit', '124M');
+		ini_set('memory_limit', '-1');
 
 		$data = new PelDataWindow(file_get_contents($path));
 
@@ -449,7 +450,7 @@ include_once $Toolkit_Dir . 'EXIF.php';
 	function setMetaTag_PEL($input, $tag, $value){
 		/* We typically need lots of RAM to parse TIFF images since they tend
 		 * to be big and uncompressed. */
-		ini_set('memory_limit', '124M');
+		ini_set('memory_limit', '-1');
 
 		/* The input file is now read into a PelDataWindow object.  At this
 		 * point we do not know if the file stores JPEG or TIFF data, so
@@ -579,7 +580,7 @@ include_once $Toolkit_Dir . 'EXIF.php';
 	}
 	
 	function getMetaTag_PEL($input, $tag){
-		ini_set('memory_limit', '124M');
+		ini_set('memory_limit', '-1');
 
 		$data = new PelDataWindow(file_get_contents($input));
 		if (PelJpeg::isValid($data)) {
