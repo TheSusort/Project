@@ -13,17 +13,17 @@ include_once $Toolkit_Dir . 'Photoshop_IRB.php';
 include_once $Toolkit_Dir . 'EXIF.php';
 
 
-function get_Rating($url){
-	$header_data = get_jpeg_header_data( $url );
-	$xmpText = get_XMP_text( $header_data );
-	$xmpArr = read_XMP_array_from_text( $xmpText );
-	$r = search_tag($xmpArr, 'xmp:Rating');
-	if (isset($r['value'])){
-		return $r['value'];
-	}else{
-		return false;
-	}
-}
+// function get_Rating($url){
+	// $header_data = get_jpeg_header_data( $url );
+	// $xmpText = get_XMP_text( $header_data );
+	// $xmpArr = read_XMP_array_from_text( $xmpText );
+	// $r = search_tag($xmpArr, 'xmp:Rating');
+	// if (isset($r['value'])){
+		// return $r['value'];
+	// }else{
+		// return false;
+	// }
+// }
 
 function set_Rating($value, $url){
 	$header_data = get_jpeg_header_data( $url );
@@ -46,11 +46,12 @@ function set_Rating($value, $url){
 	put_jpeg_header_data( $url, $url, $header_data );
 }
 
-function get_KeyWord($value, $url){
+function get_KeyWord($url){
 	$header_data = get_jpeg_header_data( $url );
 	$xmpText = get_XMP_text( $header_data );
 	$xmpArr = read_XMP_array_from_text( $xmpText );
 	$i=0;
+	$keys = array('');
 	if ($r = search_tag($xmpArr, 'dc:subject')){
 		$keyWords = $r['children'][0]['children'];
 		for ($i=0; $i<count($keyWords); $i++){
@@ -64,16 +65,39 @@ function add_KeyWord($value, $url){
 	$header_data = get_jpeg_header_data( $url );
 	$xmpText = get_XMP_text( $header_data );
 	$xmpArr = read_XMP_array_from_text( $xmpText );
+	// print_r($xmpArr);
 		$xmpArr = checkXMP($xmpArr);
 	$i=0;
 	if (!set_key($xmpArr, 'dc:subject', $value)){
-		$i = count($xmpArr[0]['children'][0]['children'][2]['children']);
-		$xmpArr[0]['children'][0]['children'][2]['children'][$i]['tag'] = 'dc:subject';
-		$xmpArr[0]['children'][0]['children'][2]['children'][$i]['children'][0]['tag'] = 'rdf:Bag';
-		$xmpArr[0]['children'][0]['children'][2]['children'][$i]['children'][0]['attributes']['xmlns:rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
-		$xmpArr[0]['children'][0]['children'][2]['children'][$i]['children'][0]['children'][0]['tag'] = 'rdf:li';
-		$xmpArr[0]['children'][0]['children'][2]['children'][$i]['children'][0]['children'][0]['value'] = $value;
+		$i = count($xmpArr[0]['children'][0]['children']);
+		if(isset($xmpArr[0]['children'][0]['children'][$i]['attributes']['xmlns:dc'])){
+			if(isset($xmpArr[0]['children'][0]['children'][$i]['children'])){
+				$j = count($xmpArr[0]['children'][0]['children'][$i]['children']);
+				$xmpArr[0]['children'][0]['children'][$i]['children'][$j]['tag'] = 'dc:subject';
+				$xmpArr[0]['children'][0]['children'][$i]['children'][$j]['children'][0]['tag'] = 'rdf:Bag';
+				$xmpArr[0]['children'][0]['children'][$i]['children'][$j]['children'][0]['attributes']['xmlns:rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+				$xmpArr[0]['children'][0]['children'][$i]['children'][$j]['children'][0]['children'][0]['tag'] = 'rdf:li';
+				$xmpArr[0]['children'][0]['children'][$i]['children'][$j]['children'][0]['children'][0]['value'] = $value;
+			}else{
+				$xmpArr[0]['children'][0]['children'][$i]['children'] = array();
+
+				$xmpArr[0]['children'][0]['children'][$i]['children'][0]['tag'] = 'dc:subject';
+				$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['tag'] = 'rdf:Bag';
+				$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['attributes']['xmlns:rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+				$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['children'][0]['tag'] = 'rdf:li';
+				$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['children'][0]['value'] = $value;
+			}
+		}else{
+			$xmpArr[0]['children'][0]['children'][$i]['tag']='rdf:Description';
+			$xmpArr[0]['children'][0]['children'][$i]['attributes']['xmlns:dc']='http://purl.org/dc/elements/1.1/';
+			$xmpArr[0]['children'][0]['children'][$i]['children'][0]['tag'] = 'dc:subject';
+			$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['tag'] = 'rdf:Bag';
+			$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['attributes']['xmlns:rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+			$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['children'][0]['tag'] = 'rdf:li';
+			$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['children'][0]['value'] = $value;
+		}
 	}
+	// print_r($xmpArr);
 	$newXMP = write_XMP_array_to_text( $xmpArr );
 	$header_data = put_XMP_text( $header_data, $newXMP );
 	put_jpeg_header_data( $url, $url, $header_data );
@@ -198,12 +222,16 @@ function checkXMP($xmp){
 }
 
 // $value = '3';
-// $url = 'Bilder/Masada.jpg';
-// $url = 'Bilder/output.jpg';
+// $url = 'Bilder/1497863_637766332932353_1505618577_o[1].jpg';
+// $url = 'Bilder/Seal.jpg';
+// $url = 'Bilder/Bilde095.jpg';
+$url = 'Bilder/test.jpg';
+// print_r(get_KeyWord($url));
 // set_Rating($value, $url);
 // del_KeyWord('q', $url);
+// print_r(get_KeyWord($url));
  // add_KeyWord('q', $url);
-
+// print_r(get_KeyWord($url));
 	// $exif_data = get_EXIF_JPEG( $url );
 	
 	// $header_data = get_jpeg_header_data( $url );
@@ -215,11 +243,18 @@ function checkXMP($xmp){
 	
 	// print_r(search_tag($xmpArr, 'xmp:Rating'));
 	// print_r($r);
-	// $header_data = get_jpeg_header_data( $url );
-	// $xmpText = get_XMP_text( $header_data );
-	// $xmpArr = read_XMP_array_from_text( $xmpText );
-	// print_r($xmpText);
+	$header_data = get_jpeg_header_data( $url );
+	$xmpText = get_XMP_text( $header_data );
+	$xmpArr = read_XMP_array_from_text( $xmpText );
+	print_r($xmpArr);
 	
-	// checkXMP('');
+	add_KeyWord('qe', $url);
 	
+	$header_data = get_jpeg_header_data( $url );
+	$xmpText = get_XMP_text( $header_data );
+	$xmpArr = read_XMP_array_from_text( $xmpText );
+	print_r($xmpArr);
+	// print_r(checkXMP($xmpArr));
+	// add_KeyWord('qqq', $url);
+	// print_r(get_KeyWord($url));
 ?>

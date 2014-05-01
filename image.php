@@ -102,9 +102,18 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		$size = getimagesize($path);
 		$format = strtolower(substr($size['mime'], strpos($size['mime'], '/')+1));
 		if($format == 'jpeg'){
-			$tags = getMetaTag_PEL($path, PelTag::XP_KEYWORDS);
-			if (isset($tags)){
-				return $tags;
+			$tags_PEL = getMetaTag_PEL($path, PelTag::XP_KEYWORDS);
+			$tags_XMP = get_KeyWord($path);
+				if(!empty($tags_XMP)){
+					$tags_XMP = implode(';', $tags_XMP);
+				}
+			echo('tags_PEL='.$tags_PEL.'<br>tags_XMP='.$tags_XMP);//------------------------------------------------
+			if (isset($tags_PEL)){
+				if(strcasecmp($tags_XMP, $tags_PEL) != 0){
+					// echo('asasdasdasd');//---------------------------------------------------------------------------
+				}else{
+					return $tags_XMP;
+				}
 			}
 		}
 		return FALSE;
@@ -125,6 +134,7 @@ include_once $Toolkit_Dir . 'EXIF.php';
 			$tags =  $oldTags.";".$newTag;
 		
 		setMetaTag_PEL($path, PelTag::XP_KEYWORDS, $tags);
+		add_KeyWord($newTag, $path);
 	}
 	
 	function del_Tags_exif($path, $delTag){
@@ -139,7 +149,9 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		if(!empty($oldTags)){
 			$tags = implode(";",$oldTags);
 			setMetaTag_PEL($path, PelTag::XP_KEYWORDS, $tags);
+			del_KeyWord($delTag, $path);
 		}else{
+			del_KeyWord($delTag, $path);
 			setMetaTag_PEL($path, PelTag::XP_KEYWORDS, ' ');
 		}
 	}
@@ -413,10 +425,11 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		
 		if($tag = get_Tag_exif($file)){
 			$data['tag'] = explode(';', $tag);
-			$key = array_search(' ', $data['tag']);
-			if ($key !== null){
-				unset($data['tag'][$key]);
-			}
+			// $key = array_search(' ', $data['tag']);
+			// if ($key !== null){
+				// unset($data['tag'][$key]);
+			// }
+			// print_r($data['tag']);
 		}
 		
 		if (file_exists($file)) {
@@ -677,6 +690,117 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		return $xmp;
 	}
 
+	function get_KeyWord($url){
+		$header_data = get_jpeg_header_data( $url );
+		$xmpText = get_XMP_text( $header_data );
+		$xmpArr = read_XMP_array_from_text( $xmpText );
+		$i=0;
+		$keys = array('');
+		if ($r = search_tag($xmpArr, 'dc:subject')){
+			$keyWords = $r['children'][0]['children'];
+			for ($i=0; $i<count($keyWords); $i++){
+				$keys[$i] = $keyWords[$i]['value'];
+			}
+		}
+		return $keys;
+	}
+
+	function add_KeyWord($value, $url){
+		$header_data = get_jpeg_header_data( $url );
+		$xmpText = get_XMP_text( $header_data );
+		$xmpArr = read_XMP_array_from_text( $xmpText );
+			$xmpArr = checkXMP($xmpArr);
+		$i=0;
+		if (!set_key($xmpArr, 'dc:subject', $value)){
+			$i = count($xmpArr[0]['children'][0]['children'][2]['children']);
+			$xmpArr[0]['children'][0]['children'][2]['children'][$i]['tag'] = 'dc:subject';
+			$xmpArr[0]['children'][0]['children'][2]['children'][$i]['children'][0]['tag'] = 'rdf:Bag';
+			$xmpArr[0]['children'][0]['children'][2]['children'][$i]['children'][0]['attributes']['xmlns:rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+			$xmpArr[0]['children'][0]['children'][2]['children'][$i]['children'][0]['children'][0]['tag'] = 'rdf:li';
+			$xmpArr[0]['children'][0]['children'][2]['children'][$i]['children'][0]['children'][0]['value'] = $value;
+		}
+		$newXMP = write_XMP_array_to_text( $xmpArr );
+		$header_data = put_XMP_text( $header_data, $newXMP );
+		put_jpeg_header_data( $url, $url, $header_data );
+	}
+
+	function del_KeyWord($value, $url){
+		$header_data = get_jpeg_header_data( $url );
+		$xmpText = get_XMP_text( $header_data );
+		$xmpArr = read_XMP_array_from_text( $xmpText );
+		$i=0;
+		del_key($xmpArr, $value);
+		$newXMP = write_XMP_array_to_text( $xmpArr );
+		$header_data = put_XMP_text( $header_data, $newXMP );
+		put_jpeg_header_data( $url, $url, $header_data );
+	}
+
+	
+	function set_key(&$arr, $tag, $value){
+		for ($i=0; $i<count($arr); $i++){
+			if(isset($arr[$i]['tag'])){
+				if ($arr[$i]['tag'] == $tag){
+					$keyWords = &$arr[$i]['children'][0]['children'];
+					$j = count($keyWords);
+					$keyWords[$j]['tag'] = 'rdf:li';
+					$keyWords[$j]['value'] = strval($value);
+					return $arr[$i];
+				}else{
+					if (isset($arr[$i]['children'])){
+						$resalt = set_key($arr[$i]['children'], $tag, $value);
+						if ($resalt){
+							return $resalt;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	function del_key(&$arr, $value){
+		$tag = 'dc:subject';
+		for ($i=0; $i<count($arr); $i++){
+			if(isset($arr[$i]['tag'])){
+				if ($arr[$i]['tag'] == $tag){
+					$keyWords = &$arr[$i]['children'][0]['children'];
+					$l = count($keyWords);
+					for ($j=0; $j<$l; $j++){
+						if ($keyWords[$j]['value'] != $value){
+							$new_keyWords[] = array('tag'=>'rdf:li', 'value'=>$keyWords[$j]['value']);
+						}
+					}
+					$keyWords = $new_keyWords;
+					return $arr[$i];
+				}else{
+					if (isset($arr[$i]['children'])){
+						$resalt = del_key($arr[$i]['children'], $value);
+						if ($resalt){
+							return $resalt;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	function set_tag(&$arr, $tag, $value){
+		for ($i=0; $i<count($arr); $i++){
+			if(isset($arr[$i]['tag'])){
+				if ($arr[$i]['tag'] == $tag){
+					$arr[$i]['value']=$value;
+					return $arr[$i];
+				}else{
+					if (isset($arr[$i]['children'])){
+						$resalt = set_tag($arr[$i]['children'], $tag, $value);
+						if ($resalt){
+							return $resalt;
+						}
+					}
+				}
+			}
+		}
+	}
+	
 	function checkImg($imgName){
 		if(preg_match("/\.jp.?g$|\.ti.?f$/i", $imgName))
 		{
