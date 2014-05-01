@@ -64,8 +64,19 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		if($format == 'jpeg'){
 			$exif = read_exif_data_quick($path);
 			if (isset($exif['Comments'])){
-				print_r($exif['Comments']);
 				return $exif['Comments'];
+			}
+		}
+		return FALSE;
+	}
+	
+	function get_Comment_exif_PEL($path){
+		$size = getimagesize($path);
+		$format = strtolower(substr($size['mime'], strpos($size['mime'], '/')+1));
+		if($format == 'jpeg'){
+			$comment = getMetaTag_PEL($path, PelTag::XP_COMMENT);
+			if (isset($comment)){
+				return $comment;
 			}
 		}
 		return FALSE;
@@ -78,6 +89,7 @@ include_once $Toolkit_Dir . 'EXIF.php';
 	}
 	
 	function set_Comment_exif($path, $value){
+		echo($path. $value);
 		setMetaTag_PEL($path, PelTag::XP_COMMENT , $value);
 	}
 	
@@ -87,8 +99,16 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		return db_do_query($query);
 	}
 	
-	function get_Tag_exif(){
-	
+	function get_Tag_exif($path){
+		$size = getimagesize($path);
+		$format = strtolower(substr($size['mime'], strpos($size['mime'], '/')+1));
+		if($format == 'jpeg'){
+			$tags = getMetaTag_PEL($path, PelTag::XP_KEYWORDS);
+			if (isset($tags)){
+				return $tags;
+			}
+		}
+		return FALSE;
 	}
 	
 	function get_Tags_DB($url){
@@ -106,6 +126,18 @@ include_once $Toolkit_Dir . 'EXIF.php';
 	
 	function set_Tags_DB($url){
 		
+	}
+	
+	function get_date_of_shooting_exif_PEL($path){
+		$size = getimagesize($path);
+		$format = strtolower(substr($size['mime'], strpos($size['mime'], '/')+1));
+		if($format == 'jpeg'){
+			$exif = read_exif_data_quick($path);
+			if (isset($exif['DateTimeOriginal'])){
+				return $exif['DateTimeOriginal'];
+			}
+		}
+		return FALSE;
 	}
 	
 	function rotateImage($url, $angle){
@@ -126,11 +158,11 @@ include_once $Toolkit_Dir . 'EXIF.php';
 				$quality = 100;
 			break;
 		}
-		
+		//get metadata---------------------
 		if($format == 'jpeg') 
 			$data = read_exif($url);
 		$rate = get_Rating_exif($url);
-		
+		//---------------------------------
 		$icfunc = "imagecreatefrom" . $format;
 		if (!function_exists($icfunc)) return false;
 		$source = $icfunc($url);
@@ -138,12 +170,11 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		$rotate = imagerotate($source, $angle, 0);
 		$func = 'image'.$format;	//save image function name
 		$func($rotate, $url, $quality);	//save image to url
-		// imagedestroy($rotate);
-		
+		//set metadata---------------------
 		if ($format == 'jpeg') 
 			write_exif_data($url, $data);
 		set_Rating_exif($url, $rate);
-		
+		//---------------------------------
 		$oldWidth = $size[1];
 		$oldHeight = $size[0];
 		$newHeight = 150; //thumb
@@ -175,10 +206,9 @@ include_once $Toolkit_Dir . 'EXIF.php';
 	*/
 	function autoRotateImage($url) { 
 		$angle = getImageOrientation($url);
-		// echo($url.'----'.$angle);
 		if ($angle != 0){
 			rotateImage($url, $angle);
-			setMetaTag_PEL($url, PelTag::ORIENTATION , '0');
+			setMetaTag_PEL($url, PelTag::ORIENTATION , '1');
 			return true;
 		}
 		return false;
@@ -284,8 +314,34 @@ include_once $Toolkit_Dir . 'EXIF.php';
 	function read_exif_data_quick($path) {
 		$tmpfile = getImgPiece($path);
 		return read_exif_data($tmpfile);
-		
 	}
+	
+	// function get_exif_tag($path, $tag){
+		// echo($path. $tag);
+		// $data = new PelDataWindow(file_get_contents($path));
+
+		// if (PelJpeg::isValid($data)) {
+			// $jpeg = new PelJpeg();
+			// $jpeg->load($data);
+			// $app1 = $jpeg->getExif();
+			// if ($app1 == null) {
+				// echo('Skipping %s because no APP1 section was found.'. $path);
+				// continue;
+			// }
+
+			// $tiff = $app1->getTiff();
+		// } elseif (PelTiff::isValid($data)) {
+				// $tiff = new PelTiff($data);
+		// } else {
+			// echo('Unrecognized image format! Skipping.');
+			// continue;
+		// }
+
+		// $ifd0 = $tiff->getIfd();
+		// $entry = $ifd0->getEntry($tag);
+		// $value = $entry->getValue();
+		// return $value;
+	// }
 	
 	function read_exif($path) {
 		$resalt = array('data'=>'', 'type'=>'');
@@ -324,9 +380,6 @@ include_once $Toolkit_Dir . 'EXIF.php';
 			exit(1);
 		}
 		return $resalt;
-		// $jpeg = new PelJpeg($path);
-		// $exif = &$jpeg->getExif();
-		// return $exif;
 	}
 	
 	function write_exif_data($path, $data) {
@@ -460,21 +513,76 @@ include_once $Toolkit_Dir . 'EXIF.php';
 	}
 	
 	function search_tag(&$arr, $tag){
-	for ($i=0; $i<count($arr); $i++){
-		if(isset($arr[$i]['tag'])){
-			if ($arr[$i]['tag'] == $tag){
-				return $arr[$i];
-			}else{
-				if (isset($arr[$i]['children'])){
-					$resalt = &search_tag($arr[$i]['children'], $tag);
-					if ($resalt){
-						return $resalt;
+		for ($i=0; $i<count($arr); $i++){
+			if(isset($arr[$i]['tag'])){
+				if ($arr[$i]['tag'] == $tag){
+					return $arr[$i];
+				}else{
+					if (isset($arr[$i]['children'])){
+						$resalt = &search_tag($arr[$i]['children'], $tag);
+						if ($resalt){
+							return $resalt;
+						}
 					}
 				}
 			}
 		}
 	}
-}
+	
+	function getMetaTag_PEL($input, $tag){
+		ini_set('memory_limit', '124M');
+
+		$data = new PelDataWindow(file_get_contents($input));
+		if (PelJpeg::isValid($data)) {
+			$jpeg = $file = new PelJpeg();
+			$jpeg->load($data);
+			$exif = $jpeg->getExif();
+
+			if ($exif == null) {
+				$exif = new PelExif();
+				$jpeg->setExif($exif);
+				$tiff = new PelTiff();
+				$exif->setTiff($tiff);
+			} else {
+				$tiff = $exif->getTiff();
+			}
+		} elseif (PelTiff::isValid($data)) {
+			$tiff = $file = new PelTiff();
+			$tiff->load($data);
+		} else {
+			PelConvert::bytesToDump($data->getBytes(0, 16));
+			exit(1);
+		}
+		$ifd0 = $tiff->getIfd();
+
+		if ($ifd0 == null) {
+		  $ifd0 = new PelIfd(PelIfd::IFD0);
+		  $tiff->setIfd($ifd0);
+		}
+		
+		$desc = $ifd0->getEntry($tag);
+
+		/* We need to check if the image already had a description stored. */
+		if ($desc == null) {
+			/* The was no description in the image. */
+
+			/* In this case we simply create a new PelEntryAscii object to hold
+			* the description.  The constructor for PelEntryAscii needs to know
+			* the tag and contents of the new entry. */
+			$desc = new PelEntryAscii($tag, '');	//-------------------------------------
+
+			/* This will insert the newly created entry with the description
+			* into the IFD. */
+			$ifd0->addEntry($desc);
+			$file->saveFile($input);
+		} else {
+			/* An old description was found in the image. */
+
+			/* The description is simply updated with the new description. */
+			return $desc->getValue();
+		}
+		return False;
+	}
 	
 	function set_XMP_tag(&$arr, $tag, $value){
 		for ($i=0; $i<count($arr); $i++){

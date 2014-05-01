@@ -29,24 +29,41 @@ include_once('funksjoner.php');
     }
 
 // Insert data in database
-    function db_insert($table, $column, $value)
-    {
+    function db_insert($table, $column, $value){
         global $db_is_connected, $db;
-        if (!$db_is_connected)
-        {
+		if (!$db_is_connected){
+			db_connnect();
+		}
+        if (!$db_is_connected){
             alert_message("Error: Could not connect to database.");
             return FALSE;
 //            exit(alert_message("Error: Could not connect to database."));
-        }elseif(count($column) <> count($value))
-        {
+        }elseif(count($column) <> count($value)){
             alert_message("SQL insert query is incorrect");
             return FALSE;
-        }else
-        {
+        }else{
             $query = "INSERT INTO $table($column) VALUES ('$value');";
             $result = $db->query($query);
-            if ($result)
-            {
+            if ($result){
+                return TRUE;
+            }
+        }
+        return FALSE;
+    }
+	
+	function db_insert_query($query){
+        global $db_is_connected, $db;
+		if (!$db_is_connected){
+			db_connnect();
+		}
+        if (!$db_is_connected){
+            alert_message("Error: Could not connect to database.");
+            return FALSE;
+//            exit(alert_message("Error: Could not connect to database."));
+        }else{
+			// echo($query);
+            $result = $db->query($query);
+            if ($result){
                 return TRUE;
             }
         }

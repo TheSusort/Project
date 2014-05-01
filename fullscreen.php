@@ -40,30 +40,6 @@
                 el.style.display='none';
                 toObj.style.display='inline';
             }
-			
-             // IN PROGRESS
-            // function leftArrowPressed() {
-                // var list = imgList();
-                // var imgLoc = getURLParameter('bilde');
-                // var imgName = imgLoc.split("/");
-                // var place = list.indexOf(imgName[1]);
-                // if (place == 0)place = list.length;
-                // var previous = list[place - 1];
-                
-               // window.location.assign("fullscreen.php?tag=null&bilde=Bilder%2F" + previous);
-                    
-            // }
-            
-            // function rightArrowPressed() {
-                // var list = imgList();
-                // var imgLoc = getURLParameter('bilde');
-                // var imgName = imgLoc.split("/");
-                // var place = list.indexOf(imgName[1]);
-                // var next = list[place + 1];
-                // if (place == list.length)place = 0;
-
-               // window.location.assign("fullscreen.php?tag=null&bilde=Bilder%2F" + next);
-            // }
             
             function imgList() {
                 <?php
@@ -761,11 +737,11 @@
 						{
 							afterTagAdded: function(evt, ui)
 							{
-								window.location.assign("http://localhost/Project/fullscreen.php?tag=" + tag + "&bilde=" + getURLParameter('bilde') + "&leggTilTaggnavn=" + $("#myTags").tagit('tagLabel', ui.tag) + "&slettTaggnavn=null" + total);
+								window.location.assign("?tag=" + tag + "&bilde=" + getURLParameter('bilde') + "&leggTilTaggnavn=" + $("#myTags").tagit('tagLabel', ui.tag) + "&slettTaggnavn=null" + total);
 							},
 							afterTagRemoved: function(evt, ui)
 							{
-								window.location.assign("http://localhost/Project/fullscreen.php?tag=" + tag + "&bilde=" + getURLParameter('bilde') + "&slettTaggnavn=" + $("#myTags").tagit('tagLabel', ui.tag) + "&leggTilTaggnavn=null" + total);
+								window.location.assign("?tag=" + tag + "&bilde=" + getURLParameter('bilde') + "&slettTaggnavn=" + $("#myTags").tagit('tagLabel', ui.tag) + "&leggTilTaggnavn=null" + total);
 							}
 						}
 						);
@@ -855,14 +831,23 @@
                     // <img src= "Rbutton.png"width="40" height="40"></a>';
                
                 ?>
-		<div id="venstreknapp">
-			<img src="img/Tom.png" width="256" height="85%" onmouseover="musOverPilVenstre(this)" onmouseout="musIkkeOver(this)" onclick="prevImg()">
+		<div id="venstreknapp" >
+			<table style="width: 100%; height: 100%; text-align: center;">
+				<tr>
+					<td> <img src="img/Tom.png" width="256" onmouseover="musOverPilVenstre(this)" onmouseout="musIkkeOver(this)" onclick="prevImg()">  </td>
+				</tr>
+			</table>
 		</div>
 		<div id="progress" style="visibility:hidden">
 			<!--img src="img/progress.gif" width="" height="" style="display:initial"-->
 		</div>
 		<div id="hoyreknapp">
-			<img src="img/Tom.png" width="256" height="85%" onmouseover="musOverPilHoyre(this)" onmouseout="musIkkeOver(this)" onclick="nextImg()">
+			<table style="width: 100%; height: 100%; text-align: center;">
+				<tr>
+					<td> <img src="img/Tom.png" width="256" onmouseover="musOverPilHoyre(this)" onmouseout="musIkkeOver(this)" onclick="nextImg()">  </td>
+				</tr>
+			</table>
+			
 		</div>
     </div>
                

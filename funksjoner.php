@@ -60,13 +60,42 @@ $files  = null;                     # List of the files from disk
         }else{
             return FALSE;
         }
-        foreach($result as $rslt)
-        {
-            if (db_insert('file_liste', 'filename', $rslt))
-            {
-                $files_new_str = $files_new_str.'\n\t'.$rslt;
-                createThumbs($big.$rslt, $thumbs.$rslt, 150);
-            }
+        foreach($result as $rslt){
+            // if (db_insert('file_liste', 'filename', $rslt))
+            // {
+			$files_new_str = $files_new_str.'\n\t'.$rslt;
+			$ratateStatus = autoRotateImage($big . $rslt);
+			if (!$ratateStatus){
+				createThumbs($big.$rslt, $thumbs.$rslt, 150);	//lager thumbnail av bilde
+			}
+			if ($GLOBALS['db_is_connected']){
+				$data = get_EXIF($big.$rslt);
+				$query = "INSERT INTO file_liste 
+										(filename, 
+										commentary, 
+										rating, 
+										date_of_addition,
+										date_of_shooting) 
+								VALUES 	('$rslt',
+										'".$data['commentary']."',
+										'".$data['rating']."',
+										'".$data['date_of_addition']."',
+										'".$data['date_of_shooting']."');";
+				if (db_insert_query($query)){
+					if(!empty($data['tag'])){
+						foreach($data['tag'] as $tag){
+							$queryTag = "INSERT INTO tag 
+											(fileid,
+											tags)
+										VALUES
+											((SELECT fileid FROM file_liste WHERE filename='$rslt'),
+											'$tag');";
+							db_insert_query($queryTag);
+						}
+					}
+				}
+			}
+            // }
         }
         if (!empty($result)){
             $files = db_select('file_liste', 'filename', 'ORDER BY rating', 'filename');
@@ -116,28 +145,45 @@ $files  = null;                     # List of the files from disk
 		$file_tmp_name = $_FILES["bildefil"]["tmp_name"];
 		
 		if (!empty($file_tmp_name[0])){
-			foreach ($file_tmp_name as $file)
-			{
+			foreach ($file_tmp_name as $file){
 				if (check_img($file_name[$i])){
 					if (file_exists($big.$file_name[$i])){
-					
 						$files_not_add = $files_not_add.'\n '.$file_name[$i].' File name already exist';
 						$not_add = TRUE;
-					
 					}elseif (!move_uploaded_file($file, $big.$file_name[$i])){
-					
 						$files_not_add = $files_not_add.'\n '.$file_name[$i].' Something went wrong. :-(';
 						$not_add = TRUE;
-					
 					}elseif (check_img($file_name[$i])){
-						autoRotateImage($big . $file_name[$i]);
-						// createThumbs($file_name[$i], $big, $thumbs, 200);	//lager thumbnail av bilde
-					
+						$ratateStatus = autoRotateImage($big . $file_name[$i]);
+						if (!$ratateStatus){
+							createThumbs($big.$file_name[$i], $thumbs.$file_name[$i], 150);	//lager thumbnail av bilde
+						}
 						if ($GLOBALS['db_is_connected']){
-							if (!db_insert('file_liste', 'filename', $file_name[$i])){
-								// alert_message('ERROR. can\'t insert into database.');
-								// return FALSE;
-							};
+							$data = get_EXIF($big.$file_name[$i]);
+							$query = "INSERT INTO file_liste 
+													(filename, 
+													commentary, 
+													rating, 
+													date_of_addition,
+													date_of_shooting) 
+											VALUES 	('$file_name[$i]',
+													'".$data['commentary']."',
+													'".$data['rating']."',
+													'".$data['date_of_addition']."',
+													'".$data['date_of_shooting']."');";
+							if (db_insert_query($query)){
+								if(!empty($data['tag'])){
+									foreach($data['tag'] as $tag){
+										$queryTag = "INSERT INTO tag 
+														(fileid,
+														tags)
+													VALUES
+														((SELECT fileid FROM file_liste WHERE filename='$file_name[$i]'),
+														'$tag');";
+										db_insert_query($queryTag);
+									}
+								}
+							}
 						}
 					}
 				}else{
@@ -151,7 +197,7 @@ $files  = null;                     # List of the files from disk
 			}
 		}
 	}
-
+	
 // Generate HTML cod for gallery. Return sting.
     function VisBilder($files)
     {
@@ -191,7 +237,6 @@ $files  = null;                     # List of the files from disk
 					}
 					$gallery = $gallery. '
 								<td id="bilde" align="center" 
-										onClick = viuwEXIF("'.get_EXIF($big.$file).'") 
 										onDblClick = openFulskr("'.$big.$file.'")>
 									<img src="' . $thumbs . $file . '" />
 								</td>';
@@ -228,7 +273,7 @@ $files  = null;                     # List of the files from disk
 		
 		$tags_str = "<ul class=\"nav\">\n\r";
 		$tags = get_tags($filesList);
-		asort($tags);
+		if(!empty($tags)) asort($tags);
 		
 		if(empty($tagChoosed)){
 			$tags_str = $tags_str."<li><a href=\"index.php\"style='background: #D9DCDC no-repeat;
@@ -353,8 +398,28 @@ $files  = null;                     # List of the files from disk
 // get EXIF data
 	function get_EXIF($file)
 	{
-		// $img_ob = new img($file);
-		// return $img_ob;
+		$data = array(	
+				'rating' =>'',
+				'commentary' =>'',
+				'tag' =>'',
+				'date_of_addition' =>'');
+				
+		$data['rating'] = get_Rating_exif($file);
+		
+		$data['commentary'] = get_Comment_exif_PEL($file);
+		
+		if($tag = get_Tag_exif($file)){
+			$data['tag'] = split(';', $tag);
+		}
+		
+		if (file_exists($file)) {
+			$data['date_of_addition'] = date("Y-m-d H:i:s", filectime($file));
+		}else{$data['date_of_addition'] = date('Y-m-d H:i:s');}
+		
+		$data['date_of_shooting'] = get_date_of_shooting_exif_PEL($file);
+		
+		// print_r($data);//---------------------------------------------------------------------------
+		return $data;
 	}
 	
 // return array of files names from dir.
