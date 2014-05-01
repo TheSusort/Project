@@ -316,32 +316,32 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		return read_exif_data($tmpfile);
 	}
 	
-	// function get_exif_tag($path, $tag){
-		// echo($path. $tag);
-		// $data = new PelDataWindow(file_get_contents($path));
+	function get_exif_tag($path, $tag){
+		echo($path. $tag);
+		$data = new PelDataWindow(file_get_contents($path));
 
-		// if (PelJpeg::isValid($data)) {
-			// $jpeg = new PelJpeg();
-			// $jpeg->load($data);
-			// $app1 = $jpeg->getExif();
-			// if ($app1 == null) {
-				// echo('Skipping %s because no APP1 section was found.'. $path);
-				// continue;
-			// }
+		if (PelJpeg::isValid($data)) {
+			$jpeg = new PelJpeg();
+			$jpeg->load($data);
+			$app1 = $jpeg->getExif();
+			if ($app1 == null) {
+				echo('Skipping %s because no APP1 section was found.'. $path);
+				continue;
+			}
 
-			// $tiff = $app1->getTiff();
-		// } elseif (PelTiff::isValid($data)) {
-				// $tiff = new PelTiff($data);
-		// } else {
-			// echo('Unrecognized image format! Skipping.');
-			// continue;
-		// }
+			$tiff = $app1->getTiff();
+		} elseif (PelTiff::isValid($data)) {
+				$tiff = new PelTiff($data);
+		} else {
+			echo('Unrecognized image format! Skipping.');
+			continue;
+		}
 
-		// $ifd0 = $tiff->getIfd();
-		// $entry = $ifd0->getEntry($tag);
-		// $value = $entry->getValue();
-		// return $value;
-	// }
+		$ifd0 = $tiff->getIfd();
+		$entry = $ifd0->getEntry($tag);
+		$value = $entry->getValue();
+		return $value;
+	}
 	
 	function read_exif($path) {
 		$resalt = array('data'=>'', 'type'=>'');

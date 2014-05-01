@@ -795,11 +795,12 @@
 
             </div>
            
-           </div>
+			</div>
 
-           <div id="fullscreenpic">
-               <div id="picturecontainer">
-          <?php
+			<div id="fullscreenpic">
+				<div id="picturecontainer">
+					
+				<?php
                     if(($_GET['tag'] === "null")) {
                         $files = get_img_list($big);
                     }else {
@@ -820,7 +821,7 @@
                     }
                     else { 
 						$showFile = substr($_GET['bilde'], 7); 
-						echo '<img id = "fullimg" src='.$big.$showFile.'?rand='.rand().' height=85%><br/>'; 
+						echo '<img id = "fullimg" src='.$big.$showFile.'?rand='.rand().' height=85% width=85%><br/>'; 
 					}
                     // if ((isset($_GET['previous'])) or (isset($_GET['next']))) {
                         // echo '<img id = "fullimg" src='.$_GET['bilde'].' height=85% ><br/>'; 
@@ -831,25 +832,26 @@
                     // <img src= "Rbutton.png"width="40" height="40"></a>';
                
                 ?>
-		<div id="venstreknapp" >
-			<table style="width: 100%; height: 100%; text-align: center;">
-				<tr>
-					<td> <img src="img/Tom.png" width="256" onmouseover="musOverPilVenstre(this)" onmouseout="musIkkeOver(this)" onclick="prevImg()">  </td>
-				</tr>
-			</table>
-		</div>
-		<div id="progress" style="visibility:hidden">
-			<!--img src="img/progress.gif" width="" height="" style="display:initial"-->
-		</div>
-		<div id="hoyreknapp">
-			<table style="width: 100%; height: 100%; text-align: center;">
-				<tr>
-					<td> <img src="img/Tom.png" width="256" onmouseover="musOverPilHoyre(this)" onmouseout="musIkkeOver(this)" onclick="nextImg()">  </td>
-				</tr>
-			</table>
-			
-		</div>
-    </div>
+				
+					<div id="venstreknapp" >
+						<table style="width: 100%; height: 100%; text-align: center;">
+							<tr>
+								<td> <img src="img/Tom.png" width="256" onmouseover="musOverPilVenstre(this)" onmouseout="musIkkeOver(this)" onclick="prevImg()">  </td>
+							</tr>
+						</table>
+					</div>
+					<div id="progress" style="visibility:hidden">
+						<!--img src="img/progress.gif" width="" height="" style="display:initial"-->
+					</div>
+					<div id="hoyreknapp">
+						<table style="width: 100%; height: 100%; text-align: center;">
+							<tr>
+								<td> <img src="img/Tom.png" width="256" onmouseover="musOverPilHoyre(this)" onmouseout="musIkkeOver(this)" onclick="nextImg()">  </td>
+							</tr>
+						</table>
+						
+					</div>
+				</div>
                
                <script type="text/javascript">
                     window.onload=function() {
@@ -864,7 +866,7 @@
                         window.close('fs'); 
                     }
                </script>
-		</div>
+			</div>
 		
 		<div id="roterVenstre">
 			<img src="img/RoterVenstre.png" width="48" height="48" onclick="rotate(90)">

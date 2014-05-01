@@ -57,8 +57,4 @@
 	
 	*/
 	
-	$file = 'Bilder/DSC_0007.JPG';
-	
-	$value = get_exif_tag($file, PelTag::DATE_TIME);
-	
 ?>

@@ -254,4 +254,6 @@ display:none;
 
 #picturecontainer {
     height:90vh;
+	text-align: center;
+	margin-top:50px;
 }
