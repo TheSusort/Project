@@ -519,6 +519,7 @@
 						if(xmlhttp.status == 200) {
 							if (xmlhttp.responseText==""){
 								showComment(comment);
+								document.getElementById('idCheck').hidden=false;
 							}else{
 								alert('Rating Error!!! \n'+ xmlhttp.responseText);
 							};
@@ -669,6 +670,7 @@
 					}
 					
 					function commentFocus(element){
+						document.getElementById('idCheck').hidden=true;
 						if (element.value == 'click to comment'){
 							element.value = ''
 						}
@@ -691,7 +693,7 @@
                    <!kommentarfelt>
 				   
         
-<!--form action="" method="post" id="commentForm"-->
+<div id="commentField">
 <input type = "text" name = "comment" id="commentFeild" value="<?php
 	$query2 = "SELECT commentary FROM file_liste WHERE fileid=$result3";
 	$result2 = $db->query($query2);
@@ -712,8 +714,8 @@
 		header("Refresh:0");
 	}
 ?>" onFocus="commentFocus(this)" onBlur="commentBlur(this)" onkeydown="commentEnter(this)" size="27"/>
-
-<!--/form-->
+<img src="img/check.jpg" width="15px" id="idCheck" hidden>
+</div>
                    
                 <!tagfelt>
                

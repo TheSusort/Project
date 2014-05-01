@@ -132,15 +132,16 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		if (!is_array($oldTags)){
 			$oldTags = array($oldTags);
 		}
-		// print_r($oldTags);
 		$key = array_search($delTag, $oldTags);
 		if ($key !== null){
 			unset($oldTags[$key]);
 		}
-		$tags = implode(";",$oldTags);
-		// print_r($oldTags);
-		// echo("<br>".$tags);
-		setMetaTag_PEL($path, PelTag::XP_KEYWORDS, $tags);
+		if(!empty($oldTags)){
+			$tags = implode(";",$oldTags);
+			setMetaTag_PEL($path, PelTag::XP_KEYWORDS, $tags);
+		}else{
+			setMetaTag_PEL($path, PelTag::XP_KEYWORDS, ' ');
+		}
 	}
 	
 	function get_date_of_shooting_exif_PEL($path){
@@ -411,6 +412,10 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		
 		if($tag = get_Tag_exif($file)){
 			$data['tag'] = explode(';', $tag);
+			$key = array_search(' ', $data['tag']);
+			if ($key !== null){
+				unset($data['tag'][$key]);
+			}
 		}
 		
 		if (file_exists($file)) {
