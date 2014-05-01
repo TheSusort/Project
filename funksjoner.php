@@ -395,32 +395,6 @@ $files  = null;                     # List of the files from disk
 		return $files;
 	}
 	
-// get EXIF data
-	function get_EXIF($file)
-	{
-		$data = array(	
-				'rating' =>'',
-				'commentary' =>'',
-				'tag' =>'',
-				'date_of_addition' =>'');
-				
-		$data['rating'] = get_Rating_exif($file);
-		
-		$data['commentary'] = get_Comment_exif_PEL($file);
-		
-		if($tag = get_Tag_exif($file)){
-			$data['tag'] = split(';', $tag);
-		}
-		
-		if (file_exists($file)) {
-			$data['date_of_addition'] = date("Y-m-d H:i:s", filectime($file));
-		}else{$data['date_of_addition'] = date('Y-m-d H:i:s');}
-		
-		$data['date_of_shooting'] = get_date_of_shooting_exif_PEL($file);
-		
-		// print_r($data);//---------------------------------------------------------------------------
-		return $data;
-	}
 	
 // return array of files names from dir.
     function get_File_List($big, $thumbs)

@@ -156,13 +156,17 @@
 		{
 			$query = "INSERT INTO tag(fileid, tags) VALUES ($result3 , '$leggTilTaggnavn')";
 			$result = $db->query($query);
+			
+			set_Tag_exif($_GET['bilde'], $leggTilTaggnavn);
 		}
 		
 		$slettTaggnavn = $_GET["slettTaggnavn"];
 		if ("null" != $slettTaggnavn)
 		{
-			$query = "DELETE FROM tag WHERE tags = '$slettTaggnavn' AND fileid=$result3;";
+			$query = "DELETE FROM tag WHERE tags = '$slettTaggnavn' AND fileid='$result3';";
 			$result = $db->query($query);
+			
+			del_Tags_exif($_GET['bilde'], $slettTaggnavn);
 		}
 	?>
         

@@ -89,7 +89,6 @@ include_once $Toolkit_Dir . 'EXIF.php';
 	}
 	
 	function set_Comment_exif($path, $value){
-		echo($path. $value);
 		setMetaTag_PEL($path, PelTag::XP_COMMENT , $value);
 	}
 	
@@ -120,12 +119,28 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		return $img;
 	}
 	
-	function set_Tag_exif(){
-	
+	function set_Tag_exif($path, $newTag){
+		$oldTags = get_Tag_exif($path);
+
+			$tags =  $oldTags.";".$newTag;
+		
+		setMetaTag_PEL($path, PelTag::XP_KEYWORDS, $tags);
 	}
 	
-	function set_Tags_DB($url){
-		
+	function del_Tags_exif($path, $delTag){
+		$oldTags = explode(';', get_Tag_exif($path));
+		if (!is_array($oldTags)){
+			$oldTags = array($oldTags);
+		}
+		// print_r($oldTags);
+		$key = array_search($delTag, $oldTags);
+		if ($key !== null){
+			unset($oldTags[$key]);
+		}
+		$tags = implode(";",$oldTags);
+		// print_r($oldTags);
+		// echo("<br>".$tags);
+		setMetaTag_PEL($path, PelTag::XP_KEYWORDS, $tags);
 	}
 	
 	function get_date_of_shooting_exif_PEL($path){
@@ -316,32 +331,31 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		return read_exif_data($tmpfile);
 	}
 	
-	function get_exif_tag($path, $tag){
-		echo($path. $tag);
-		$data = new PelDataWindow(file_get_contents($path));
+	// function get_exif_tag($path, $tag){
+		// $data = new PelDataWindow(file_get_contents($path));
 
-		if (PelJpeg::isValid($data)) {
-			$jpeg = new PelJpeg();
-			$jpeg->load($data);
-			$app1 = $jpeg->getExif();
-			if ($app1 == null) {
-				echo('Skipping %s because no APP1 section was found.'. $path);
-				continue;
-			}
+		// if (PelJpeg::isValid($data)) {
+			// $jpeg = new PelJpeg();
+			// $jpeg->load($data);
+			// $app1 = $jpeg->getExif();
+			// if ($app1 == null) {
+				// echo('Skipping %s because no APP1 section was found.'. $path);
+				// continue;
+			// }
 
-			$tiff = $app1->getTiff();
-		} elseif (PelTiff::isValid($data)) {
-				$tiff = new PelTiff($data);
-		} else {
-			echo('Unrecognized image format! Skipping.');
-			continue;
-		}
+			// $tiff = $app1->getTiff();
+		// } elseif (PelTiff::isValid($data)) {
+				// $tiff = new PelTiff($data);
+		// } else {
+			// echo('Unrecognized image format! Skipping.');
+			// continue;
+		// }
 
-		$ifd0 = $tiff->getIfd();
-		$entry = $ifd0->getEntry($tag);
-		$value = $entry->getValue();
-		return $value;
-	}
+		// $ifd0 = $tiff->getIfd();
+		// $entry = $ifd0->getEntry($tag);
+		// $value = $entry->getValue();
+		// return $value;
+	// }
 	
 	function read_exif($path) {
 		$resalt = array('data'=>'', 'type'=>'');
@@ -380,6 +394,33 @@ include_once $Toolkit_Dir . 'EXIF.php';
 			exit(1);
 		}
 		return $resalt;
+	}
+	
+	// get EXIF data
+	function get_EXIF($file)
+	{
+		$data = array(	
+				'rating' =>'',
+				'commentary' =>'',
+				'tag' =>'',
+				'date_of_addition' =>'');
+				
+		$data['rating'] = get_Rating_exif($file);
+		
+		$data['commentary'] = get_Comment_exif_PEL($file);
+		
+		if($tag = get_Tag_exif($file)){
+			$data['tag'] = explode(';', $tag);
+		}
+		
+		if (file_exists($file)) {
+			$data['date_of_addition'] = date("Y-m-d H:i:s", filectime($file));
+		}else{$data['date_of_addition'] = date('Y-m-d H:i:s');}
+		
+		$data['date_of_shooting'] = get_date_of_shooting_exif_PEL($file);
+		
+		// print_r($data);//---------------------------------------------------------------------------
+		return $data;
 	}
 	
 	function write_exif_data($path, $data) {
@@ -487,16 +528,19 @@ include_once $Toolkit_Dir . 'EXIF.php';
 
 		/* We need to check if the image already had a description stored. */
 		if ($desc == null) {
+		
 			/* The was no description in the image. */
 
 			/* In this case we simply create a new PelEntryAscii object to hold
 			* the description.  The constructor for PelEntryAscii needs to know
 			* the tag and contents of the new entry. */
 			$desc = new PelEntryAscii($tag, $value);	//-------------------------------------
-
+			$desc->setValue($value);
+			
 			/* This will insert the newly created entry with the description
 			* into the IFD. */
 			$ifd0->addEntry($desc);
+			
 		} else {
 			/* An old description was found in the image. */
 
