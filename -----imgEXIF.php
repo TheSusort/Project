@@ -222,13 +222,13 @@ function checkXMP($xmp){
 }
 
 // $value = '3';
-// $url = 'Bilder/1497863_637766332932353_1505618577_o[1].jpg';
+$url = 'Bilder/1497863_637766332932353_1505618577_o[1].jpg';
 // $url = 'Bilder/Seal.jpg';
 // $url = 'Bilder/Bilde095.jpg';
-$url = 'Bilder/test.jpg';
+// $url = 'Bilder/test.jpg';
 // print_r(get_KeyWord($url));
 // set_Rating($value, $url);
-// del_KeyWord('q', $url);
+// del_KeyWord('qe', $url);
 // print_r(get_KeyWord($url));
  // add_KeyWord('q', $url);
 // print_r(get_KeyWord($url));
@@ -250,10 +250,10 @@ $url = 'Bilder/test.jpg';
 	
 	add_KeyWord('qe', $url);
 	
-	$header_data = get_jpeg_header_data( $url );
-	$xmpText = get_XMP_text( $header_data );
-	$xmpArr = read_XMP_array_from_text( $xmpText );
-	print_r($xmpArr);
+	// $header_data = get_jpeg_header_data( $url );
+	// $xmpText = get_XMP_text( $header_data );
+	// $xmpArr = read_XMP_array_from_text( $xmpText );
+	// print_r($xmpArr);
 	// print_r(checkXMP($xmpArr));
 	// add_KeyWord('qqq', $url);
 	// print_r(get_KeyWord($url));

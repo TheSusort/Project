@@ -706,23 +706,46 @@ include_once $Toolkit_Dir . 'EXIF.php';
 	}
 
 	function add_KeyWord($value, $url){
-		$header_data = get_jpeg_header_data( $url );
-		$xmpText = get_XMP_text( $header_data );
-		$xmpArr = read_XMP_array_from_text( $xmpText );
-			$xmpArr = checkXMP($xmpArr);
-		$i=0;
-		if (!set_key($xmpArr, 'dc:subject', $value)){
-			$i = count($xmpArr[0]['children'][0]['children'][2]['children']);
-			$xmpArr[0]['children'][0]['children'][2]['children'][$i]['tag'] = 'dc:subject';
-			$xmpArr[0]['children'][0]['children'][2]['children'][$i]['children'][0]['tag'] = 'rdf:Bag';
-			$xmpArr[0]['children'][0]['children'][2]['children'][$i]['children'][0]['attributes']['xmlns:rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
-			$xmpArr[0]['children'][0]['children'][2]['children'][$i]['children'][0]['children'][0]['tag'] = 'rdf:li';
-			$xmpArr[0]['children'][0]['children'][2]['children'][$i]['children'][0]['children'][0]['value'] = $value;
+	$header_data = get_jpeg_header_data( $url );
+	$xmpText = get_XMP_text( $header_data );
+	$xmpArr = read_XMP_array_from_text( $xmpText );
+	// print_r($xmpArr);
+		$xmpArr = checkXMP($xmpArr);
+	$i=0;
+	if (!set_key($xmpArr, 'dc:subject', $value)){
+		$i = count($xmpArr[0]['children'][0]['children']);
+		if(isset($xmpArr[0]['children'][0]['children'][$i]['attributes']['xmlns:dc'])){
+			if(isset($xmpArr[0]['children'][0]['children'][$i]['children'])){
+				$j = count($xmpArr[0]['children'][0]['children'][$i]['children']);
+				$xmpArr[0]['children'][0]['children'][$i]['children'][$j]['tag'] = 'dc:subject';
+				$xmpArr[0]['children'][0]['children'][$i]['children'][$j]['children'][0]['tag'] = 'rdf:Bag';
+				$xmpArr[0]['children'][0]['children'][$i]['children'][$j]['children'][0]['attributes']['xmlns:rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+				$xmpArr[0]['children'][0]['children'][$i]['children'][$j]['children'][0]['children'][0]['tag'] = 'rdf:li';
+				$xmpArr[0]['children'][0]['children'][$i]['children'][$j]['children'][0]['children'][0]['value'] = $value;
+			}else{
+				$xmpArr[0]['children'][0]['children'][$i]['children'] = array();
+
+				$xmpArr[0]['children'][0]['children'][$i]['children'][0]['tag'] = 'dc:subject';
+				$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['tag'] = 'rdf:Bag';
+				$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['attributes']['xmlns:rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+				$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['children'][0]['tag'] = 'rdf:li';
+				$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['children'][0]['value'] = $value;
+			}
+		}else{
+			$xmpArr[0]['children'][0]['children'][$i]['tag']='rdf:Description';
+			$xmpArr[0]['children'][0]['children'][$i]['attributes']['xmlns:dc']='http://purl.org/dc/elements/1.1/';
+			$xmpArr[0]['children'][0]['children'][$i]['children'][0]['tag'] = 'dc:subject';
+			$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['tag'] = 'rdf:Bag';
+			$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['attributes']['xmlns:rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+			$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['children'][0]['tag'] = 'rdf:li';
+			$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['children'][0]['value'] = $value;
 		}
-		$newXMP = write_XMP_array_to_text( $xmpArr );
-		$header_data = put_XMP_text( $header_data, $newXMP );
-		put_jpeg_header_data( $url, $url, $header_data );
 	}
+	// print_r($xmpArr);
+	$newXMP = write_XMP_array_to_text( $xmpArr );
+	$header_data = put_XMP_text( $header_data, $newXMP );
+	put_jpeg_header_data( $url, $url, $header_data );
+}
 
 	function del_KeyWord($value, $url){
 		$header_data = get_jpeg_header_data( $url );
