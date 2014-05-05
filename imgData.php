@@ -13,7 +13,7 @@
 	}
 	
 	//---- set Comment-----
-	if(!empty($_POST['comment']) && !empty($_POST['name'])){
+	if(isset($_POST['comment']) && !empty($_POST['name'])){
 		$result = set_Comment_DB($_POST['name'], $_POST['comment']);
 		if ($result){
 			set_Comment_exif($_POST['name'], $_POST['comment']);

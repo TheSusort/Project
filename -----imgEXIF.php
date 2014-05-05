@@ -12,6 +12,8 @@ include_once $Toolkit_Dir . 'XMP.php';
 include_once $Toolkit_Dir . 'Photoshop_IRB.php';
 include_once $Toolkit_Dir . 'EXIF.php';
 
+include_once 'image.php';
+
 
 // function get_Rating($url){
 	// $header_data = get_jpeg_header_data( $url );
@@ -247,8 +249,8 @@ $url = 'Bilder/1497863_637766332932353_1505618577_o[1].jpg';
 	$xmpText = get_XMP_text( $header_data );
 	$xmpArr = read_XMP_array_from_text( $xmpText );
 	print_r($xmpArr);
-	
-	add_KeyWord('qe', $url);
+	echo(getMetaTag_PEL($path, PelTag::XP_KEYWORDS));
+	// add_KeyWord('qe', $url);
 	
 	// $header_data = get_jpeg_header_data( $url );
 	// $xmpText = get_XMP_text( $header_data );
