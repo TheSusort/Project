@@ -586,9 +586,10 @@ include_once $Toolkit_Dir . 'EXIF.php';
 			* the description.  The constructor for PelEntryAscii needs to know
 			* the tag and contents of the new entry. */
 			
-			$desc = new PelEntryAscii($tag, $value);	//-------------------------------------
-			if ($tag == PelTag::XP_KEYWORDS){
+			if ($tag == PelTag::XP_COMMENT){
 				$desc = new PelEntryWindowsString($tag, $value);//-------------------------------------
+			}else{
+				$desc = new PelEntryAscii($tag, $value);	//-------------------------------------
 			}
 			// $desc->setValue($value);
 		
