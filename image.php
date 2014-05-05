@@ -105,7 +105,7 @@ include_once $Toolkit_Dir . 'EXIF.php';
 	}
 	
 	function set_Comment_exif($path, $value){
-		setMetaTag_PEL($path, PelTag::XP_COMMENT , $value);
+		setMetaTag_PEL($path, PelTag::XP_COMMENT  , $value);
 	}
 	
 	function set_Comment_DB($path, $value){
@@ -572,7 +572,8 @@ include_once $Toolkit_Dir . 'EXIF.php';
 			/* In this case we simply create a new PelEntryAscii object to hold
 			* the description.  The constructor for PelEntryAscii needs to know
 			* the tag and contents of the new entry. */
-			$desc = new PelEntryAscii($tag, $value);	//-------------------------------------
+			// $desc = new PelEntryAscii($tag, $value);	//-------------------------------------
+			$desc = new PelEntryWindowsString($tag, $value);//-------------------------------------
 			// $desc->setValue($value);
 		
 			/* This will insert the newly created entry with the description
@@ -593,7 +594,7 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		 * completes the script. */
 		 
 		$file->saveFile($input);
-		// $file->saveFile("Bilder/test.jpg");
+		// file_put_contents('test.jpg', $file->getBytes());
 		
 		//==TEST=========================================================================
 			// $data1 = new PelDataWindow(file_get_contents($input));
@@ -698,7 +699,7 @@ include_once $Toolkit_Dir . 'EXIF.php';
 	}
 
 	function checkXMP($xmp){
-		if(empty($xmp)){
+		if(empty($xmp) | !isset($xmp[0]['children'][0]['children'])){
 			$xmp = array();
 			$xmp[0]=array(	'tag'=>'x:xmpmeta', 
 							'attributes'=>array('xmlns:x'=>'adobe:ns:meta/'), 
@@ -729,9 +730,11 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		$i=0;
 		$keys = array('');
 		if ($r = search_tag($xmpArr, 'dc:subject')){
-			$keyWords = $r['children'][0]['children'];
-			for ($i=0; $i<count($keyWords); $i++){
-				$keys[$i] = $keyWords[$i]['value'];
+			if (isset($r['children'][0]['children'])){
+				$keyWords = $r['children'][0]['children'];
+				for ($i=0; $i<count($keyWords); $i++){
+					$keys[$i] = $keyWords[$i]['value'];
+				}
 			}
 		}
 		return $keys;
@@ -745,6 +748,7 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		$xmpArr = checkXMP($xmpArr);
 	$i=0;
 	if (!set_key($xmpArr, 'dc:subject', $value)){
+	// print_r($xmpArr);
 		$i = count($xmpArr[0]['children'][0]['children']);
 		if(isset($xmpArr[0]['children'][0]['children'][$i]['attributes']['xmlns:dc'])){
 			if(isset($xmpArr[0]['children'][0]['children'][$i]['children'])){
@@ -819,6 +823,7 @@ include_once $Toolkit_Dir . 'EXIF.php';
 				if ($arr[$i]['tag'] == $tag){
 					$keyWords = &$arr[$i]['children'][0]['children'];
 					$l = count($keyWords);
+					$new_keyWords=array();
 					for ($j=0; $j<$l; $j++){
 						if ($keyWords[$j]['value'] != $value){
 							$new_keyWords[] = array('tag'=>'rdf:li', 'value'=>$keyWords[$j]['value']);
