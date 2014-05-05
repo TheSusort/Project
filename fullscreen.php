@@ -56,6 +56,8 @@
                     
             }
 			
+			
+			
             document.onkeydown = function(evt) {
                 evt = evt || window.event;
                 switch (evt.keyCode) {
@@ -804,8 +806,8 @@
 			</div>
 
 			<div id="fullscreenpic">
-				<div id="picturecontainer">
-					
+				<div id="picturecontainer" >
+							
 				<?php
                     if(($_GET['tag'] === "null")) {
                         $files = get_img_list($big);
@@ -827,7 +829,7 @@
                     }
                     else { 
 						$showFile = substr($_GET['bilde'], 7); 
-						echo '<img id = "fullimg" src='.$big.$showFile.'?rand='.rand().' height=85% width=85%><br/>'; 
+						echo '<img id = "fullimg" src='.$big.$showFile.'?rand='.rand().' onload="loadImage()"><br/>'; 
 					}
                     // if ((isset($_GET['previous'])) or (isset($_GET['next']))) {
                         // echo '<img id = "fullimg" src='.$_GET['bilde'].' height=85% ><br/>'; 
@@ -860,6 +862,19 @@
 				</div>
                
                <script type="text/javascript">
+					function loadImage(){
+						var div = document.getElementById("picturecontainer");
+						// alert(div.offsetWidth+' '+div.offsetHeight);
+						var img = document.getElementById("fullimg");
+						var img_w = img.width;
+						var img_h = img.height;
+						var img_diw_w = div.offsetWidth*0.85;
+						var img_diw_h = div.offsetHeight*0.85;
+						var proportion = img_diw_h/img_h;
+						img.height = img_diw_h;
+						img.width = img_diw_w*proportion;
+					}
+			   
                     window.onload=function() {
                         document.onkeyup = key_event;
                     }
