@@ -8,7 +8,7 @@ include_once 'image.php';
 		$fileName = substr($_POST['name'], 7);
 		$d_s = DIRECTORY_SEPARATOR;
 		$imgPath = 'Bilder' . $d_s . $fileName;
-		RotateImage($imgPath, $angle);
+		rotateImage($imgPath, $angle);
 	}
 
 // Delete image

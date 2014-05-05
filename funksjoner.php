@@ -362,14 +362,14 @@ $files  = null;                     # List of the files from disk
 		if ($rating == '0'){
 			$query = "SELECT filename FROM file_liste
 						$query_1
-						WHERE file_liste.rating IS NULL
+						WHERE file_liste.rating IS NULL or file_liste.rating = '0'
 						$query_2
 						ORDER BY file_liste.filename";
 			$files = db_select_query('filename',$query);
 		}elseif ($rating == '6'){
 			$query = "SELECT filename FROM file_liste
 						$query_1
-						WHERE file_liste.rating IS NOT NULL 
+						WHERE file_liste.rating IS NOT NULL and file_liste.rating != '0'
 						$query_2
 						ORDER BY file_liste.filename";
 			$files = db_select_query('filename', $query);

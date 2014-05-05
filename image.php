@@ -145,13 +145,23 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		return $img;
 	}
 	
-	function set_Tag_exif($path, $newTag){
+	function add_Tag_exif($path, $newTag){
 		$oldTags = get_Tag_exif($path);
 
 			$tags =  $oldTags.";".$newTag;
 		
-		// setMetaTag_PEL($path, PelTag::XP_KEYWORDS, $tags);
 		add_KeyWord($newTag, $path);
+	}
+	
+	function set_Tag_exif($path, $tags){
+		$tags = explode(';',$tags);
+		// print_r($tags);
+		foreach($tags as $tag){
+				if(!empty($tag)){
+					add_KeyWord($tag, $path);
+				}
+			// add_KeyWord($tag, $path);
+		}
 	}
 	
 	function del_Tags_exif($path, $delTag){
@@ -206,7 +216,9 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		//get metadata---------------------
 		if($format == 'jpeg') 
 			$data = read_exif($url);
+		$tags = get_Tag_exif($url);
 		$rate = get_Rating_exif($url);
+		// echo($tags);
 		//---------------------------------
 		$icfunc = "imagecreatefrom" . $format;
 		if (!function_exists($icfunc)) return false;
@@ -218,6 +230,7 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		//set metadata---------------------
 		if ($format == 'jpeg') 
 			write_exif_data($url, $data);
+		set_Tag_exif($url, $tags);
 		set_Rating_exif($url, $rate);
 		//---------------------------------
 		$oldWidth = $size[1];
@@ -572,8 +585,11 @@ include_once $Toolkit_Dir . 'EXIF.php';
 			/* In this case we simply create a new PelEntryAscii object to hold
 			* the description.  The constructor for PelEntryAscii needs to know
 			* the tag and contents of the new entry. */
-			// $desc = new PelEntryAscii($tag, $value);	//-------------------------------------
-			$desc = new PelEntryWindowsString($tag, $value);//-------------------------------------
+			
+			$desc = new PelEntryAscii($tag, $value);	//-------------------------------------
+			if ($tag == PelTag::XP_KEYWORDS){
+				$desc = new PelEntryWindowsString($tag, $value);//-------------------------------------
+			}
 			// $desc->setValue($value);
 		
 			/* This will insert the newly created entry with the description
@@ -741,41 +757,41 @@ include_once $Toolkit_Dir . 'EXIF.php';
 	}
 
 	function add_KeyWord($value, $url){
-	$header_data = get_jpeg_header_data( $url );
-	$xmpText = get_XMP_text( $header_data );
-	$xmpArr = read_XMP_array_from_text( $xmpText );
-	// print_r($xmpArr);
-		$xmpArr = checkXMP($xmpArr);
-	$i=0;
-	if (!set_key($xmpArr, 'dc:subject', $value)){
-	// print_r($xmpArr);
-		$i = count($xmpArr[0]['children'][0]['children']);
-		if(isset($xmpArr[0]['children'][0]['children'][$i]['attributes']['xmlns:dc'])){
-			if(isset($xmpArr[0]['children'][0]['children'][$i]['children'])){
-				$j = count($xmpArr[0]['children'][0]['children'][$i]['children']);
-				$xmpArr[0]['children'][0]['children'][$i]['children'][$j]['tag'] = 'dc:subject';
-				$xmpArr[0]['children'][0]['children'][$i]['children'][$j]['children'][0]['tag'] = 'rdf:Bag';
-				$xmpArr[0]['children'][0]['children'][$i]['children'][$j]['children'][0]['attributes']['xmlns:rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
-				$xmpArr[0]['children'][0]['children'][$i]['children'][$j]['children'][0]['children'][0]['tag'] = 'rdf:li';
-				$xmpArr[0]['children'][0]['children'][$i]['children'][$j]['children'][0]['children'][0]['value'] = $value;
-			}else{
-				$xmpArr[0]['children'][0]['children'][$i]['children'] = array();
+		$header_data = get_jpeg_header_data( $url );
+		$xmpText = get_XMP_text( $header_data );
+		$xmpArr = read_XMP_array_from_text( $xmpText );
+		// print_r($xmpArr);
+			$xmpArr = checkXMP($xmpArr);
+		$i=0;
+		if (!set_key($xmpArr, 'dc:subject', $value)){
+		// print_r($xmpArr);
+			$i = count($xmpArr[0]['children'][0]['children']);
+			if(isset($xmpArr[0]['children'][0]['children'][$i]['attributes']['xmlns:dc'])){
+				if(isset($xmpArr[0]['children'][0]['children'][$i]['children'])){
+					$j = count($xmpArr[0]['children'][0]['children'][$i]['children']);
+					$xmpArr[0]['children'][0]['children'][$i]['children'][$j]['tag'] = 'dc:subject';
+					$xmpArr[0]['children'][0]['children'][$i]['children'][$j]['children'][0]['tag'] = 'rdf:Bag';
+					$xmpArr[0]['children'][0]['children'][$i]['children'][$j]['children'][0]['attributes']['xmlns:rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+					$xmpArr[0]['children'][0]['children'][$i]['children'][$j]['children'][0]['children'][0]['tag'] = 'rdf:li';
+					$xmpArr[0]['children'][0]['children'][$i]['children'][$j]['children'][0]['children'][0]['value'] = $value;
+				}else{
+					$xmpArr[0]['children'][0]['children'][$i]['children'] = array();
 
+					$xmpArr[0]['children'][0]['children'][$i]['children'][0]['tag'] = 'dc:subject';
+					$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['tag'] = 'rdf:Bag';
+					$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['attributes']['xmlns:rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+					$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['children'][0]['tag'] = 'rdf:li';
+					$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['children'][0]['value'] = $value;
+				}
+			}else{
+				$xmpArr[0]['children'][0]['children'][$i]['tag']='rdf:Description';
+				$xmpArr[0]['children'][0]['children'][$i]['attributes']['xmlns:dc']='http://purl.org/dc/elements/1.1/';
 				$xmpArr[0]['children'][0]['children'][$i]['children'][0]['tag'] = 'dc:subject';
 				$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['tag'] = 'rdf:Bag';
 				$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['attributes']['xmlns:rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
 				$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['children'][0]['tag'] = 'rdf:li';
 				$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['children'][0]['value'] = $value;
 			}
-		}else{
-			$xmpArr[0]['children'][0]['children'][$i]['tag']='rdf:Description';
-			$xmpArr[0]['children'][0]['children'][$i]['attributes']['xmlns:dc']='http://purl.org/dc/elements/1.1/';
-			$xmpArr[0]['children'][0]['children'][$i]['children'][0]['tag'] = 'dc:subject';
-			$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['tag'] = 'rdf:Bag';
-			$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['attributes']['xmlns:rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
-			$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['children'][0]['tag'] = 'rdf:li';
-			$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['children'][0]['value'] = $value;
-		}
 	}
 	// print_r($xmpArr);
 	$newXMP = write_XMP_array_to_text( $xmpArr );
