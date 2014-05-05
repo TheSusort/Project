@@ -11,6 +11,9 @@ $files  = null;                     # List of the files from disk
 // Transformation array to string
     function array_to_string($array)
     {
+		if(!is_array($array)){
+			$array = array($array);
+		}
         reset($array);
         $str = current($array);
         while (next($array) <> null)
