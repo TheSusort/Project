@@ -360,7 +360,7 @@ $files  = null;                     # List of the files from disk
 	
     }
 // get images list by tag
-	function get_img_by_tag($tag, $order)
+	function get_img_by_tag($tag, $order='')
 	{
 		// $files = db_select('file_liste', 'filename', 'INNER JOIN tag ON file_liste.fileid = tag.fileid WHERE tag.tags = \''.$tag.'\'', 'filename');
 		$queryOrder = '';
@@ -702,7 +702,7 @@ $files  = null;                     # List of the files from disk
 
 		}
 		
-		function getSerchList($serch, $tag, $rate, $sortering){
+		function getSerchList($serch, $tag, $rate, $sortering=''){
 			$queryTag = '';
 			$queryRate = '';
 			$querySort = '';
