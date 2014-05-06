@@ -28,13 +28,51 @@
 	</script>
 	
 	<script>
+	
+		function empty( mixed_var ) {   // Determine whether a variable is empty
+			return ( mixed_var === "" || mixed_var === 0   || mixed_var === "0" || mixed_var === null  || mixed_var === false  );
+		}
+
+	
 		window.onload=function() {
 			var rate = getURLParameter('ratinginput');
 			setRate(rate);
 			document.getElementById('tag').value = getURLParameter('tag');
 			
-			var sortingArr = getURLParameter('SortingCategory').split("#");
-			document.getElementById("SortingCategory").selectedIndex=sortingArr[0];
+			var getStr = window.location.search.replace( "?", "" );
+			var getArr = getStr.split("&");
+			
+			for (var i = 0; i < getArr.length; ++i) {
+				if(!empty(getArr[i])){
+					var getElements = getArr[i].split("=");
+					if(!empty(getElements[1])){
+					
+						if(getElements[0]!='sortSubmit' & getElements[0]!='SortingCategory'){
+						console.log(i+': '+getElements[0]);
+							var orderForm = document.getElementById('orderForm')
+							var getEl = document.createElement("INPUT");
+							getEl.setAttribute("type", "hidden");
+							getEl.name = getElements[0];
+							getEl.value = getElements[1];
+							orderForm.appendChild(getEl);
+						}
+					}
+				}
+				
+			}
+			
+			
+			if (!empty(getURLParameter('SortingCategory'))) {
+				var sortingArr = getURLParameter('SortingCategory').split("--");
+				document.getElementById("SortingCategory").selectedIndex=sortingArr[0];
+				var searchForm = document.getElementById('ratingForm')
+				var order = document.createElement("INPUT");
+				order.setAttribute("type", "hidden");
+				order.name = 'SortingCategory';
+				order.value = getURLParameter('SortingCategory');
+				searchForm.appendChild(order);
+			}
+			
 		}
 		
 		function setRate(rate){
@@ -213,15 +251,15 @@
         </div>
                     
 		<div id="title">
-			<form action = "" method="get">
+			<form action = "" id='orderForm' method="get">
 				<h1>Web Photo Gallery 
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<select name="SortingCategory" id="SortingCategory">
 						<option selected value="0"> Sorter etter</option>
-						<option value="1#file_liste.filename"> Sort by name </option>
-						<option value="2#file_liste.rating"> Sort by rating</option>
-						<option value="3#file_liste.rating"> Sort by date of addition</option>
-						<option value="4#file_liste.rating"> Sort by date of shooting</option>
+						<option value="1--file_liste.filename"> Sort by name </option>
+						<option value="2--file_liste.rating"> Sort by rating</option>
+						<option value="3--file_liste.date_of_addition"> Sort by date of addition</option>
+						<option value="4--file_liste.date_of_shooting"> Sort by date of shooting</option>
 					</select>
 					<input type="submit" name="sortSubmit" value="Sort">
 				<h1>

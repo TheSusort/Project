@@ -23,7 +23,7 @@ $files  = null;                     # List of the files from disk
         return $str;
     }
 
-// Show message in the new window
+// Show message in the pop-up window
     function alert_message($message)
     {
         echo("
@@ -33,6 +33,14 @@ $files  = null;                     # List of the files from disk
             ");
     }
 
+	function consol_message($message)
+    {
+        echo("
+                <script type=\"text/javascript\">
+                    console.log((\"$message\");
+                </script>
+            ");
+    }
 	// Check for image modification
     function check_img_modification($dir)
     {
@@ -268,7 +276,18 @@ $files  = null;                     # List of the files from disk
 
 // Generate HTML cod for tags list
 	function gen_tags($filesList)
-	{
+	{	
+		$searchData ='';
+		if (isset($_GET['search'])){
+			$searchData .= "&search=".$_GET['search'];
+			$searchData .= "&ratinginput=".$_GET['ratinginput'];
+		}
+		
+		$order ='';
+		if (isset($_GET['SortingCategory'])){
+			$order .= "&SortingCategory=".$_GET['SortingCategory'];
+		}
+		
 		$tagChoosed ='';
 		if(isset($_GET['tag'])){
 			$tagChoosed = $_GET['tag'];
@@ -279,22 +298,22 @@ $files  = null;                     # List of the files from disk
 		if(!empty($tags)) asort($tags);
 		
 		if(empty($tagChoosed)){
-			$tags_str = $tags_str."<li><a href=\"index.php\"style='background: #D9DCDC no-repeat;
+			$tags_str = $tags_str."<li><a href=\"index.php?$order\" style='background: #D9DCDC no-repeat;
 														color: #141818;
 														padding: 7px 15px 7px 30px;'><span>All</span></a></li>\r\n";
 		}else{
-			$tags_str = $tags_str."<li><a href=\"index.php\"><span>All</span></a></li>\r\n";
+			$tags_str = $tags_str."<li><a href=\"index.php?$order\"><span>All</span></a></li>\r\n";
 		}
 		if (!empty($tags)){
 			foreach($tags as $tag)
 			{
 				if ($tag == $tagChoosed){
-					$tags_str = $tags_str."<li><a href=\"?tag=$tag\" style='background: #D9DCDC no-repeat;
+					$tags_str = $tags_str."<li><a href=\"?tag=$tag$searchData$order\" style='background: #D9DCDC no-repeat;
 														color: #141818;
 														padding: 7px 15px 7px 30px;'>
 														<span>".$tag."</span></a></li>\r\n";
 				}else{
-					$tags_str = $tags_str."<li><a href=\"?tag=$tag\"><span>".$tag."</span></a></li>\r\n";
+					$tags_str = $tags_str."<li><a href=\"?tag=$tag$searchData$order\"><span>".$tag."</span></a></li>\r\n";
 				}
 			}
 		}
@@ -330,7 +349,6 @@ $files  = null;                     # List of the files from disk
 			//$sluttTags = array_filter($finalTags);
 			$sluttTags = array_unique($finalTags);
 			
-			 //print_r($sluttTags);
 			
 			return $sluttTags;
 		}else{
@@ -342,49 +360,67 @@ $files  = null;                     # List of the files from disk
 	
     }
 // get images list by tag
-	function get_img_by_tag($tag)
+	function get_img_by_tag($tag, $order)
 	{
 		// $files = db_select('file_liste', 'filename', 'INNER JOIN tag ON file_liste.fileid = tag.fileid WHERE tag.tags = \''.$tag.'\'', 'filename');
+		$queryOrder = '';
+		if (!empty($order)){
+			if ($order == 'filename'){
+				$queryOrder = $order.', ';
+			}else{
+				$queryOrder = $order.' DESC, ';
+			}
+		}
 		
 		$files = db_select_query('filename',"SELECT filename FROM file_liste
 								INNER JOIN tag ON file_liste.fileid = tag.fileid 
 									WHERE tag.tags = '$tag' 
-									ORDER BY file_liste.filename");
+									ORDER BY $queryOrder file_liste.filename");
 		return $files;
 	}
 
 // eksperiment get images list by rating
-	function get_img_by_rating($rating, $tag = false){
+	function get_img_by_rating($rating, $tag = false, $order = ''){
+	
+		$querySort = '';
+		if (!empty($order)){
+			if ($order == 'filename'){
+				$querySort = $order.', ';
+			}else{
+				$querySort = $order.' DESC, ';
+			}
+		};
+			
 		$query_1 = '';
 		$query_2 = '';
 		if ($tag){
 			$query_1 = 'INNER JOIN tag ON file_liste.fileid = tag.fileid';
-			$query_2 = "and (tag.tags = '$tag')";
+			$query_2 = " (tag.tags = '$tag')";
 		}
 		
 		if ($rating == '0'){
 			$query = "SELECT filename FROM file_liste
 						$query_1
 						WHERE file_liste.rating IS NULL or file_liste.rating = '0'
-						$query_2
-						ORDER BY file_liste.filename";
+						and $query_2
+						ORDER BY $querySort file_liste.filename";
 			$files = db_select_query('filename',$query);
 		}elseif ($rating == '6'){
 			$query = "SELECT filename FROM file_liste
 						$query_1
 						WHERE file_liste.rating IS NOT NULL and file_liste.rating != '0'
-						$query_2
-						ORDER BY file_liste.filename";
+						and $query_2
+						ORDER BY $querySort file_liste.filename";
 			$files = db_select_query('filename', $query);
 		}elseif ($rating == '-1'){
 			if(!empty($query_2)){
 				$query = "SELECT filename FROM file_liste
 							$query_1
 							WHERE $query_2
-							ORDER BY file_liste.filename";
+							ORDER BY $querySort file_liste.filename";
 			}else{
 				$query = "SELECT filename FROM file_liste
-							ORDER BY file_liste.filename";
+							ORDER BY $querySort file_liste.filename";
 			}
 			$files = db_select_query('filename', $query );
 		}else{
@@ -392,7 +428,7 @@ $files  = null;                     # List of the files from disk
 						$query_1
 						WHERE file_liste.rating = '$rating'
 						$query_2
-						ORDER BY file_liste.filename";
+						ORDER BY $querySort file_liste.filename";
 			$files = db_select_query('filename', $query);
 		}
 		return $files;
@@ -426,6 +462,24 @@ $files  = null;                     # List of the files from disk
         return $files;
     }
 
+// return array of files names from db.
+    function get_img_list_db($sortering='')
+    {
+		$querySort = '';
+		if (!empty($sortering)){
+			if ($sortering == 'file_liste.filename'){
+				$querySort = $sortering.', ';
+			}else{
+				$querySort = $sortering.' DESC, ';
+			}
+		};
+        $query = "SELECT * FROM file_liste 
+					ORDER BY $querySort file_liste.filename";
+			// echo($query);		
+		$files = db_select_query('filename', $query );
+		return $files;
+    }
+	
 //Sjekke at bildet er en støttet type
 	function check_img($img_name)
 	{
@@ -653,9 +707,13 @@ $files  = null;                     # List of the files from disk
 			$queryRate = '';
 			$querySort = '';
 			if (!empty($sortering)){
-				$querySort = "GROUP BY ".$sortering;
+				if ($sortering == 'filename'){
+					$querySort = $sortering.', ';
+				}else{
+					$querySort = $sortering.' DESC, ';
+				}
 			};
-			if (!empty($tag)){$queryTag .= "and (tag.tags = '$tag')";}
+			
 			if ($rate !== null){
 				if ($rate == 0){
 					$queryRate .= "and (file_liste.rating IS NULL or file_liste.rating='0')";
@@ -667,15 +725,26 @@ $files  = null;                     # List of the files from disk
 					$queryRate .= "and (file_liste.rating = $rate)";
 				}
 			}
-			$query = "SELECT * FROM file_liste 
+			$queryS = "SELECT * FROM file_liste 
 						LEFT JOIN tag ON file_liste.fileid = tag.fileid
 						WHERE (INSTR(file_liste.commentary, '$serch') > 0 or INSTR(tag.tags, '$serch') > 0)
-							$queryTag
 							$queryRate
-						ORDER BY file_liste.filename
-						$querySort";
-			$files = db_select_query('filename', $query);
-			return($files);
+						ORDER BY $querySort file_liste.filename";
+// echo($queryS);
+			$resalt = $filesS = db_select_query('filename', $queryS);
+			if(!is_array($filesS)){$filesS=array($filesS);}
+			
+			if (!empty($tag)){
+				$queryT = "SELECT * FROM file_liste 
+							LEFT JOIN tag ON file_liste.fileid = tag.fileid 
+							WHERE INSTR(tag.tags, '$tag') > 0
+								$queryRate
+							ORDER BY $querySort file_liste.filename";
+				$filesT = db_select_query('filename', $queryT);
+				if(!is_array($filesT)){$filesT=array($filesT);}
+				$resalt = array_intersect($filesS, $filesT);
+			}
+			return($resalt);
 		}
 		
 		// testfunksjon for oppdatering av tagsliste etter søk / ikke i bruk

@@ -18,7 +18,7 @@ include_once('funksjoner.php');
         if (mysqli_connect_errno())
         {
             $db_is_connected = false;
-            alert_message("Error: Could not connect to database. Please try again later.");
+            consol_message("Error: Could not connect to database. Please try again later.");
             return;
 //            exit(alert_message("Error: Could not connect to database. Please try again later."));
         }else{
@@ -35,11 +35,11 @@ include_once('funksjoner.php');
 			db_connnect();
 		}
         if (!$db_is_connected){
-            alert_message("Error: Could not connect to database.");
+            consol_message("Error: Could not connect to database.");
             return FALSE;
 //            exit(alert_message("Error: Could not connect to database."));
         }elseif(count($column) <> count($value)){
-            alert_message("SQL insert query is incorrect");
+            consol_message("SQL insert query is incorrect");
             return FALSE;
         }else{
             $query = "INSERT INTO $table($column) VALUES ('$value');";
@@ -57,7 +57,7 @@ include_once('funksjoner.php');
 			db_connnect();
 		}
         if (!$db_is_connected){
-            alert_message("Error: Could not connect to database.");
+            consol_message("Error: Could not connect to database.");
             return FALSE;
 //            exit(alert_message("Error: Could not connect to database."));
         }else{
@@ -79,7 +79,7 @@ include_once('funksjoner.php');
 		}
 		if (!$db_is_connected)
 		{
-			alert_message("Error: Could not connect to database.");
+			consol_message("Error: Could not connect to database.");
 			return FALSE;
 		}else{
 			$query = "DELETE FROM $table WHERE $column = '$value';";
@@ -103,16 +103,16 @@ include_once('funksjoner.php');
 		}
         if (!$db_is_connected)
         {	
-            alert_message("Error: Could not connect to database.");
+            consol_message("Error: Could not connect to database.");
             return FALSE;
-//            exit(alert_message("Error: Could not connect to database."));
+//            exit(consol_message("Error: Could not connect to database."));
         }else{
             $query = "SELECT $column FROM $table $group;";
 			// echo('<br><hr>db_select<br>'.$query);//-----------------------------------------------------
             $rslt = $db->query($query);
             if (!$rslt)
             {
-                alert_message($query." isn't correct .");
+                consol_message($query." isn't correct .");
                 return FALSE;
             }else{
                 while ($row = $rslt->fetch_assoc()) {
@@ -132,7 +132,7 @@ include_once('funksjoner.php');
 		}
 		$rslt = $db->query($query);
 		if (!$rslt){
-			alert_message($query." isn't correct .");
+			consol_message($query." isn't correct .");
 			return FALSE;
 		}else{
 			// echo('<br><hr>db_select_query<br>'.$query);//---------------------------------------------
@@ -150,7 +150,7 @@ include_once('funksjoner.php');
 			db_connnect();
 		}
         if (!$db_is_connected){	
-            alert_message("Error: Could not connect to database.");
+            consol_message("Error: Could not connect to database.");
             return FALSE;
 //            exit(alert_message("Error: Could not connect ot database."));
         }else{
