@@ -805,8 +805,8 @@
            
 			</div>
 
-			<div id="fullscreenpic">
-				<div id="picturecontainer" >
+			<div id="fullscreenpic" >
+				<div id="picturecontainer"  >
 							
 				<?php
                     if(($_GET['tag'] === "null")) {

@@ -32,6 +32,9 @@
 			var rate = getURLParameter('ratinginput');
 			setRate(rate);
 			document.getElementById('tag').value = getURLParameter('tag');
+			
+			var sortingArr = getURLParameter('SortingCategory').split("#");
+			document.getElementById("SortingCategory").selectedIndex=sortingArr[0];
 		}
 		
 		function setRate(rate){
@@ -210,13 +213,15 @@
         </div>
                     
 		<div id="title">
-			<form action = "" method="post">
+			<form action = "" method="get">
 				<h1>Web Photo Gallery 
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<select name="SortingCategory" id="SortingCategory">
 						<option selected value="0"> Sorter etter</option>
-						<option value="1"> Sort by name </option>
-						<option value="2"> Sort by rating</option>
+						<option value="1#file_liste.filename"> Sort by name </option>
+						<option value="2#file_liste.rating"> Sort by rating</option>
+						<option value="3#file_liste.rating"> Sort by date of addition</option>
+						<option value="4#file_liste.rating"> Sort by date of shooting</option>
 					</select>
 					<input type="submit" name="sortSubmit" value="Sort">
 				<h1>

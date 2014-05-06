@@ -648,15 +648,19 @@ $files  = null;                     # List of the files from disk
 
 		}
 		
-		function getSerchList($serch, $tag, $rate){
+		function getSerchList($serch, $tag, $rate, $sortering){
 			$queryTag = '';
 			$queryRate = '';
+			$querySort = '';
+			if (!empty($sortering)){
+				$querySort = "GROUP BY ".$sortering;
+			};
 			if (!empty($tag)){$queryTag .= "and (tag.tags = '$tag')";}
 			if ($rate !== null){
 				if ($rate == 0){
-					$queryRate .= "and (file_liste.rating IS NULL)";
+					$queryRate .= "and (file_liste.rating IS NULL or file_liste.rating='0')";
 				}elseif ($rate == 6){
-					$queryRate .= "and (file_liste.rating IS NOT NULL)";
+					$queryRate .= "and (file_liste.rating IS NOT NULL and file_liste.rating<>'0') ";
 				}elseif ($rate == -1){
 					$queryRate .= "";
 				}else{
@@ -668,7 +672,8 @@ $files  = null;                     # List of the files from disk
 						WHERE (INSTR(file_liste.commentary, '$serch') > 0 or INSTR(tag.tags, '$serch') > 0)
 							$queryTag
 							$queryRate
-						ORDER BY file_liste.filename";
+						ORDER BY file_liste.filename
+						$querySort";
 			$files = db_select_query('filename', $query);
 			return($files);
 		}
