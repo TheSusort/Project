@@ -14,7 +14,6 @@
 	$cpam = "";
 	// global $failed;
 	// $failed	= FALSE;
-	// print_r($_GET);
     if ($_FILES != null){
         $message = $message.save_file();
     }
@@ -34,7 +33,6 @@
 			$sortering = array('','');
 		}
 	}
-	echo($sortering[1]);
 	if(!empty($_GET['search']) & isset($_GET['ratinginput'])){ // if you file the search fild
 	echo('if you file the search fild');
 		$search = $_GET['search'];
