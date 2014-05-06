@@ -695,8 +695,8 @@
                    <!kommentarfelt>
 				   
         
-<div id="commentField">
-<input type = "text" name = "comment" id="commentFeild" value="<?php
+<div id="commentField" style="text-align:left;padding-left:3px">
+<input type = "text" name = "comment" id="commentFeild" size="30" style="padding-left:3px" value="<?php
 	$query2 = "SELECT commentary FROM file_liste WHERE fileid=$result3";
 	$result2 = $db->query($query2);
 	foreach($result2 as $rr){
