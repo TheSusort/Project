@@ -34,7 +34,6 @@
 		}
 	}
 	if(!empty($_GET['search']) & isset($_GET['ratinginput'])){ // if you file the search fild
-	echo('if you file the search fild');
 		$search = $_GET['search'];
 		$rate = $_GET['ratinginput'];
 		$tag = '';
@@ -43,7 +42,6 @@
 		}
 		$files = getSerchList($search, $tag, $rate, $sortering[1]);
 	}elseif(isset($_GET['ratinginput']) & empty($_GET['search'])){ // if you want to get images only by rating
-	echo('if you want to get images only by rating');
 		$rating = $_GET['ratinginput'];
 		$tag = '';
 		if(isset($_GET['tag'])) $tag = $_GET['tag'];
@@ -51,10 +49,8 @@
 	}else{
 		if (!empty($_GET['tag'])){						// if you choose tag
 			$files = get_img_by_tag($_GET['tag'], $sortering[1]);
-			echo('if you choose tag');
 		}else{											// get all images without mask
 			$files = get_img_list_db($sortering[1]);
-			echo('get all images without mask');
 		}
 	}
 	if (!is_array($files)){$files = array($files);}

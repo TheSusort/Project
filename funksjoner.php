@@ -32,7 +32,7 @@ $files  = null;                     # List of the files from disk
                 </script>
             ");
     }
-
+// Show message in the console
 	function consol_message($message)
     {
         echo("
@@ -501,7 +501,7 @@ $files  = null;                     # List of the files from disk
 				$search = $search1;
 				
 				if (strpos($search,"'") !== false) {
-					alert_message("Invalid character!");
+					consol_message("Invalid character!");
 					return;
 				}
 				
@@ -617,7 +617,7 @@ $files  = null;                     # List of the files from disk
 		
 			if(!$files){
 				global $failed;
-				alert_message('Search yields no results!');
+				consol_message('Search yields no results!');
 				$failed = TRUE;
 				return FALSE;
 			}
