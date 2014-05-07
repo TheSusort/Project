@@ -356,7 +356,8 @@
 					}
 		
 					function empty( mixed_var ) {   // Determine whether a variable is empty
-						return ( mixed_var === "" || mixed_var === 0   || mixed_var === "0" || mixed_var === null || mixed_var == "null" || mixed_var === false  );
+						return ( mixed_var === "" ||  mixed_var === null || mixed_var == "null" || mixed_var === false  );
+						// return ( mixed_var === "" || mixed_var === 0   || mixed_var === "0" || mixed_var === null || mixed_var == "null" || mixed_var === false  );
 					}
 					
 					function prevImg(){

@@ -47,7 +47,8 @@
 	<script>
 	
 		function empty( mixed_var ) {   // Determine whether a variable is empty
-			return ( mixed_var === "" || mixed_var === 0   || mixed_var === "0" || mixed_var === null  || mixed_var === false  );
+			return ( mixed_var === "" ||  mixed_var === null  || mixed_var === false  );
+		//	return ( mixed_var === "" || mixed_var === 0   || mixed_var === "0" || mixed_var === null  || mixed_var === false  );
 		}
 
 	
@@ -270,11 +271,11 @@
 				<h1>Web Photo Gallery 
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<select name="SortingCategory" id="SortingCategory">
-						<option selected value="0"> Sorter etter</option>
-						<option value="1--file_liste.filename"> Sort by name </option>
-						<option value="2--file_liste.rating"> Sort by rating</option>
-						<option value="3--file_liste.date_of_addition"> Sort by date of addition</option>
-						<option value="4--file_liste.date_of_shooting"> Sort by date of shooting</option>
+						<!--option selected value="0"> Sorter etter</option-->
+						<option value="0--file_liste.filename"> Sort by name </option>
+						<option value="1--file_liste.rating"> Sort by rating</option>
+						<option value="2--file_liste.date_of_addition"> Sort by date of addition</option>
+						<option value="3--file_liste.date_of_shooting"> Sort by date of shooting</option>
 					</select>
 					<input type="submit" name="sortSubmit" value="Sort">
 				<h1>
