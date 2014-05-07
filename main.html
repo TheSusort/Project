@@ -19,16 +19,31 @@
             var tag = getURLParameter('tag');
 			var ratinginput = getURLParameter('ratinginput');
 			var search = getURLParameter('search');
-			var order = '';
-			var getOrder = getURLParameter('SortingCategory');
-			if (!empty(getOrder)){
-				var orderArr = getURLParameter('SortingCategory').split("--");
-				if(!empty(orderArr[1])){
-					order = orderArr[1];
-				}
+			var order = getURLParameter('SortingCategory');;
+			//var order = '';
+			//var getOrder = getURLParameter('SortingCategory');
+			//if (!empty(getOrder)){
+				//var orderArr = getURLParameter('SortingCategory').split("--");
+				//if(!empty(orderArr[1])){
+				//	order = orderArr[1];
+				//}
+			//}
+			var extention = '';
+			if(!empty(tag)){
+				extention += "tag="+ tag;
 			}
+			if(!empty(ratinginput)){
+				extention += "&ratinginput=" + ratinginput;
+			}
+			if(!empty(search)){
+				extention += "&search="+ search;
+			}
+			if(!empty(order)){
+				extention += "&SortingCategory="+ order;
+			}
+			
 			var ratingcategory = getURLParameter('ratingcategory');
-			window.open("fullscreen.php?tag="+ tag + "&ratinginput=" + ratinginput + "&search=" + search + "&SortingCategory=" + order +"&bilde="+file + "&leggTilTaggnavn=null&slettTaggnavn=null");
+			window.open("fullscreen.php?"+extention +"&bilde="+file + "&leggTilTaggnavn=null&slettTaggnavn=null");
 		}
 		
         function getURLParameter(name) {

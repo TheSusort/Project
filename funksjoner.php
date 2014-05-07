@@ -393,23 +393,29 @@ $files  = null;                     # List of the files from disk
 			
 		$query_1 = '';
 		$query_2 = '';
-		if ($tag){
+		if (!empty($tag)){
 			$query_1 = 'INNER JOIN tag ON file_liste.fileid = tag.fileid';
 			$query_2 = " (tag.tags = '$tag')";
 		}
 		
 		if ($rating == '0'){	// Unrated
+			if(!empty($query_2)){
+				$query_2 = 'and '.$query_2;
+			}
 			$query = "SELECT filename FROM file_liste
 						$query_1
 						WHERE file_liste.rating IS NULL or file_liste.rating = '0'
-						and $query_2
+						$query_2
 						ORDER BY $querySort file_liste.filename";
 			$files = db_select_query('filename',$query);
 		}elseif ($rating == '6'){	// Rated
+			if(!empty($query_2)){
+				$query_2 = 'and '.$query_2;
+			}
 			$query = "SELECT filename FROM file_liste
 						$query_1
 						WHERE file_liste.rating IS NOT NULL and file_liste.rating != '0'
-						and $query_2
+						$query_2
 						ORDER BY $querySort file_liste.filename";
 			$files = db_select_query('filename', $query);
 		}elseif ($rating == '-1'){	//	All
@@ -461,7 +467,7 @@ $files  = null;                     # List of the files from disk
 				$sortering = array('','');
 			}
 		}
-		
+		// print_r($_GET);
 		if(!empty($_GET['search']) & isset($_GET['ratinginput'])){ // if you file the search fild
 			$search = $_GET['search'];
 			$rate = $_GET['ratinginput'];
