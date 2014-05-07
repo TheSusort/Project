@@ -381,7 +381,8 @@
 						var tag = getURLParameter('tag');
 						var ratinginput = getURLParameter('ratinginput');
 						var search = getURLParameter('search');
-						var order = getURLParameter('SortingCategory');;
+						var order = getURLParameter('SortingCategory');
+			
 						
 						var extention = '';
 						if(!empty(tag)){
@@ -399,7 +400,7 @@
 						var length = fileNames.length;
 						var next = (corImg+1)%length;
 						var newpic = fileNames[next];
-						window.location.assign("?tag=" + tag + "&bilde=Bilder/" + newpic + "&leggTilTaggnavn=null" + "&slettTaggnavn=null" + extention);
+						window.location.assign("?&bilde=Bilder/" + newpic + "&leggTilTaggnavn=null" + "&slettTaggnavn=null" + extention);
 						// var hiddenNextImg = new Image();
 						// hiddenNextImg.src = 'Bilder/'+fileNames[next]+'?rand='+Math.random();
 						// var fullimg = document.getElementById('fullimg');
@@ -410,15 +411,15 @@
 					}
 		
 					function empty( mixed_var ) {   // Determine whether a variable is empty
-						return ( mixed_var === "" || mixed_var === 0   || mixed_var === "0" || mixed_var === null  || mixed_var === 'null'  || mixed_var === false  );
+						return ( mixed_var === "" || mixed_var === 0   || mixed_var === "0" || mixed_var === null || mixed_var == "null" || mixed_var === false  );
 					}
-		
+					
 					function prevImg(){
 					
 						var tag = getURLParameter('tag');
 						var ratinginput = getURLParameter('ratinginput');
 						var search = getURLParameter('search');
-						var order = getURLParameter('SortingCategory');;
+						var order = getURLParameter('SortingCategory');
 						
 						var extention = '';
 						if(!empty(tag)){
