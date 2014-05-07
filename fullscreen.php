@@ -23,45 +23,46 @@
 
         <!javascript kommentarboks>
         <script type="text/javascript">
-            function exchange(el)
-			{
-                var ie=document.all&&!document.getElementById? document.all : 0;
-                var toObjId=/b$/.test(el.id)? el.id.replace(/b$/,'') : el.id+'b';
-                var toObj=ie? ie[toObjId] : document.getElementById(toObjId);
-                if(/b$/.test(el.id))
-                    toObj.innerHTML=el.value;
-                else{
-                    toObj.style.width=200+'px';
-                    toObj.value=el.innerHTML;
-                }
-                el.style.display='none';
-                toObj.style.display='inline';
-            }
+            // function exchange(el)
+			// {
+                // var ie=document.all&&!document.getElementById? document.all : 0;
+                // var toObjId=/b$/.test(el.id)? el.id.replace(/b$/,'') : el.id+'b';
+                // var toObj=ie? ie[toObjId] : document.getElementById(toObjId);
+                // if(/b$/.test(el.id))
+                    // toObj.innerHTML=el.value;
+                // else{
+                    // toObj.style.width=200+'px';
+                    // toObj.value=el.innerHTML;
+                // }
+                // el.style.display='none';
+                // toObj.style.display='inline';
+            // }
             
-            function imgList() {
-                <?php
-                    // include_once("funksjoner.php");
-                    $files = get_img_list($big);
+            // function imgList() {
+                // <?php
+                    // $files = get_img_list($big);
+					// $files = get_imgs();
                     
-                    $number = count($files);
-                    $key = array_search(basename($_GET['bilde']), $files);
-                ?>
-                var imgList = <?php 
-                                echo json_encode($files);
-                                ?>;
-                return imgList;
+                    // $number = count($files);
+                    // $key = array_search(basename($_GET['bilde']), $files);
+                // ?>
+                // var imgList = <?php 
+                                // echo json_encode($files);
+                                // ?>;
+								// console.log(imgList);
+                // return imgList;
                     
-            }
+            // }
 			
             document.onkeydown = function(evt) {
                 evt = evt || window.event;
                 switch (evt.keyCode) {
                     case 37:
-                        // leftArrowPressed();
+                        // leftArrowPressed
 						prevImg();
                         break;
                     case 39:
-                        // rightArrowPressed();
+                        // rightArrowPressed
 						nextImg();
                         break;
                 }
@@ -69,8 +70,8 @@
             
             function getURLParameter(name) {
                 return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
-		}
-// PROGRESS
+			}
+
         </script>
 		
 		<script type="text/javascript">
@@ -296,7 +297,8 @@
 					   for(var i=0; i<__GET.length; i++) { 
 						  var getVar = __GET[i].split("="); 
 						  $_GET[getVar[0]] = typeof(getVar[1])=="undefined" ? "" : getVar[1]; 
-					   } 
+					   }
+					   console.log($_GET);
 					   return $_GET; 
 					} 
 
@@ -344,8 +346,13 @@
 					}
 					
 					function getImgList(){
-						var str = "<?php   echo($imgListStr) ?>";
-						var imgList = str.split(', ')
+						// var str = "<?php   echo($imgListStr) ?>";
+						// var imgList = str.split(', ')
+						var imgList = <?php  
+							$files = get_imgs();
+							echo json_encode($files);
+						?>;
+						console.log(imgList);
 						return imgList;
 					}
 				
@@ -726,25 +733,32 @@
 																		
 						var sletteTagHendelse = $('#myTags');
 						
+						// var ratinginput = getURLParameter('ratinginput');
+						// var search = getURLParameter('search');
+						// var ratingcategory = getURLParameter('ratingcategory');
+						// var tag = getURLParameter('tag');
+						// var total = "&ratinginput=" + ratinginput + "&search=" + search + "&ratingcategory=" + ratingcategory;
+						
+						// if(ratingcategory=='null'){
+							// var total="";
+						// }
+			// "?tag="+ tag + "&ratinginput=" + ratinginput + "&search=" + search + "&SortingCategory=" + order +"&bilde="+file + "&leggTilTaggnavn=null&slettTaggnavn=null"
+						var tag = getURLParameter('tag');
 						var ratinginput = getURLParameter('ratinginput');
 						var search = getURLParameter('search');
-						var ratingcategory = getURLParameter('ratingcategory');
-						var tag = getURLParameter('tag');
-						var total = "&ratinginput=" + ratinginput + "&search=" + search + "&ratingcategory=" + ratingcategory;
-						
-						if(ratingcategory=='null'){
-							var total="";
-						}
-	
+						var order = getURLParameter('SortingCategory');
+						var img = getURLParameter('bilde');
+						var extension = '';
+						extension += '&tag=' + tag + '&ratinginput=' + ratinginput + '&search=' + search + '&SortingCategory=' + order;
 						sletteTagHendelse.tagit(
 						{
 							afterTagAdded: function(evt, ui)
 							{
-								window.location.assign("?tag=" + tag + "&bilde=" + getURLParameter('bilde') + "&leggTilTaggnavn=" + $("#myTags").tagit('tagLabel', ui.tag) + "&slettTaggnavn=null" + total);
+								window.location.assign("?bilde=" + img + extension + "&leggTilTaggnavn=" + $("#myTags").tagit('tagLabel', ui.tag) + "&slettTaggnavn=null");
 							},
 							afterTagRemoved: function(evt, ui)
 							{
-								window.location.assign("?tag=" + tag + "&bilde=" + getURLParameter('bilde') + "&slettTaggnavn=" + $("#myTags").tagit('tagLabel', ui.tag) + "&leggTilTaggnavn=null" + total);
+								window.location.assign("?bilde=" + img + extension + "&slettTaggnavn=" + $("#myTags").tagit('tagLabel', ui.tag) + "&leggTilTaggnavn=null");
 							}
 						}
 						);
@@ -803,36 +817,13 @@
 			<div id="fullscreenpic" >
 				<div id="picturecontainer"  >
 							
-				<?php
-                    if(($_GET['tag'] === "null")) {
-                        $files = get_img_list($big);
-                    }else {
-                        $files = get_img_by_tag($_GET['tag']);
-                    }                
-                    
-                    $number = count($files);
-                    $key = array_search(basename($_GET['bilde']), $files);
+				<?php               
+                    // $files = get_imgs();
+                    // $number = count($files);
+                    // $key = array_search(basename($_GET['bilde']), $files);
 
-                    
-                    if (isset($_GET['previous'])){
-                        if ($key == 0) $key = $number;
-                        $showFile = $files[$key - 1];
-                    }
-                    else if (isset($_GET['next'])){
-                        if($key == $number-1) $key = -1;
-                        $showFile = $files[$key + 1];
-                    }
-                    else { 
-						$showFile = substr($_GET['bilde'], 7); 
-						echo '<img id = "fullimg" src='.$big.$showFile.'?rand='.rand().' onload="loadImage()"><br/>'; 
-					}
-                    // if ((isset($_GET['previous'])) or (isset($_GET['next']))) {
-                        // echo '<img id = "fullimg" src='.$_GET['bilde'].' height=85% ><br/>'; 
-                    // }
-                    // echo '<a href="?previous=1&amp;tag='.$_GET['tag'].'&amp;bilde='.urlencode($big.$showFile).'">
-                    // <img src= "Lbutton.png"width="40" height="40"></a>';
-                    // echo '<a href="?next=1&amp;tag='.$_GET['tag'].'&amp;bilde='.urlencode($big.$showFile).'">
-                    // <img src= "Rbutton.png"width="40" height="40"></a>';
+					$showFile = $_GET['bilde']; 
+					echo '<img id="fullimg" src='.$showFile.'?rand='.rand().' onload="loadImage()"><br/>'; 
                
                 ?>
 				
