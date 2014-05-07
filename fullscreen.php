@@ -53,8 +53,6 @@
                     
             }
 			
-			
-			
             document.onkeydown = function(evt) {
                 evt = evt || window.event;
                 switch (evt.keyCode) {

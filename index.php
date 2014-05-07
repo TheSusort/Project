@@ -41,13 +41,13 @@
 			$tag = $_GET['tag'];
 		}
 		$files = getSerchList($search, $tag, $rate, $sortering[1]);
-	}elseif(isset($_GET['ratinginput']) & empty($_GET['search'])){ // if you want to get images only by rating
+	}elseif(isset($_GET['ratinginput']) & empty($_GET['search'])){ // if you want to get images by rating
 		$rating = $_GET['ratinginput'];
 		$tag = '';
 		if(isset($_GET['tag'])) $tag = $_GET['tag'];
 		$files = get_img_by_rating($rating, $tag, $sortering[1]);
 	}else{
-		if (!empty($_GET['tag'])){						// if you choose tag
+		if (!empty($_GET['tag'])){						// if you choose only tag
 			$files = get_img_by_tag($_GET['tag'], $sortering[1]);
 		}else{											// get all images without mask
 			$files = get_img_list_db($sortering[1]);

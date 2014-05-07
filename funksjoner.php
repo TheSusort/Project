@@ -398,21 +398,21 @@ $files  = null;                     # List of the files from disk
 			$query_2 = " (tag.tags = '$tag')";
 		}
 		
-		if ($rating == '0'){
+		if ($rating == '0'){	// Unrated
 			$query = "SELECT filename FROM file_liste
 						$query_1
 						WHERE file_liste.rating IS NULL or file_liste.rating = '0'
 						and $query_2
 						ORDER BY $querySort file_liste.filename";
 			$files = db_select_query('filename',$query);
-		}elseif ($rating == '6'){
+		}elseif ($rating == '6'){	// Rated
 			$query = "SELECT filename FROM file_liste
 						$query_1
 						WHERE file_liste.rating IS NOT NULL and file_liste.rating != '0'
 						and $query_2
 						ORDER BY $querySort file_liste.filename";
 			$files = db_select_query('filename', $query);
-		}elseif ($rating == '-1'){
+		}elseif ($rating == '-1'){	//	All
 			if(!empty($query_2)){
 				$query = "SELECT filename FROM file_liste
 							$query_1
@@ -424,6 +424,9 @@ $files  = null;                     # List of the files from disk
 			}
 			$files = db_select_query('filename', $query );
 		}else{
+			if(!empty($query_2)){
+				$query_2 = 'and '.$query_2;
+			}
 			$query = "SELECT filename FROM file_liste
 						$query_1
 						WHERE file_liste.rating = '$rating'
