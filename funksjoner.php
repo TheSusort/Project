@@ -352,7 +352,7 @@ $files  = null;                     # List of the files from disk
 		// $files = db_select('file_liste', 'filename', 'INNER JOIN tag ON file_liste.fileid = tag.fileid WHERE tag.tags = \''.$tag.'\'', 'filename');
 		$queryOrder = '';
 		if (!empty($order)){
-			if ($order == 'filename'){
+			if ($order == 'file_liste.filename'){
 				$queryOrder = $order.', ';
 			}else{
 				$queryOrder = $order.' DESC, ';
@@ -371,7 +371,7 @@ $files  = null;                     # List of the files from disk
 	
 		$querySort = '';
 		if (!empty($order)){
-			if ($order == 'filename'){
+			if ($order == 'file_liste.filename'){
 				$querySort = $order.', ';
 			}else{
 				$querySort = $order.' DESC, ';
@@ -738,7 +738,7 @@ $files  = null;                     # List of the files from disk
 			$queryRate = '';
 			$querySort = '';
 			if (!empty($sortering)){
-				if ($sortering == 'filename'){
+				if ($sortering == 'file_liste.filename'){
 					$querySort = $sortering.', ';
 				}else{
 					$querySort = $sortering.' DESC, ';
