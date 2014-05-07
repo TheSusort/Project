@@ -13,9 +13,6 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js"    type="text/javascript" charset="utf-8"></script>
         <script src="js/tag-it.js" type="text/javascript" charset="utf-8"></script>
 		
-		<script type="text/javascript" src="exif-js-master/binaryajax.js"></script>
-		<script type="text/javascript" src="exif-js-master/exif.js"></script>
-		
 		<?php
 			include_once("mysql.php");
 			include_once("funksjoner.php");
@@ -103,30 +100,30 @@
     	
 		global $imgListStr;
 		if (empty($_GET['tag']) || $_GET['tag']=='null'){
-		//	$imgList = db_select('file_liste', 'filename', '', 'filename');//test
-			
-		// ALERT TESTZONE FOR IMAGE-SCROLL BASED ON SEARCH RESULTS
-			
-		$ratinginput = 'null';
-		$search = 'null';
-		$ratingcategory = 'null';
+			//	$imgList = db_select('file_liste', 'filename', '', 'filename');//test
+				
+			// ALERT TESTZONE FOR IMAGE-SCROLL BASED ON SEARCH RESULTS
+				
+			$ratinginput = 'null';
+			$search = 'null';
+			$ratingcategory = 'null';
 
-		if(!empty($_GET['ratinginput'])){$ratinginput = $_GET['ratinginput'];}
-		if(!empty($_GET['search'])){$search = $_GET['search'];}
-		if(!empty($_GET['ratingcategory'])){$ratingcategory = $_GET['ratingcategory'];}
-	
-		if($ratinginput == 'null'){$ratinginput = "";}
-		if($search == 'null'){$search = "";}
-		if($ratingcategory == 'null'){$ratingcategory = "";}
-	
-		if(!$ratingcategory==""){
-			$imgList = get_search_list($ratinginput, $search, $ratingcategory);
-		}
-		else{
-			$imgList = db_select('file_liste', 'filename', '', 'filename');
-		}
+			if(!empty($_GET['ratinginput'])){$ratinginput = $_GET['ratinginput'];}
+			if(!empty($_GET['search'])){$search = $_GET['search'];}
+			if(!empty($_GET['ratingcategory'])){$ratingcategory = $_GET['ratingcategory'];}
 		
-		// TESTZONE END
+			if($ratinginput == 'null'){$ratinginput = "";}
+			if($search == 'null'){$search = "";}
+			if($ratingcategory == 'null'){$ratingcategory = "";}
+		
+			if(!$ratingcategory==""){
+				$imgList = get_search_list($ratinginput, $search, $ratingcategory);
+			}
+			else{
+				$imgList = db_select('file_liste', 'filename', '', 'filename');
+			}
+			
+			// TESTZONE END
 		
 		}else{
 			$group = "inner join tag on file_liste.fileid = tag.fileid where tag.tags = '".$_GET['tag']."'";
@@ -870,9 +867,15 @@
 						var img_h = img.height;
 						var img_diw_w = div.offsetWidth*0.85;
 						var img_diw_h = div.offsetHeight*0.85;
-						var proportion = img_diw_h/img_h;
-						img.height = img_diw_h;
-						img.width = img_diw_w*proportion;
+						if (img_h >= img_w){
+							var proportion = img_diw_h/img_h;
+							img.height = img_diw_h;
+							img.width = img_w*proportion;
+						}else{
+							var proportion = img_diw_h/img_h;
+							img.width = img_diw_w;
+							img.height = img_h*proportion;
+						}
 					}
 			   
                     window.onload=function() {
