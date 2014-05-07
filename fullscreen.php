@@ -18,42 +18,12 @@
 			include_once("funksjoner.php");
 			db_connnect();
 			
-			ob_start();//???????????????????????????
+			ob_start();
 		?>
 
         <!javascript kommentarboks>
         <script type="text/javascript">
-            // function exchange(el)
-			// {
-                // var ie=document.all&&!document.getElementById? document.all : 0;
-                // var toObjId=/b$/.test(el.id)? el.id.replace(/b$/,'') : el.id+'b';
-                // var toObj=ie? ie[toObjId] : document.getElementById(toObjId);
-                // if(/b$/.test(el.id))
-                    // toObj.innerHTML=el.value;
-                // else{
-                    // toObj.style.width=200+'px';
-                    // toObj.value=el.innerHTML;
-                // }
-                // el.style.display='none';
-                // toObj.style.display='inline';
-            // }
-            
-            // function imgList() {
-                // <?php
-                    // $files = get_img_list($big);
-					// $files = get_imgs();
-                    
-                    // $number = count($files);
-                    // $key = array_search(basename($_GET['bilde']), $files);
-                // ?>
-                // var imgList = <?php 
-                                // echo json_encode($files);
-                                // ?>;
-								// console.log(imgList);
-                // return imgList;
-                    
-            // }
-			
+  		
             document.onkeydown = function(evt) {
                 evt = evt || window.event;
                 switch (evt.keyCode) {
@@ -99,9 +69,6 @@
     	
 		global $imgListStr;
 		if (empty($_GET['tag']) || $_GET['tag']=='null'){
-			//	$imgList = db_select('file_liste', 'filename', '', 'filename');//test
-				
-			// ALERT TESTZONE FOR IMAGE-SCROLL BASED ON SEARCH RESULTS
 				
 			$ratinginput = 'null';
 			$search = 'null';
@@ -121,8 +88,6 @@
 			else{
 				$imgList = db_select('file_liste', 'filename', '', 'filename');
 			}
-			
-			// TESTZONE END
 		
 		}else{
 			$group = "inner join tag on file_liste.fileid = tag.fileid where tag.tags = '".$_GET['tag']."'";
@@ -133,8 +98,6 @@
 	global $currentImage;
 	global $result3;
 	$currentImage = substr($_GET['bilde'],7);
-	
-	//$result3 = getImgDetails($currentImage);
 	
 			$query1 = "SELECT fileid FROM file_liste WHERE filename='$currentImage'";
 					$result1 = $db->query($query1);
@@ -346,8 +309,6 @@
 					}
 					
 					function getImgList(){
-						// var str = "<?php   echo($imgListStr) ?>";
-						// var imgList = str.split(', ')
 						var imgList = <?php  
 							$files = get_imgs();
 							echo (json_encode($files));
@@ -369,15 +330,6 @@
 					}
 			
 					function nextImg(){
-						// var ratinginput = getURLParameter('ratinginput');
-						// var search = getURLParameter('search');
-						// var ratingcategory = getURLParameter('ratingcategory');
-						// var tag = getURLParameter('tag');
-						// var total = "&ratinginput=" + ratinginput + "&search=" + search + "&ratingcategory=" + ratingcategory;
-						
-						// if(ratingcategory=='null'){
-							// var total="";
-						// }
 						var tag = getURLParameter('tag');
 						var ratinginput = getURLParameter('ratinginput');
 						var search = getURLParameter('search');
@@ -401,13 +353,6 @@
 						var next = (corImg+1)%length;
 						var newpic = fileNames[next];
 						window.location.assign("?&bilde=Bilder/" + newpic + "&leggTilTaggnavn=null" + "&slettTaggnavn=null" + extention);
-						// var hiddenNextImg = new Image();
-						// hiddenNextImg.src = 'Bilder/'+fileNames[next]+'?rand='+Math.random();
-						// var fullimg = document.getElementById('fullimg');
-						// fullimg.src = hiddenNextImg.src;
-						
-						// corImg = next;
-						// showData();
 					}
 		
 					function empty( mixed_var ) {   // Determine whether a variable is empty
@@ -443,15 +388,6 @@
 						var newpic = fileNames[prev];
 						window.location.assign("?bilde=Bilder/" + newpic + "&leggTilTaggnavn=null" + "&slettTaggnavn=null" + extention);
 						
-						// var hiddenNextImg = new Image();
-						// hiddenNextImg.src = 'Bilder/'+fileNames[prev]+'?rand='+Math.random();
-						
-						// var fullimg = document.getElementById('fullimg');
-						// fullimg.src = hiddenNextImg.src;
-						
-						// corImg = prev;
-						
-						// showData();
 					}
 			
 					function showData(){
@@ -460,7 +396,6 @@
 						showComment(imgData[1]);
 						showTags(imgData[2]);
 						document.getElementById('nameStr').innerHTML = fileNames[corImg];
-						//location.reload(true);
 					}
 				
 					//---- checks the string by template(rate: [1-5]#comment: STRING#tags: STRING,STRING,STRING;)
@@ -748,7 +683,6 @@
 		$svaret = $_POST['comment'];
 		$query = "UPDATE file_liste SET commentary='$svaret' WHERE fileid=$result3";
 		$result = $db->query($query);
-		//echo '<meta http-equiv="refresh" content="0">';
 		header("Refresh:0");
 	}
 ?>" onFocus="commentFocus(this)" onBlur="commentBlur(this)" onkeydown="commentEnter(this)" size="27"/>
@@ -766,24 +700,6 @@
 						});
 																		
 						var sletteTagHendelse = $('#myTags');
-						
-						// var ratinginput = getURLParameter('ratinginput');
-						// var search = getURLParameter('search');
-						// var ratingcategory = getURLParameter('ratingcategory');
-						// var tag = getURLParameter('tag');
-						// var total = "&ratinginput=" + ratinginput + "&search=" + search + "&ratingcategory=" + ratingcategory;
-						
-						// if(ratingcategory=='null'){
-							// var total="";
-						// }
-			// "?tag="+ tag + "&ratinginput=" + ratinginput + "&search=" + search + "&SortingCategory=" + order +"&bilde="+file + "&leggTilTaggnavn=null&slettTaggnavn=null"
-						// var tag = getURLParameter('tag');
-						// var ratinginput = getURLParameter('ratinginput');
-						// var search = getURLParameter('search');
-						// var order = getURLParameter('SortingCategory');
-						// var img = getURLParameter('bilde');
-						// var extension = '';
-						// extension += '&tag=' + tag + '&ratinginput=' + ratinginput + '&search=' + search + '&SortingCategory=' + order;
 						
 						var img = getURLParameter('bilde');
 						var tag = getURLParameter('tag');
@@ -873,9 +789,6 @@
 				<div id="picturecontainer"  >
 							
 				<?php               
-                    // $files = get_imgs();
-                    // $number = count($files);
-                    // $key = array_search(basename($_GET['bilde']), $files);
 
 					$showFile = $_GET['bilde']; 
 					echo '<img id="fullimg" src='.$showFile.'?rand='.rand().' onload="loadImage()"><br/>'; 
@@ -890,7 +803,6 @@
 						</table>
 					</div>
 					<div id="progress" style="visibility:hidden">
-						<!--img src="img/progress.gif" width="" height="" style="display:initial"-->
 					</div>
 					<div id="hoyreknapp">
 						<table style="width: 100%; height: 100%; text-align: center;">
@@ -905,7 +817,6 @@
                <script type="text/javascript">
 					function loadImage(){
 						var div = document.getElementById("picturecontainer");
-						// alert(div.offsetWidth+' '+div.offsetHeight);
 						var img = document.getElementById("fullimg");
 						var img_w = img.width;
 						var img_h = img.height;

@@ -118,20 +118,11 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		$size = getimagesize($path);
 		$format = strtolower(substr($size['mime'], strpos($size['mime'], '/')+1));
 		if($format == 'jpeg'){
-			// $tags_PEL = getMetaTag_PEL($path, PelTag::XP_KEYWORDS);
 			$tags_XMP = get_KeyWord($path);
 				if(!empty($tags_XMP)){
 					$tags_XMP = implode(';', $tags_XMP);
 				}
 			return $tags_XMP;
-			// echo('tags_PEL='.$tags_PEL.'<br>tags_XMP='.$tags_XMP);//------------------------------------------------
-			// if (isset($tags_PEL)){
-				// if(strcasecmp($tags_XMP, $tags_PEL) != 0){
-					// echo('asasdasdasd');//---------------------------------------------------------------------------
-				// }else{
-					// return $tags_XMP;
-				// }
-			// }
 		}
 		return FALSE;
 	}
@@ -155,12 +146,10 @@ include_once $Toolkit_Dir . 'EXIF.php';
 	
 	function set_Tag_exif($path, $tags){
 		$tags = explode(';',$tags);
-		// print_r($tags);
 		foreach($tags as $tag){
 				if(!empty($tag)){
 					add_KeyWord($tag, $path);
 				}
-			// add_KeyWord($tag, $path);
 		}
 	}
 	
@@ -218,8 +207,6 @@ include_once $Toolkit_Dir . 'EXIF.php';
 			$data = read_exif($url);
 		$tags = get_Tag_exif($url);
 		$rate = get_Rating_exif($url);
-		// echo($tags);
-		//---------------------------------
 		$icfunc = "imagecreatefrom" . $format;
 		if (!function_exists($icfunc)) return false;
 		$source = $icfunc($url);
@@ -333,7 +320,6 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		$format = strtolower(substr($size['mime'], strpos($size['mime'], '/')+1));
 		if($format == 'jpeg'){
 			$exif = read_exif_data_quick($path);
-			// print_r($exif);
 			$angle = 0;
 			if (isset($exif['Orientation'])){
 				$orientation = $exif['Orientation'];
@@ -374,32 +360,6 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		$tmpfile = getImgPiece($path);
 		return read_exif_data($tmpfile);
 	}
-	
-	// function get_exif_tag($path, $tag){
-		// $data = new PelDataWindow(file_get_contents($path));
-
-		// if (PelJpeg::isValid($data)) {
-			// $jpeg = new PelJpeg();
-			// $jpeg->load($data);
-			// $app1 = $jpeg->getExif();
-			// if ($app1 == null) {
-				// echo('Skipping %s because no APP1 section was found.'. $path);
-				// continue;
-			// }
-
-			// $tiff = $app1->getTiff();
-		// } elseif (PelTiff::isValid($data)) {
-				// $tiff = new PelTiff($data);
-		// } else {
-			// echo('Unrecognized image format! Skipping.');
-			// continue;
-		// }
-
-		// $ifd0 = $tiff->getIfd();
-		// $entry = $ifd0->getEntry($tag);
-		// $value = $entry->getValue();
-		// return $value;
-	// }
 	
 	function read_exif($path) {
 		$resalt = array('data'=>'', 'type'=>'');
@@ -455,11 +415,6 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		
 		if($tag = get_Tag_exif($file)){
 			$data['tag'] = explode(';', $tag);
-			// $key = array_search(' ', $data['tag']);
-			// if ($key !== null){
-				// unset($data['tag'][$key]);
-			// }
-			// print_r($data['tag']);
 		}
 		
 		if (file_exists($file)) {
@@ -468,7 +423,6 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		
 		$data['date_of_shooting'] = get_date_of_shooting_exif_PEL($file);
 		
-		// print_r($data);//---------------------------------------------------------------------------
 		return $data;
 	}
 	
@@ -485,9 +439,6 @@ include_once $Toolkit_Dir . 'EXIF.php';
 				$tiff->saveFile($path);
 			break;
 		}
-		// $NewJpeg = new PelJpeg($path);
-		// $NewJpeg->setExif($exif);
-		// $NewJpeg->saveFile($path);
 	}
 	
 	function setMetaTag_PEL($input, $tag, $value){
@@ -508,7 +459,6 @@ include_once $Toolkit_Dir . 'EXIF.php';
 			* PelJpeg object which will hold it.  When we want to save the
 			* image again, we need to know which object to same (using the
 			* getBytes method), so we store $jpeg as $file too. */
-			// echo('PelJpeg::isValid($data)');
 			$jpeg = $file = new PelJpeg();
 
 			/* We then load the data from the PelDataWindow into our PelJpeg
@@ -523,7 +473,6 @@ include_once $Toolkit_Dir . 'EXIF.php';
 			$exif = $jpeg->getExif();
 
 			if ($exif == null) {
-			// echo('$exif == null');
 				/* Ups, there is no APP1 section in the JPEG file.  This is where
 				 * the Exif data should be. */
 
@@ -574,12 +523,10 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		/* Each entry in an IFD is identified with a tag.  This will load the
 		 * ImageDescription entry if it is present.  If the IFD does not
 		 * contain such an entry, null will be returned. */
-		// $desc = $ifd0->getEntry(PelTag::IMAGE_DESCRIPTION);//----------------------------------
 		$desc = $ifd0->getEntry($tag);
 
 		/* We need to check if the image already had a description stored. */
 		if ($desc == null) {
-		// echo("\n\$desc == null\n");
 			/* The was no description in the image. */
 
 			/* In this case we simply create a new PelEntryAscii object to hold
@@ -587,11 +534,10 @@ include_once $Toolkit_Dir . 'EXIF.php';
 			* the tag and contents of the new entry. */
 			
 			if ($tag == PelTag::XP_COMMENT){
-				$desc = new PelEntryWindowsString($tag, $value);//-------------------------------------
+				$desc = new PelEntryWindowsString($tag, $value);
 			}else{
-				$desc = new PelEntryAscii($tag, $value);	//-------------------------------------
+				$desc = new PelEntryAscii($tag, $value);
 			}
-			// $desc->setValue($value);
 		
 			/* This will insert the newly created entry with the description
 			* into the IFD. */
@@ -599,7 +545,6 @@ include_once $Toolkit_Dir . 'EXIF.php';
 			
 		} else {
 			/* An old description was found in the image. */
-
 			/* The description is simply updated with the new description. */
 			$desc->setValue($value);
 		}
@@ -612,17 +557,6 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		 
 		$file->saveFile($input);
 		// file_put_contents('test.jpg', $file->getBytes());
-		
-		//==TEST=========================================================================
-			// $data1 = new PelDataWindow(file_get_contents($input));
-			// $jpeg1 = new PelJpeg();
-			// $jpeg1->load($data1);
-			// $exif1 = $jpeg1->getExif();
-			// $tiff1 = $exif1->getTiff();
-			// $ifd01 = $tiff1->getIfd();
-			// echo(getMetaTag_PEL($input, PelTag::XP_COMMENT));
-		//===============================================================================
-		
 	}
 	
 	function search_tag(&$arr, $tag){
@@ -675,23 +609,12 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		
 		$desc = $ifd0->getEntry($tag);
 
-		/* We need to check if the image already had a description stored. */
 		if ($desc == null) {
-			/* The was no description in the image. */
+			$desc = new PelEntryAscii($tag, '');
 
-			/* In this case we simply create a new PelEntryAscii object to hold
-			* the description.  The constructor for PelEntryAscii needs to know
-			* the tag and contents of the new entry. */
-			$desc = new PelEntryAscii($tag, '');	//-------------------------------------
-
-			/* This will insert the newly created entry with the description
-			* into the IFD. */
 			$ifd0->addEntry($desc);
 			$file->saveFile($input);
 		} else {
-			/* An old description was found in the image. */
-
-			/* The description is simply updated with the new description. */
 			return $desc->getValue();
 		}
 		return False;
@@ -761,11 +684,9 @@ include_once $Toolkit_Dir . 'EXIF.php';
 		$header_data = get_jpeg_header_data( $url );
 		$xmpText = get_XMP_text( $header_data );
 		$xmpArr = read_XMP_array_from_text( $xmpText );
-		// print_r($xmpArr);
 			$xmpArr = checkXMP($xmpArr);
 		$i=0;
 		if (!set_key($xmpArr, 'dc:subject', $value)){
-		// print_r($xmpArr);
 			$i = count($xmpArr[0]['children'][0]['children']);
 			if(isset($xmpArr[0]['children'][0]['children'][$i]['attributes']['xmlns:dc'])){
 				if(isset($xmpArr[0]['children'][0]['children'][$i]['children'])){
@@ -794,7 +715,6 @@ include_once $Toolkit_Dir . 'EXIF.php';
 				$xmpArr[0]['children'][0]['children'][$i]['children'][0]['children'][0]['children'][0]['value'] = $value;
 			}
 	}
-	// print_r($xmpArr);
 	$newXMP = write_XMP_array_to_text( $xmpArr );
 	$header_data = put_XMP_text( $header_data, $newXMP );
 	put_jpeg_header_data( $url, $url, $header_data );

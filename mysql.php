@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Gluck
- * Date: 07.02.14
- * Time: 11:12
- */
 
 $db_is_connected = false;
 include_once('funksjoner.php');
@@ -20,7 +14,6 @@ include_once('funksjoner.php');
             $db_is_connected = false;
             consol_message("Error: Could not connect to database. Please try again later.");
             return;
-//            exit(alert_message("Error: Could not connect to database. Please try again later."));
         }else{
             $db_is_connected = true;
             $db->query("SET CHARACTER SET utf8");
@@ -37,7 +30,6 @@ include_once('funksjoner.php');
         if (!$db_is_connected){
             consol_message("Error: Could not connect to database.");
             return FALSE;
-//            exit(alert_message("Error: Could not connect to database."));
         }elseif(count($column) <> count($value)){
             consol_message("SQL insert query is incorrect");
             return FALSE;
@@ -59,7 +51,6 @@ include_once('funksjoner.php');
         if (!$db_is_connected){
             consol_message("Error: Could not connect to database.");
             return FALSE;
-//            exit(alert_message("Error: Could not connect to database."));
         }else{
 			// echo($query);
             $result = $db->query($query);
@@ -105,10 +96,8 @@ include_once('funksjoner.php');
         {	
             consol_message("Error: Could not connect to database.");
             return FALSE;
-//            exit(consol_message("Error: Could not connect to database."));
         }else{
             $query = "SELECT $column FROM $table $group;";
-			// echo('<br><hr>db_select<br>'.$query);//-----------------------------------------------------
             $rslt = $db->query($query);
             if (!$rslt)
             {
@@ -135,7 +124,6 @@ include_once('funksjoner.php');
 			consol_message($query." isn't correct .");
 			return FALSE;
 		}else{
-			// echo('<br><hr>db_select_query<br>'.$query);//---------------------------------------------
 			while ($row = $rslt->fetch_assoc()) {
 				$result[] = $row["$ret"];
 			}
@@ -152,7 +140,6 @@ include_once('funksjoner.php');
         if (!$db_is_connected){	
             consol_message("Error: Could not connect to database.");
             return FALSE;
-//            exit(alert_message("Error: Could not connect ot database."));
         }else{
 			$result = $db->query($query);
 			if ($result)

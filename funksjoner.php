@@ -251,8 +251,6 @@ $files  = null;                     # List of the files from disk
 										onDblClick = openFulskr("'.$big.$file.'")>
 									<img src="' . $thumbs . $file . '" />
 								</td>';
-								// viuwEXIF("'.get_EXIF($big.$file).'") 
-								// viuwEXIF("'.$big.$file.'")
 					$colCtr++;
 				}
 			}
@@ -336,28 +334,17 @@ $files  = null;                     # List of the files from disk
 							WHERE file_liste.filename = '$file'
 							ORDER BY tag.tags" ;
 				$currentTags = db_select_query('tags', $query);
-				// $currentTags = db_select($where, $what, $sQuery3, $what);
 				
 				if(!empty($currentTags)){
-					//$currentTags = array_filter($currentTags);
 					foreach($currentTags as $bb){
 						array_push($finalTags, $bb);
 					}
 				}
 			}	
-					
-			//$sluttTags = array_filter($finalTags);
+			
 			$sluttTags = array_unique($finalTags);
-			
-			
 			return $sluttTags;
-		}else{
-		
 		}
-	
-    //   $tag_list = db_select('tag', 'tags', 'GROUP BY tags', 'tags');
-    //  return $tag_list;
-	
     }
 // get images list by tag
 	function get_img_by_tag($tag, $order='')

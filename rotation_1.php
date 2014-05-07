@@ -1,7 +1,6 @@
 <?php
-// include_once 'imgEXIF.php';
-
 include_once 'image.php';
+
 // Rotation image with path $_POST['name'] on angle $_POST['angle']
 	if(isset($_POST['angle'])&isset($_POST['name'])){
 		$angle = $_POST['angle'];
