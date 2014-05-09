@@ -6,11 +6,11 @@
         <link rel="stylesheet" href="style.css">
         <link rel="shortcut icon" href="img/favicon.ico">
         
-        <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/smoothness/jquery-ui.css">
+        <link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
         <link href="css/jquery.tagit.css" rel="stylesheet" type="text/css">
         
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"   type="text/javascript" charset="utf-8"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js"    type="text/javascript" charset="utf-8"></script>
+        <script src="js/jquery.min.js"   type="text/javascript" charset="utf-8"></script>
+        <script src="js/jquery-ui.min.js"    type="text/javascript" charset="utf-8"></script>
         <script src="js/tag-it.js" type="text/javascript" charset="utf-8"></script>
 		
 		<?php
